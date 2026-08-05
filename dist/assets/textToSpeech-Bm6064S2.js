@@ -1,0 +1,15 @@
+import{h as v,s as h}from"./alerts-Cf_U-u9c.js";const g=t=>{t.innerHTML=`
+                            <textarea id="ttsText" placeholder="Enter text to speak..." rows="6"></textarea>
+                            <div class="option-group">
+                                <label for="ttsVoice">Voice:</label>
+                                <select id="ttsVoice"></select>
+                                <label for="ttsRate" style="margin-left:10px;">Rate: <span id="ttsRateVal">1</span></label>
+                                <input type="range" id="ttsRate" min="0.5" max="2" value="1" step="0.1" style="vertical-align: middle;">
+                                <label for="ttsPitch" style="margin-left:10px;">Pitch: <span id="ttsPitchVal">1</span></label>
+                                <input type="range" id="ttsPitch" min="0" max="2" value="1" step="0.1" style="vertical-align: middle;">
+                            </div>
+                            <button id="ttsSpeakBtn">Speak</button>
+                            <button id="ttsPauseBtn">Pause</button>
+                            <button id="ttsResumeBtn">Resume</button>
+                            <button id="ttsStopBtn">Stop</button>
+                        `;const f=t.querySelector("#ttsText"),d=t.querySelector("#ttsVoice"),c=t.querySelector("#ttsRate"),p=t.querySelector("#ttsPitch"),S=t.querySelector("#ttsRateVal"),y=t.querySelector("#ttsPitchVal"),i=t.querySelector("#ttsSpeakBtn"),l=t.querySelector("#ttsPauseBtn"),n=t.querySelector("#ttsResumeBtn"),o=t.querySelector("#ttsStopBtn"),e=window.speechSynthesis;if(!e){t.innerHTML="<p>Sorry, your browser doesn't support Text to Speech.</p>";return}let b=[],s=null;function m(){b=e.getVoices().sort((a,r)=>a.name.localeCompare(r.name));const u=d.value;d.innerHTML="",b.forEach(a=>{const r=document.createElement("option");r.textContent=`${a.name} (${a.lang})`,r.value=a.name,a.default&&(r.selected=!0),d.appendChild(r)}),u&&(d.value=u)}m(),e.onvoiceschanged!==void 0&&(e.onvoiceschanged=m),c.oninput=()=>S.textContent=c.value,p.oninput=()=>y.textContent=p.value,i.onclick=()=>{if(e.speaking&&e.cancel(),f.value.trim()!==""){v(),s=new SpeechSynthesisUtterance(f.value.trim());const u=b.find(a=>a.name===d.value);u&&(s.voice=u),s.pitch=parseFloat(p.value),s.rate=parseFloat(c.value),s.onstart=()=>{i.disabled=!0,l.disabled=!1,n.disabled=!0,o.disabled=!1},s.onend=()=>{i.disabled=!1,l.disabled=!0,n.disabled=!0,o.disabled=!0,s=null},s.onerror=a=>{h(`Error during speech: ${a.error}`,"error"),i.disabled=!1,l.disabled=!0,n.disabled=!0,o.disabled=!0,s=null},e.speak(s)}else h("Please enter some text to speak.","error")},l.onclick=()=>{e.speaking&&!e.paused&&(e.pause(),l.disabled=!0,n.disabled=!1)},n.onclick=()=>{e.paused&&(e.resume(),l.disabled=!1,n.disabled=!0)},o.onclick=()=>{(e.speaking||e.paused)&&e.cancel(),i.disabled=!1,l.disabled=!0,n.disabled=!0,o.disabled=!0,s=null},i.disabled=!1,l.disabled=!0,n.disabled=!0,o.disabled=!0,window.currentToolCleanup=()=>{e&&(e.speaking||e.paused)&&e.cancel()}};export{g as default};

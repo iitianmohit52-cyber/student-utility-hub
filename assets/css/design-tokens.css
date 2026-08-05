@@ -1,0 +1,13 @@
+:root {
+    --background-color: #1E1E2F;
+    --text-color: #EAEAEA;
+    --header-background: #2B2D42;
+    --accent-color: #FFD700;
+    --tool-card-background: #3A3D5B;
+    --button-hover-color: #E6C200;
+    --soft-box-shadow: 0 8px 16px rgba(255, 215, 0, 0.1);
+    --card-hover-box-shadow: 0 12px 24px rgba(255, 215, 0, 0.2);
+    --font-family: 'Poppins', sans-serif;
+    --ad-placeholder-bg: #4a4e69;
+    --ad-placeholder-border: #6c757d;
+}

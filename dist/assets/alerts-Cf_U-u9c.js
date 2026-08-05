@@ -1,0 +1,1 @@
+const o=(t,l="info")=>{const e=document.getElementById("modalAlert");e&&(e.textContent=t,e.className=`modal-alert ${l}`,e.style.display="block")},s=()=>{const t=document.getElementById("modalAlert");t&&(t.style.display="none")};export{s as h,o as s};

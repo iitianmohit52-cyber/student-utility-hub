@@ -1,0 +1,12 @@
+import{h as V,s as g}from"./alerts-Cf_U-u9c.js";const H=r=>{r.innerHTML=`
+                            <label for="htmlColorPicker">Select a Color:</label>
+                            <input type="color" id="htmlColorPicker" value="#FFD700" style="width:100%; height: 40px; margin-bottom:1rem;">
+                            <div class="color-picker-display result-area">
+                                <div id="colorPreview" class="color-preview"></div>
+                                <div id="colorValues" class="color-values">
+                                    <p>HEX: <strong id="hexValue"></strong> <button class="copy-color-val" data-type="hex" title="Copy HEX">📋</button></p>
+                                    <p>RGB: <strong id="rgbValue"></strong> <button class="copy-color-val" data-type="rgb" title="Copy RGB">📋</button></p>
+                                    <p>HSL: <strong id="hslValue"></strong> <button class="copy-color-val" data-type="hsl" title="Copy HSL">📋</button></p>
+                                </div>
+                            </div>
+                        `;const d=r.querySelector("#htmlColorPicker"),v=r.querySelector("#colorPreview"),b=r.querySelector("#hexValue"),f=r.querySelector("#rgbValue"),m=r.querySelector("#hslValue"),C=r.querySelectorAll(".copy-color-val");let a,i,u;function y(e){a=e.toUpperCase(),v.style.backgroundColor=a,b.textContent=a;const t=S(a);i=`rgb(${t.r}, ${t.g}, ${t.b})`,f.textContent=i;const o=k(t.r,t.g,t.b);u=`hsl(${o.h}, ${o.s}%, ${o.l}%)`,m.textContent=u}d.oninput=e=>{y(e.target.value),V()},C.forEach(e=>{e.style.padding="0.2em 0.5em",e.style.marginLeft="5px",e.onclick=()=>{let t;const o=e.dataset.type;o==="hex"?t=a:o==="rgb"?t=i:o==="hsl"&&(t=u),t&&navigator.clipboard.writeText(t).then(()=>g(`${o.toUpperCase()} value copied!`,"success")).catch(()=>g("Failed to copy.","error"))}}),y(d.value);function S(e){let t=0,o=0,l=0;return e.length===4?(t=parseInt(e[1]+e[1],16),o=parseInt(e[2]+e[2],16),l=parseInt(e[3]+e[3],16)):e.length===7&&(t=parseInt(e.substring(1,3),16),o=parseInt(e.substring(3,5),16),l=parseInt(e.substring(5,7),16)),{r:t,g:o,b:l}}function k(e,t,o){e/=255,t/=255,o/=255;const l=Math.max(e,t,o),c=Math.min(e,t,o);let s,p,h=(l+c)/2;if(l===c)s=p=0;else{const n=l-c;switch(p=h>.5?n/(2-l-c):n/(l+c),l){case e:s=(t-o)/n+(t<o?6:0);break;case t:s=(o-e)/n+2;break;case o:s=(e-t)/n+4;break}s/=6}return{h:Math.round(s*360),s:Math.round(p*100),l:Math.round(h*100)}}};export{H as default};
