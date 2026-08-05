@@ -1,1 +1,0 @@
-const i=(e,n,t=50)=>{if(!e||n&&!n.includes(e.type))return!1;const r=t*1024*1024;return!(e.size>r||e.size===0)},s=e=>{if(typeof e!="string")return e;const n=document.createElement("div");return n.innerText=e,n.innerHTML};export{s as e,i};
