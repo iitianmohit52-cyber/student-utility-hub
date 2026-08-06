@@ -1,5 +1,6 @@
 import { createElement } from '../utils/dom.js';
-import { setupThemeToggle } from './ThemeToggle.js';
+import { safeStorage } from '../utils/safeStorage.js';
+import { Analytics, AnalyticsEvents } from '../analytics/analytics.js';
 
 export const renderHeader = () => {
     const header = createElement('header', 'app-header');
@@ -12,95 +13,124 @@ export const renderHeader = () => {
             </div>
             
             <div class="mobile-header-controls">
-                <button type="button" class="mobile-search-btn" id="mobileSearchBtn" aria-label="Open search">🔍</button>
+                <button type="button" class="mobile-search-icon-btn" id="mobileHeaderSearchBtn" aria-label="Open search in menu">🔍</button>
                 <div class="hamburger-menu" id="mobileMenuBtn" role="button" tabindex="0" aria-expanded="false" aria-label="Open navigation menu" aria-controls="navMenu">
                     <span></span><span></span><span></span>
                 </div>
             </div>
 
-            <div class="header-actions" id="navMenu" aria-hidden="true">
-                <nav class="main-nav">
-                    <a href="#" class="nav-link">Home</a>
-                    <a href="#article-image-tools" class="nav-link">About Tools</a>
-                </nav>
-                <div class="search-container">
+            <div class="header-actions" id="navMenu" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Mobile Navigation Drawer">
+                <!-- Mobile Drawer Top Header -->
+                <div class="drawer-header">
+                    <span class="drawer-title">Navigation</span>
+                    <button type="button" class="drawer-close-btn" id="drawerCloseBtn" aria-label="Close navigation menu">✕</button>
+                </div>
+
+                <!-- Drawer Search Bar -->
+                <div class="drawer-search-container">
+                    <span class="drawer-search-icon">🔍</span>
+                    <input type="text" id="drawerSearchInput" placeholder="Search 20+ free tools..." aria-label="Search tools">
+                </div>
+
+                <!-- Desktop / Main Search Bar -->
+                <div class="search-container desktop-search-only">
                     <span class="search-icon">🔍</span>
                     <input type="text" id="globalSearch" placeholder="Search (Ctrl + K)" accesskey="k">
                     <span class="search-shortcut">Ctrl K</span>
                 </div>
-                <div id="themeToggleContainer"></div>
+
+                <!-- Drawer Navigation Items -->
+                <nav class="main-nav">
+                    <a href="#" class="nav-link drawer-item"><span class="item-icon">🏠</span> Home</a>
+                    <a href="#article-image-tools" class="nav-link drawer-item"><span class="item-icon">🛠</span> About Tools</a>
+                    <a href="#popular-tools" class="nav-link drawer-item" id="popularToolsLink"><span class="item-icon">⭐</span> Popular Tools</a>
+                    <a href="#category-filters" class="nav-link drawer-item" id="categoriesLink"><span class="item-icon">📚</span> Categories</a>
+                    <a href="#footer" class="nav-link drawer-item" id="contactLink"><span class="item-icon">📞</span> Contact</a>
+                </nav>
+
+                <!-- iOS-Style Dark Mode Toggle -->
+                <div class="ios-theme-container">
+                    <span class="ios-theme-label" id="themeLabel">🌙 Dark Mode</span>
+                    <label class="ios-toggle-wrapper">
+                        <input type="checkbox" id="iosThemeToggle" aria-label="Toggle dark mode">
+                        <span class="ios-toggle-track">
+                            <span class="ios-toggle-knob"></span>
+                        </span>
+                    </label>
+                </div>
+
+                <!-- Explore CTA Button -->
+                <div class="drawer-cta-container">
+                    <a href="#tool-grid-section" class="drawer-cta-btn" id="exploreToolsBtn">🚀 Explore All Tools</a>
+                </div>
+
+                <!-- Drawer Footer -->
+                <div class="drawer-footer">
+                    <div class="drawer-footer-brand">🚀 Student Utility Hub</div>
+                    <div class="drawer-footer-tagline">20+ Free Client-Side Online Tools</div>
+                    <div class="drawer-footer-links">
+                        <a href="#article-image-tools">Privacy</a> • <a href="#article-image-tools">Terms</a>
+                    </div>
+                    <div class="drawer-footer-version">v1.0.0 • Production Ready</div>
+                </div>
+
+                <!-- Desktop Theme Toggle Wrapper -->
+                <div id="themeToggleContainer" class="desktop-theme-only"></div>
             </div>
         </div>
         <div class="mobile-nav-overlay" id="mobileNavOverlay" aria-hidden="true"></div>
-
-        <!-- Mobile Search Overlay Modal -->
-        <div class="mobile-search-overlay" id="mobileSearchOverlay" aria-hidden="true">
-            <div class="mobile-search-box">
-                <span class="search-icon">🔍</span>
-                <input type="text" id="mobileSearchInput" placeholder="Search 20+ free tools..." aria-label="Search tools">
-                <button type="button" class="close-search-btn" id="closeSearchBtn" aria-label="Close search">✕</button>
-            </div>
-        </div>
     `;
 
-    // Initialize Theme Toggle
-    const themeContainer = header.querySelector('#themeToggleContainer');
-    setupThemeToggle(themeContainer);
-
-    // Setup Search Logic (Desktop)
+    // References
     const searchInput = header.querySelector('#globalSearch');
-    
+    const drawerSearchInput = header.querySelector('#drawerSearchInput');
+    const mobileHeaderSearchBtn = header.querySelector('#mobileHeaderSearchBtn');
+    const mobileBtn = header.querySelector('#mobileMenuBtn');
+    const drawerCloseBtn = header.querySelector('#drawerCloseBtn');
+    const navMenu = header.querySelector('#navMenu');
+    const overlay = header.querySelector('#mobileNavOverlay');
+    const iosThemeToggle = header.querySelector('#iosThemeToggle');
+    const themeLabel = header.querySelector('#themeLabel');
+    let isPushedState = false;
+
+    // Theme Management Logic (Preserves existing theme attributes)
+    const currentTheme = safeStorage.getItem('theme', 'dark');
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    iosThemeToggle.checked = currentTheme === 'dark';
+    themeLabel.textContent = currentTheme === 'dark' ? '🌙 Dark Mode' : '☀️ Light Mode';
+
+    const updateTheme = (newTheme) => {
+        document.documentElement.setAttribute('data-theme', newTheme);
+        safeStorage.setItem('theme', newTheme);
+        Analytics.event(AnalyticsEvents.THEME_CHANGE, { to: newTheme });
+        iosThemeToggle.checked = newTheme === 'dark';
+        themeLabel.textContent = newTheme === 'dark' ? '🌙 Dark Mode' : '☀️ Light Mode';
+    };
+
+    iosThemeToggle.addEventListener('change', (e) => {
+        const newTheme = e.target.checked ? 'dark' : 'light';
+        updateTheme(newTheme);
+    });
+
     // Keyboard shortcut (Ctrl + K)
     document.addEventListener('keydown', (e) => {
         if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
             e.preventDefault();
             if (window.innerWidth <= 768) {
-                openMobileSearch();
+                openMenu(true);
             } else {
                 searchInput.focus();
             }
         }
     });
 
-    // Mobile Search Modal Logic
-    const mobileSearchBtn = header.querySelector('#mobileSearchBtn');
-    const mobileSearchOverlay = header.querySelector('#mobileSearchOverlay');
-    const mobileSearchInput = header.querySelector('#mobileSearchInput');
-    const closeSearchBtn = header.querySelector('#closeSearchBtn');
-
-    const openMobileSearch = () => {
-        mobileSearchOverlay.classList.add('active');
-        mobileSearchOverlay.setAttribute('aria-hidden', 'false');
-        mobileSearchInput.value = searchInput.value;
-        setTimeout(() => mobileSearchInput.focus(), 50);
-    };
-
-    const closeMobileSearch = () => {
-        mobileSearchOverlay.classList.remove('active');
-        mobileSearchOverlay.setAttribute('aria-hidden', 'true');
-    };
-
-    mobileSearchBtn.addEventListener('click', openMobileSearch);
-    closeSearchBtn.addEventListener('click', closeMobileSearch);
-
-    mobileSearchOverlay.addEventListener('click', (e) => {
-        if (e.target === mobileSearchOverlay) {
-            closeMobileSearch();
-        }
-    });
-
-    // Live search sync between mobile search input & main search logic
-    mobileSearchInput.addEventListener('input', (e) => {
+    // Sync Live Search between Drawer & Main Search Engine
+    drawerSearchInput.addEventListener('input', (e) => {
         searchInput.value = e.target.value;
         searchInput.dispatchEvent(new Event('input', { bubbles: true }));
     });
 
-    // Mobile Menu Logic with Accessibility & Android Back Button Support
-    const mobileBtn = header.querySelector('#mobileMenuBtn');
-    const navMenu = header.querySelector('#navMenu');
-    const overlay = header.querySelector('#mobileNavOverlay');
-    let isPushedState = false;
-
+    // Drawer Open / Close Functions
     const closeMenu = (fromPopState = false) => {
         if (!navMenu.classList.contains('active')) return;
 
@@ -125,13 +155,13 @@ export const renderHeader = () => {
         if (fromPopState) {
             isPushedState = false;
         }
+
+        // Return focus to hamburger button
+        setTimeout(() => mobileBtn.focus(), 50);
     };
 
-    const openMenu = () => {
+    const openMenu = (focusSearch = false) => {
         if (navMenu.classList.contains('active')) return;
-
-        // Close search if open
-        closeMobileSearch();
 
         mobileBtn.classList.add('active');
         mobileBtn.setAttribute('aria-expanded', 'true');
@@ -150,51 +180,76 @@ export const renderHeader = () => {
             isPushedState = true;
         }
 
-        const firstFocusable = navMenu.querySelector('a, input, button');
-        if (firstFocusable) {
-            firstFocusable.focus();
-        }
+        // Focus trap & auto-focus logic
+        setTimeout(() => {
+            if (focusSearch) {
+                drawerSearchInput.focus();
+            } else {
+                drawerCloseBtn.focus();
+            }
+        }, 100);
     };
 
     const toggleMenu = () => {
         if (navMenu.classList.contains('active')) {
             closeMenu();
         } else {
-            openMenu();
+            openMenu(false);
         }
     };
 
+    // Event Listeners
     mobileBtn.addEventListener('click', toggleMenu);
-    mobileBtn.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            toggleMenu();
-        }
-    });
-
+    mobileHeaderSearchBtn.addEventListener('click', () => openMenu(true));
+    drawerCloseBtn.addEventListener('click', () => closeMenu());
     overlay.addEventListener('click', () => closeMenu());
 
-    // Close menu when clicking nav links
-    header.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', () => closeMenu());
+    // Navigation Links Click Handler
+    header.querySelectorAll('.nav-link, .drawer-cta-btn').forEach(link => {
+        link.addEventListener('click', (e) => {
+            const targetId = link.getAttribute('href');
+            closeMenu();
+            
+            // Custom scroll logic for categories / popular
+            if (targetId === '#category-filters') {
+                const categoryEl = document.querySelector('.category-filters');
+                if (categoryEl) categoryEl.scrollIntoView({ behavior: 'smooth' });
+            } else if (targetId === '#popular-tools') {
+                const popularBtn = document.querySelector('.filter-btn[data-category="popular"]');
+                if (popularBtn) popularBtn.click();
+            }
+        });
     });
 
-    // Close menu or search on Escape key
+    // Keyboard Accessibility: Escape key and Focus Trap
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            if (mobileSearchOverlay.classList.contains('active')) {
-                closeMobileSearch();
-            } else if (navMenu.classList.contains('active')) {
-                closeMenu();
+        if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+            closeMenu();
+        }
+
+        // Focus Trap inside drawer
+        if (navMenu.classList.contains('active') && e.key === 'Tab') {
+            const focusableEls = navMenu.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+            const firstFocusable = focusableEls[0];
+            const lastFocusable = focusableEls[focusableEls.length - 1];
+
+            if (e.shiftKey) {
+                if (document.activeElement === firstFocusable) {
+                    e.preventDefault();
+                    lastFocusable.focus();
+                }
+            } else {
+                if (document.activeElement === lastFocusable) {
+                    e.preventDefault();
+                    firstFocusable.focus();
+                }
             }
         }
     });
 
-    // Handle Android / Browser Back Button
-    window.addEventListener('popstate', (e) => {
-        if (mobileSearchOverlay.classList.contains('active')) {
-            closeMobileSearch();
-        } else if (navMenu.classList.contains('active')) {
+    // Android / Browser Back Button Listener
+    window.addEventListener('popstate', () => {
+        if (navMenu.classList.contains('active')) {
             closeMenu(true);
         }
     });
