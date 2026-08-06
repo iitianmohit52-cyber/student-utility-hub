@@ -7,9 +7,10 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite",
+    "prebuild": "node scripts/generate_seo.js",
     "build": "vite build",
     "preview": "vite preview",
-    "update-domain": "node scripts/update_domain.js"
+    "update-seo": "node scripts/generate_seo.js"
   },
   "devDependencies": {
     "vite": "^5.0.0"

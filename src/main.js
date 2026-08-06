@@ -10,6 +10,10 @@ import { createToolCard } from './utils/dom.js';
 import { safeStorage } from './utils/safeStorage.js';
 import { initErrorHandling } from './utils/errorHandler.js';
 import { Analytics, AnalyticsEvents } from './analytics/analytics.js';
+import { updateSEO } from './seo.js';
+
+// Update SEO dynamically based on central config
+updateSEO();
 
 // Initialize Global Security Error Boundaries
 initErrorHandling();
