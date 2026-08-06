@@ -145,6 +145,7 @@ window.addEventListener('appinstalled', () => {
 
 document.addEventListener('DOMContentLoaded', () => {
     const app = document.getElementById('app');
+    app.innerHTML = ''; // Clear prerendered SEO fallback HTML
     
     // 1. Render Header
     const header = renderHeader();
