@@ -1,7 +1,7 @@
 import { AnalyticsConfig } from './analytics.config.js';
 import { AnalyticsEvents } from './events.js';
 import { consentManager, ConsentCategories } from './consent.js';
-import { ConsoleDebugProvider, GoogleAnalyticsProvider, PlausibleProvider } from './providers.js';
+import { ConsoleDebugProvider, GoogleTagManagerProvider, PlausibleProvider } from './providers.js';
 import { initPerformanceMonitoring } from './performance.js';
 import { initErrorReporting } from './errorReporting.js';
 
@@ -19,9 +19,10 @@ class AnalyticsSystem {
         if (AnalyticsConfig.providers.console || AnalyticsConfig.debugMode) {
             this.activeProviders.push(new ConsoleDebugProvider());
         }
-        if (AnalyticsConfig.providers.googleAnalytics && consentManager.hasConsent(ConsentCategories.ANALYTICS)) {
-            this.activeProviders.push(new GoogleAnalyticsProvider());
+        if (AnalyticsConfig.providers.googleAnalytics) {
+            this.activeProviders.push(new GoogleTagManagerProvider());
         }
+
         if (AnalyticsConfig.providers.plausible && consentManager.hasConsent(ConsentCategories.ANALYTICS)) {
             this.activeProviders.push(new PlausibleProvider());
         }

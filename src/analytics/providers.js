@@ -19,18 +19,25 @@ export class ConsoleDebugProvider extends BaseProvider {
 }
 
 // Stubs for future implementation
-export class GoogleAnalyticsProvider extends BaseProvider {
+export class GoogleTagManagerProvider extends BaseProvider {
     init() {
-        // window.dataLayer = window.dataLayer || [];
-        // function gtag(){dataLayer.push(arguments);}
-        // gtag('js', new Date());
-        // gtag('config', 'G-XXXXXX');
+        // GTM script is already initialized in index.html
     }
     trackEvent(eventName, eventData) {
-        // if (window.gtag) gtag('event', eventName, eventData);
+        if (window.dataLayer) {
+            window.dataLayer.push({
+                event: eventName,
+                ...eventData
+            });
+        }
     }
     trackPageView(url) {
-        // if (window.gtag) gtag('event', 'page_view', { page_path: url });
+        if (window.dataLayer) {
+            window.dataLayer.push({
+                event: 'page_view',
+                page_path: url
+            });
+        }
     }
 }
 
