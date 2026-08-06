@@ -8,7 +8,7 @@ export const renderHeader = () => {
         <div class="header-container">
             <div class="logo">
                 <span class="logo-icon">🚀</span>
-                <h1>Student Utility Hub</h1>
+                <h1>Student Utility Hub<span class="sr-only"> - 20+ Free Online Tools &amp; Calculators</span></h1>
             </div>
             
             <div class="hamburger-menu" id="mobileMenuBtn">
