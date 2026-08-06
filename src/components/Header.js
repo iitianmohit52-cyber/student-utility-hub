@@ -51,15 +51,39 @@ export const renderHeader = () => {
     const navMenu = header.querySelector('#navMenu');
     const overlay = header.querySelector('#mobileNavOverlay');
 
+    const closeMenu = () => {
+        mobileBtn.classList.remove('active');
+        navMenu.classList.remove('active');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+    };
+
     const toggleMenu = () => {
-        mobileBtn.classList.toggle('active');
-        navMenu.classList.toggle('active');
-        overlay.classList.toggle('active');
-        document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
+        const isActive = navMenu.classList.contains('active');
+        if (isActive) {
+            closeMenu();
+        } else {
+            mobileBtn.classList.add('active');
+            navMenu.classList.add('active');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
     };
 
     mobileBtn.addEventListener('click', toggleMenu);
-    overlay.addEventListener('click', toggleMenu);
+    overlay.addEventListener('click', closeMenu);
+
+    // Close menu when clicking nav links
+    header.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', closeMenu);
+    });
+
+    // Close menu on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+            closeMenu();
+        }
+    });
 
     return header;
 };
