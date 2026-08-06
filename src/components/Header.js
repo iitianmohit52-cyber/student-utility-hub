@@ -11,11 +11,11 @@ export const renderHeader = () => {
                 <h1>Student Utility Hub<span class="sr-only"> - 20+ Free Online Tools &amp; Calculators</span></h1>
             </div>
             
-            <div class="hamburger-menu" id="mobileMenuBtn">
+            <div class="hamburger-menu" id="mobileMenuBtn" role="button" tabindex="0" aria-expanded="false" aria-label="Open navigation menu" aria-controls="navMenu">
                 <span></span><span></span><span></span>
             </div>
 
-            <div class="header-actions" id="navMenu">
+            <div class="header-actions" id="navMenu" aria-hidden="true">
                 <nav class="main-nav">
                     <a href="#" class="nav-link">Home</a>
                     <a href="#article-image-tools" class="nav-link">About Tools</a>
@@ -28,7 +28,7 @@ export const renderHeader = () => {
                 <div id="themeToggleContainer"></div>
             </div>
         </div>
-        <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+        <div class="mobile-nav-overlay" id="mobileNavOverlay" aria-hidden="true"></div>
     `;
 
     // Initialize Theme Toggle
@@ -46,42 +46,99 @@ export const renderHeader = () => {
         }
     });
 
-    // Mobile Menu Logic
+    // Mobile Menu Logic with Accessibility & Android Back Button Support
     const mobileBtn = header.querySelector('#mobileMenuBtn');
     const navMenu = header.querySelector('#navMenu');
     const overlay = header.querySelector('#mobileNavOverlay');
+    let isPushedState = false;
 
-    const closeMenu = () => {
+    const closeMenu = (fromPopState = false) => {
+        if (!navMenu.classList.contains('active')) return;
+
         mobileBtn.classList.remove('active');
+        mobileBtn.setAttribute('aria-expanded', 'false');
+        mobileBtn.setAttribute('aria-label', 'Open navigation menu');
+        
         navMenu.classList.remove('active');
+        navMenu.setAttribute('aria-hidden', 'true');
+        
         overlay.classList.remove('active');
+        overlay.setAttribute('aria-hidden', 'true');
+        
         document.body.style.overflow = '';
+
+        if (isPushedState && !fromPopState) {
+            isPushedState = false;
+            if (window.history.state?.drawerOpen) {
+                window.history.back();
+            }
+        }
+        if (fromPopState) {
+            isPushedState = false;
+        }
+    };
+
+    const openMenu = () => {
+        if (navMenu.classList.contains('active')) return;
+
+        mobileBtn.classList.add('active');
+        mobileBtn.setAttribute('aria-expanded', 'true');
+        mobileBtn.setAttribute('aria-label', 'Close navigation menu');
+        
+        navMenu.classList.add('active');
+        navMenu.setAttribute('aria-hidden', 'false');
+        
+        overlay.classList.add('active');
+        overlay.setAttribute('aria-hidden', 'false');
+        
+        document.body.style.overflow = 'hidden';
+
+        if (!isPushedState) {
+            window.history.pushState({ drawerOpen: true }, '');
+            isPushedState = true;
+        }
+
+        // Focus first interactive element inside drawer
+        const firstFocusable = navMenu.querySelector('a, input, button');
+        if (firstFocusable) {
+            firstFocusable.focus();
+        }
     };
 
     const toggleMenu = () => {
-        const isActive = navMenu.classList.contains('active');
-        if (isActive) {
+        if (navMenu.classList.contains('active')) {
             closeMenu();
         } else {
-            mobileBtn.classList.add('active');
-            navMenu.classList.add('active');
-            overlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
+            openMenu();
         }
     };
 
     mobileBtn.addEventListener('click', toggleMenu);
-    overlay.addEventListener('click', closeMenu);
+    mobileBtn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggleMenu();
+        }
+    });
+
+    overlay.addEventListener('click', () => closeMenu());
 
     // Close menu when clicking nav links
     header.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', closeMenu);
+        link.addEventListener('click', () => closeMenu());
     });
 
     // Close menu on Escape key
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && navMenu.classList.contains('active')) {
             closeMenu();
+        }
+    });
+
+    // Handle Android / Browser Back Button
+    window.addEventListener('popstate', (e) => {
+        if (navMenu.classList.contains('active')) {
+            closeMenu(true);
         }
     });
 

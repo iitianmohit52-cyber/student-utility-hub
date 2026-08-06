@@ -846,14 +846,16 @@ main {
     .header-actions {
         position: fixed;
         top: 0;
-        right: -300px;
+        right: 0;
+        transform: translateX(100%);
+        visibility: hidden;
         width: min(300px, 85vw);
         height: 100vh;
         height: 100dvh;
         background-color: var(--surface-color);
         flex-direction: column;
         padding: 5rem 1.5rem 2rem;
-        transition: right var(--transition-normal);
+        transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.28s ease;
         border-left: 1px solid var(--tool-card-border);
         box-shadow: -5px 0 20px rgba(0,0,0,0.2);
         overflow-y: auto;
@@ -861,7 +863,8 @@ main {
     }
     
     .header-actions.active {
-        right: 0;
+        transform: translateX(0);
+        visibility: visible;
     }
 
     .main-nav {
