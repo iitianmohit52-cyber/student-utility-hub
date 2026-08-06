@@ -11,8 +11,11 @@ export const renderHeader = () => {
                 <h1>Student Utility Hub<span class="sr-only"> - 20+ Free Online Tools &amp; Calculators</span></h1>
             </div>
             
-            <div class="hamburger-menu" id="mobileMenuBtn" role="button" tabindex="0" aria-expanded="false" aria-label="Open navigation menu" aria-controls="navMenu">
-                <span></span><span></span><span></span>
+            <div class="mobile-header-controls">
+                <button type="button" class="mobile-search-btn" id="mobileSearchBtn" aria-label="Open search">🔍</button>
+                <div class="hamburger-menu" id="mobileMenuBtn" role="button" tabindex="0" aria-expanded="false" aria-label="Open navigation menu" aria-controls="navMenu">
+                    <span></span><span></span><span></span>
+                </div>
             </div>
 
             <div class="header-actions" id="navMenu" aria-hidden="true">
@@ -29,21 +32,67 @@ export const renderHeader = () => {
             </div>
         </div>
         <div class="mobile-nav-overlay" id="mobileNavOverlay" aria-hidden="true"></div>
+
+        <!-- Mobile Search Overlay Modal -->
+        <div class="mobile-search-overlay" id="mobileSearchOverlay" aria-hidden="true">
+            <div class="mobile-search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="mobileSearchInput" placeholder="Search 20+ free tools..." aria-label="Search tools">
+                <button type="button" class="close-search-btn" id="closeSearchBtn" aria-label="Close search">✕</button>
+            </div>
+        </div>
     `;
 
     // Initialize Theme Toggle
     const themeContainer = header.querySelector('#themeToggleContainer');
     setupThemeToggle(themeContainer);
 
-    // Setup Search Logic
+    // Setup Search Logic (Desktop)
     const searchInput = header.querySelector('#globalSearch');
     
     // Keyboard shortcut (Ctrl + K)
     document.addEventListener('keydown', (e) => {
         if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
             e.preventDefault();
-            searchInput.focus();
+            if (window.innerWidth <= 768) {
+                openMobileSearch();
+            } else {
+                searchInput.focus();
+            }
         }
+    });
+
+    // Mobile Search Modal Logic
+    const mobileSearchBtn = header.querySelector('#mobileSearchBtn');
+    const mobileSearchOverlay = header.querySelector('#mobileSearchOverlay');
+    const mobileSearchInput = header.querySelector('#mobileSearchInput');
+    const closeSearchBtn = header.querySelector('#closeSearchBtn');
+
+    const openMobileSearch = () => {
+        mobileSearchOverlay.classList.add('active');
+        mobileSearchOverlay.setAttribute('aria-hidden', 'false');
+        mobileSearchInput.value = searchInput.value;
+        setTimeout(() => mobileSearchInput.focus(), 50);
+    };
+
+    const closeMobileSearch = () => {
+        mobileSearchOverlay.classList.remove('active');
+        mobileSearchOverlay.setAttribute('aria-hidden', 'true');
+    };
+
+    mobileSearchBtn.addEventListener('click', openMobileSearch);
+    closeSearchBtn.addEventListener('click', closeMobileSearch);
+
+    mobileSearchOverlay.addEventListener('click', (e) => {
+        if (e.target === mobileSearchOverlay) {
+            closeMobileSearch();
+        }
+    });
+
+    // Live search sync between mobile search input & main search logic
+    mobileSearchInput.addEventListener('input', (e) => {
+        searchInput.value = e.target.value;
+        searchInput.dispatchEvent(new Event('input', { bubbles: true }));
     });
 
     // Mobile Menu Logic with Accessibility & Android Back Button Support
@@ -81,6 +130,9 @@ export const renderHeader = () => {
     const openMenu = () => {
         if (navMenu.classList.contains('active')) return;
 
+        // Close search if open
+        closeMobileSearch();
+
         mobileBtn.classList.add('active');
         mobileBtn.setAttribute('aria-expanded', 'true');
         mobileBtn.setAttribute('aria-label', 'Close navigation menu');
@@ -98,7 +150,6 @@ export const renderHeader = () => {
             isPushedState = true;
         }
 
-        // Focus first interactive element inside drawer
         const firstFocusable = navMenu.querySelector('a, input, button');
         if (firstFocusable) {
             firstFocusable.focus();
@@ -128,16 +179,22 @@ export const renderHeader = () => {
         link.addEventListener('click', () => closeMenu());
     });
 
-    // Close menu on Escape key
+    // Close menu or search on Escape key
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && navMenu.classList.contains('active')) {
-            closeMenu();
+        if (e.key === 'Escape') {
+            if (mobileSearchOverlay.classList.contains('active')) {
+                closeMobileSearch();
+            } else if (navMenu.classList.contains('active')) {
+                closeMenu();
+            }
         }
     });
 
     // Handle Android / Browser Back Button
     window.addEventListener('popstate', (e) => {
-        if (navMenu.classList.contains('active')) {
+        if (mobileSearchOverlay.classList.contains('active')) {
+            closeMobileSearch();
+        } else if (navMenu.classList.contains('active')) {
             closeMenu(true);
         }
     });

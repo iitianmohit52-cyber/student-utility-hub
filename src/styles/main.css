@@ -4,6 +4,21 @@
     box-sizing: border-box;
 }
 
+html, body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+#app, main, .app-header, .app-footer, #seo-content-silo {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
 body {
     font-family: var(--font-family);
     background-color: var(--background-color);
@@ -184,6 +199,86 @@ main {
 .theme-toggle-btn:hover {
     background-color: var(--tool-card-hover);
     border-color: var(--text-secondary);
+}
+
+.mobile-header-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.mobile-search-btn {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.4rem;
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 8px;
+    color: var(--text-primary);
+    transition: background-color var(--transition-fast);
+}
+
+.mobile-search-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    align-items: flex-start;
+    padding: 1rem;
+}
+
+.mobile-search-box {
+    width: 100%;
+    max-width: 600px;
+    margin: 0.5rem auto 0;
+    background: var(--surface-color);
+    border: 1px solid var(--tool-card-border);
+    border-radius: 12px;
+    padding: 0.6rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.mobile-search-box input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-family: inherit;
+}
+
+.close-search-btn {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0.3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    min-height: 36px;
 }
 
 /* Hamburger Menu (Mobile) */
@@ -842,6 +937,9 @@ main {
 
 @media (max-width: 768px) {
     .hamburger-menu { display: flex; }
+    .mobile-search-btn { display: flex; }
+    .mobile-search-overlay { display: flex; }
+    .mobile-search-overlay.active { opacity: 1; pointer-events: auto; }
     
     .header-actions {
         position: fixed;
