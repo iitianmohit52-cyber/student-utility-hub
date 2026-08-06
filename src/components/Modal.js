@@ -148,17 +148,17 @@ export const renderModal = () => {
                 "@type": "ListItem",
                 "position": 1,
                 "name": "Home",
-                "item": "https://www.studentutilityhub.com/"
+                "item": "https://student-utility-hub-2ss3.vercel.app/"
             },{
                 "@type": "ListItem",
                 "position": 2,
                 "name": catName,
-                "item": `https://www.studentutilityhub.com/#${tool.category}`
+                "item": `https://student-utility-hub-2ss3.vercel.app/#${tool.category}`
             },{
                 "@type": "ListItem",
                 "position": 3,
                 "name": tool.name,
-                "item": `https://www.studentutilityhub.com/#${tool.id}`
+                "item": `https://student-utility-hub-2ss3.vercel.app/#${tool.id}`
             }]
         });
         document.head.appendChild(breadcrumbSchema);

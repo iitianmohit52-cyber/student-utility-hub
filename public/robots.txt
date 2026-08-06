@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.studentutilityhub.com/sitemap.xml
+Sitemap: https://student-utility-hub-2ss3.vercel.app/sitemap.xml
