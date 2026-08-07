@@ -45,6 +45,9 @@ export const renderHero = (container) => {
         </div>
         
         <div class="category-filters" id="category-filters" role="tablist" aria-label="Tool Categories">
+            <button class="filter-btn" data-category="favorites" role="tab" aria-selected="false" aria-label="Filter tools by Favorites">
+                ⭐ Favorites
+            </button>
             ${categories.map(cat => `
                 <button class="filter-btn ${cat.id === 'all' ? 'active' : ''}" data-category="${cat.id}" role="tab" aria-selected="${cat.id === 'all' ? 'true' : 'false'}" aria-label="Filter tools by ${cat.name}">
                     ${cat.name}

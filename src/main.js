@@ -13,6 +13,15 @@ import { updateSEO } from './seo.js';
 import { initRouter, navigate } from './router.js';
 import { renderToolPage } from './components/LandingPage.js';
 import { renderCategoryPage } from './components/CategoryPage.js';
+import { renderArticlePage } from './components/ArticlePage.js';
+import { renderContentHubPage } from './components/ContentHubPage.js';
+import { renderAdminDashboard } from './components/AdminDashboard.js';
+import { articles } from './tools/articleRegistry.js';
+import { initWebVitals } from './utils/webVitals.js';
+import { getFavorites, getRecentlyUsed, isFavorite, logSearchQuery } from './utils/userStorage.js';
+
+// Initialize Web Vitals observer
+initWebVitals();
 
 // Update SEO dynamically based on central config
 updateSEO();
@@ -110,6 +119,18 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 render404(mainContent);
             }
+        } else if (path === '/blog') {
+            renderContentHubPage(mainContent);
+        } else if (path === '/analytics-dashboard') {
+            renderAdminDashboard(mainContent);
+        } else if (path.startsWith('/guides/')) {
+            const slug = path.split('/guides/')[1];
+            const article = articles.find(a => a.slug === slug || a.id === slug);
+            if (article) {
+                renderArticlePage(mainContent, article);
+            } else {
+                render404(mainContent);
+            }
         } else if (path.endsWith('-tools') || path === '/calculators') {
             const categoryId = path.replace('-tools', '').replace('/', '');
             const category = categories.find(c => c.id === categoryId);
@@ -161,14 +182,37 @@ const renderHomePage = (container) => {
     const renderTools = (categoryFilter = 'all', searchQuery = '') => {
         toolGrid.innerHTML = '';
         const lowerQuery = searchQuery.toLowerCase();
+        if (searchQuery) logSearchQuery(searchQuery);
+
+        const favsList = getFavorites();
+        const recentList = getRecentlyUsed();
 
         const filteredTools = tools.filter(tool => {
-            const matchesCategory = categoryFilter === 'all' || tool.category === categoryFilter;
+            const matchesCategory = categoryFilter === 'all' ? true :
+                                  categoryFilter === 'favorites' ? favsList.includes(tool.id) :
+                                  tool.category === categoryFilter;
             const matchesSearch = tool.name.toLowerCase().includes(lowerQuery) || 
                                   tool.description.toLowerCase().includes(lowerQuery) ||
                                   (tool.keywords && tool.keywords.some(k => k.toLowerCase().includes(lowerQuery)));
             return matchesCategory && matchesSearch;
         });
+
+        // Search Ranking Prioritization: Favorites & Recently Used sorted to top
+        filteredTools.sort((a, b) => {
+            const scoreA = (favsList.includes(a.id) ? 10 : 0) + (recentList.includes(a.id) ? 5 : 0);
+            const scoreB = (favsList.includes(b.id) ? 10 : 0) + (recentList.includes(b.id) ? 5 : 0);
+            return scoreB - scoreA;
+        });
+
+        const filteredArticles = articles.filter(art => {
+            const matchesCategory = categoryFilter === 'all' || art.category === categoryFilter;
+            const matchesSearch = art.title.toLowerCase().includes(lowerQuery) || 
+                                  art.summary.toLowerCase().includes(lowerQuery) ||
+                                  (art.keywords && art.keywords.some(k => k.toLowerCase().includes(lowerQuery)));
+            return matchesCategory && matchesSearch;
+        });
+
+        const totalItemsCount = filteredTools.length + filteredArticles.length;
 
         const isInitialRender = toolGrid.children.length === 0 || toolGrid.querySelector('.skeleton-card');
         
@@ -184,13 +228,13 @@ const renderHomePage = (container) => {
         function populateGrid() {
             toolGrid.innerHTML = '';
             
-            if (filteredTools.length === 0) {
+            if (totalItemsCount === 0) {
                 toolGrid.innerHTML = `
-                    <div class="no-results">
+                    <div class="no-results" style="grid-column: 1/-1;">
                         <span class="no-results-icon">🔍</span>
-                        <h3>No matching tools found</h3>
-                        <p>We couldn't find any tools matching your query. Try resetting your search or exploring all categories.</p>
-                        <button type="button" class="primary-btn reset-search-btn" id="resetSearchBtn" style="min-height:44px; padding:0.6rem 1.4rem; font-size:0.95rem;">Clear Search & Show All Tools</button>
+                        <h3>No matching tools or articles found</h3>
+                        <p>We couldn't find any results matching your query. Try resetting your search or exploring all categories.</p>
+                        <button type="button" class="primary-btn reset-search-btn" id="resetSearchBtn" style="min-height:44px; padding:0.6rem 1.4rem; font-size:0.95rem;">Clear Search & Show All</button>
                     </div>
                 `;
                 const resetBtn = toolGrid.querySelector('#resetSearchBtn');
@@ -204,6 +248,7 @@ const renderHomePage = (container) => {
                 return;
             }
 
+            // Render matching tools
             filteredTools.forEach((tool, index) => {
                 const card = createToolCard(tool);
                 card.style.animation = `fadeInUp 0.5s ease forwards ${index * 0.04}s`;
@@ -218,6 +263,41 @@ const renderHomePage = (container) => {
                     };
                 }
                 
+                toolGrid.appendChild(card);
+            });
+
+            // Render matching articles
+            filteredArticles.forEach((art, index) => {
+                const card = document.createElement('div');
+                card.className = 'tool-card';
+                card.style.display = 'flex';
+                card.style.flexDirection = 'column';
+                card.style.justifyContent = 'space-between';
+                card.style.animation = `fadeInUp 0.5s ease forwards ${(filteredTools.length + index) * 0.04}s`;
+                card.style.opacity = '0';
+
+                card.innerHTML = `
+                    <div class="card-header" style="margin-bottom:0.75rem;">
+                        <span class="card-badge category-badge" style="background:var(--primary-light); color:var(--primary-color);">📚 GUIDE</span>
+                        <span style="font-size:0.8rem; color:var(--text-secondary);">${art.readTime}</span>
+                    </div>
+                    <div class="card-body" style="flex-grow:1; text-align:left;">
+                        <h3 style="font-size:1.2rem; line-height:1.4; color:var(--text-primary); margin-bottom:0.5rem; font-weight:700;">${art.title}</h3>
+                        <p style="font-size:0.85rem; line-height:1.5; color:var(--text-secondary);">${art.summary}</p>
+                    </div>
+                    <div class="card-footer" style="margin-top:1.5rem;">
+                        <a href="/guides/${art.slug}" class="tool-button" style="text-decoration:none; display:block; text-align:center;">
+                            <span>Read Guide</span>
+                            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        </a>
+                    </div>
+                `;
+
+                card.querySelector('a').onclick = (e) => {
+                    e.preventDefault();
+                    navigate(`/guides/${art.slug}`);
+                };
+
                 toolGrid.appendChild(card);
             });
         }

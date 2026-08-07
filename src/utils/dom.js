@@ -1,6 +1,4 @@
-/**
- * Utility functions for DOM manipulation
- */
+import { isFavorite, toggleFavorite } from './userStorage.js';
 
 export const $ = (selector) => document.querySelector(selector);
 export const $$ = (selector) => document.querySelectorAll(selector);
@@ -16,19 +14,23 @@ export const createToolCard = (tool) => {
     const card = createElement('div', 'tool-card');
     card.setAttribute('data-category', tool.category);
     
-    // Add "Popular" badge randomly for visual flair, or specifically if category is calculator
     const isPopular = ['emiCalculator', 'imageCompressor', 'qrCodeGenerator'].includes(tool.id);
     const popularBadge = isPopular ? '<span class="card-badge popular-badge">🔥 Popular</span>' : '';
     
     const categoryName = tool.category.charAt(0).toUpperCase() + tool.category.slice(1);
     const categoryBadge = `<span class="card-badge category-badge">${categoryName}</span>`;
 
+    const favorited = isFavorite(tool.id);
+    const heartFill = favorited ? '#ff4757' : 'none';
+    const heartStroke = favorited ? '#ff4757' : 'currentColor';
+    const activeClass = favorited ? ' active' : '';
+
     card.innerHTML = `
         <div class="card-header">
             ${popularBadge}
             ${categoryBadge}
-            <button class="favorite-btn" aria-label="Add to favorites" title="Favorite">
-                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="heart-icon"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+            <button class="favorite-btn${activeClass}" aria-label="Add to favorites" title="Favorite">
+                <svg viewBox="0 0 24 24" width="20" height="20" stroke="${heartStroke}" stroke-width="2" fill="${heartFill}" stroke-linecap="round" stroke-linejoin="round" class="heart-icon"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
             </button>
         </div>
         <div class="card-icon-wrapper">
@@ -46,16 +48,19 @@ export const createToolCard = (tool) => {
         </div>
     `;
     
-    // Toggle favorite state
+    // Toggle favorite state in userStorage
     const favBtn = card.querySelector('.favorite-btn');
     favBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        favBtn.classList.toggle('active');
+        e.preventDefault();
+        const isFavNow = toggleFavorite(tool.id);
         const icon = favBtn.querySelector('svg');
-        if (favBtn.classList.contains('active')) {
+        if (isFavNow) {
+            favBtn.classList.add('active');
             icon.style.fill = '#ff4757';
             icon.style.stroke = '#ff4757';
         } else {
+            favBtn.classList.remove('active');
             icon.style.fill = 'none';
             icon.style.stroke = 'currentColor';
         }

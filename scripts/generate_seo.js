@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { tools } from '../src/tools/toolRegistry.js';
+import { articles } from '../src/tools/articleRegistry.js';
 
 const SITE_URL = process.env.VITE_SITE_URL || "https://student-utility-hub-2ss3.vercel.app";
 
@@ -45,11 +46,14 @@ const categoryUrls = [
 ];
 writeSitemap('sitemap-categories.xml', categoryUrls);
 
-// 4. Generate sitemap-blog.xml (Placeholder for future blog/guides)
+// 4. Generate sitemap-blog.xml
 const blogUrls = [
-    { loc: 'blog', changefreq: 'weekly', priority: '0.7' },
-    { loc: 'guides', changefreq: 'weekly', priority: '0.7' },
-    { loc: 'tutorials', changefreq: 'weekly', priority: '0.7' }
+    { loc: 'blog', changefreq: 'weekly', priority: '0.8' },
+    ...articles.map(art => ({
+        loc: `guides/${art.slug}`,
+        changefreq: 'weekly',
+        priority: '0.7'
+    }))
 ];
 writeSitemap('sitemap-blog.xml', blogUrls);
 
