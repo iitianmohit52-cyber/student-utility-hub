@@ -24,7 +24,7 @@ export const renderToolPage = async (container, tool) => {
 
     // Build the page structure
     container.innerHTML = `
-        <div class="landing-page-container" style="max-width: var(--max-width); margin: 0 auto; padding: 2rem 1.5rem; animation: fadeIn 0.3s ease-out;">
+        <div class="landing-page-container" style="max-width: var(--max-width, 1400px); margin: 0 auto; padding: 2rem 1.5rem; animation: fadeIn 0.3s ease-out;">
             <!-- 1. Breadcrumbs -->
             <nav class="breadcrumb" aria-label="Breadcrumb" style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem; font-weight: 500;">
                 <a href="/">Home</a> &gt; 

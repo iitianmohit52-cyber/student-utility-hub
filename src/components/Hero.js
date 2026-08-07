@@ -12,33 +12,47 @@ export const renderHero = (container) => {
         </div>
         
         <div class="hero-content">
-            <span class="hero-badge">100% Client-Side Processing</span>
-            <h2>Your Ultimate Collection of <span class="gradient-text">Free Online Tools</span></h2>
-            <p>Access a suite of 50+ powerful online tools for PDF, images, developer, calculations, and text processing. Fast, free, and secure.</p>
-            <div class="hero-cta">
-                <button class="primary-btn" id="heroExploreBtn" aria-label="Explore tools list" onclick="document.querySelector('.tool-grid')?.scrollIntoView({behavior: 'smooth'})">🚀 Explore All 50+ Tools</button>
+            <span class="hero-badge">⚡ 100% Client-Side Processing</span>
+            <h2 style="font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800; line-height: 1.15; letter-spacing: -0.03em;">
+                Your Enterprise Hub for <span class="gradient-text">Free Online Tools</span>
+            </h2>
+            <p style="font-size: 1.15rem; max-width: 720px; margin: 1.25rem auto 2.5rem; color: var(--text-secondary); line-height: 1.6;">
+                Access a powerful suite of 75+ client-side utilities for PDF management, image editing, developer formatting, calculations, and student productivity. Zero uploads, zero latency.
+            </p>
+            
+            <div class="hero-cta" style="margin-bottom: 3.5rem;">
+                <button class="primary-btn" id="heroExploreBtn" aria-label="Explore tools list" onclick="document.querySelector('.tool-grid')?.scrollIntoView({behavior: 'smooth'})" style="padding: 0.9rem 2.2rem; font-size: 1.05rem;">
+                    🚀 Explore 75+ Production Tools
+                </button>
             </div>
             
-            <div class="hero-stats">
-                <div class="stat-card">
-                    <span class="stat-icon">⚡</span>
+            <div class="hero-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem; max-width: 1000px; margin: 0 auto 3rem;">
+                <div class="stat-card" style="background: var(--surface-glass); backdrop-filter: blur(16px); border: 1px solid var(--glass-border); padding: 1.25rem; border-radius: var(--radius-lg);">
+                    <span class="stat-icon" style="font-size: 1.6rem;">⚡</span>
                     <div class="stat-info">
-                        <strong>Lightning Fast</strong>
+                        <strong>Instant Execution</strong>
                         <span>Zero server latency</span>
                     </div>
                 </div>
-                <div class="stat-card">
-                    <span class="stat-icon">🔒</span>
+                <div class="stat-card" style="background: var(--surface-glass); backdrop-filter: blur(16px); border: 1px solid var(--glass-border); padding: 1.25rem; border-radius: var(--radius-lg);">
+                    <span class="stat-icon" style="font-size: 1.6rem;">🔒</span>
                     <div class="stat-info">
                         <strong>Privacy First</strong>
-                        <span>Files never leave your device</span>
+                        <span>Files never leave device</span>
                     </div>
                 </div>
-                <div class="stat-card">
-                    <span class="stat-icon">🛠️</span>
+                <div class="stat-card" style="background: var(--surface-glass); backdrop-filter: blur(16px); border: 1px solid var(--glass-border); padding: 1.25rem; border-radius: var(--radius-lg);">
+                    <span class="stat-icon" style="font-size: 1.6rem;">📶</span>
                     <div class="stat-info">
-                        <strong>50+ Utilities</strong>
-                        <span>Everything you need in one place</span>
+                        <strong>Offline Capable</strong>
+                        <span>PWA cache ready</span>
+                    </div>
+                </div>
+                <div class="stat-card" style="background: var(--surface-glass); backdrop-filter: blur(16px); border: 1px solid var(--glass-border); padding: 1.25rem; border-radius: var(--radius-lg);">
+                    <span class="stat-icon" style="font-size: 1.6rem;">🛠️</span>
+                    <div class="stat-info">
+                        <strong>75+ Utilities</strong>
+                        <span>Everything in one hub</span>
                     </div>
                 </div>
             </div>
@@ -58,4 +72,3 @@ export const renderHero = (container) => {
 
     container.appendChild(heroSection);
 };
-

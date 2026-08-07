@@ -10,7 +10,7 @@ export const renderContentHubPage = (container) => {
     }
 
     container.innerHTML = `
-        <div class="content-hub-container" style="max-width: var(--max-width); margin: 0 auto; padding: 2rem 1.5rem; animation: fadeIn 0.3s ease-out;">
+        <div class="content-hub-container" style="max-width: var(--max-width, 1400px); margin: 0 auto; padding: 2rem 1.5rem; animation: fadeIn 0.3s ease-out;">
             <!-- Breadcrumbs -->
             <nav class="breadcrumb" style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem; font-weight: 500;">
                 <a href="/">Home</a> &gt; 
