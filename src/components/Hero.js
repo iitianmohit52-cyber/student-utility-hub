@@ -14,9 +14,9 @@ export const renderHero = (container) => {
         <div class="hero-content">
             <span class="hero-badge">100% Client-Side Processing</span>
             <h2>Your Ultimate Collection of <span class="gradient-text">Free Online Tools</span></h2>
-            <p>Access a suite of 20+ powerful online tools for images, audio, video, calculations, and text processing. Fast, free, and secure.</p>
+            <p>Access a suite of 50+ powerful online tools for PDF, images, developer, calculations, and text processing. Fast, free, and secure.</p>
             <div class="hero-cta">
-                <button class="primary-btn" onclick="document.querySelector('.tool-grid').scrollIntoView({behavior: 'smooth'})">Explore Tools</button>
+                <button class="primary-btn" id="heroExploreBtn" aria-label="Explore tools list" onclick="document.querySelector('.tool-grid')?.scrollIntoView({behavior: 'smooth'})">🚀 Explore All 50+ Tools</button>
             </div>
             
             <div class="hero-stats">
@@ -37,16 +37,16 @@ export const renderHero = (container) => {
                 <div class="stat-card">
                     <span class="stat-icon">🛠️</span>
                     <div class="stat-info">
-                        <strong>20+ Utilities</strong>
+                        <strong>50+ Utilities</strong>
                         <span>Everything you need in one place</span>
                     </div>
                 </div>
             </div>
         </div>
         
-        <div class="category-filters">
+        <div class="category-filters" id="category-filters" role="tablist" aria-label="Tool Categories">
             ${categories.map(cat => `
-                <button class="filter-btn ${cat.id === 'all' ? 'active' : ''}" data-category="${cat.id}">
+                <button class="filter-btn ${cat.id === 'all' ? 'active' : ''}" data-category="${cat.id}" role="tab" aria-selected="${cat.id === 'all' ? 'true' : 'false'}" aria-label="Filter tools by ${cat.name}">
                     ${cat.name}
                 </button>
             `).join('')}
@@ -55,3 +55,4 @@ export const renderHero = (container) => {
 
     container.appendChild(heroSection);
 };
+

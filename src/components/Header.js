@@ -13,7 +13,7 @@ export const renderHeader = () => {
             </div>
             
             <div class="mobile-header-controls">
-                <button type="button" class="mobile-search-icon-btn" id="mobileHeaderSearchBtn" aria-label="Open search in menu">🔍</button>
+                <button type="button" class="mobile-search-icon-btn" id="mobileHeaderSearchBtn" aria-label="Open search modal">🔍</button>
                 <div class="hamburger-menu" id="mobileMenuBtn" role="button" tabindex="0" aria-expanded="false" aria-label="Open navigation menu" aria-controls="navMenu">
                     <span></span><span></span><span></span>
                 </div>
@@ -29,29 +29,29 @@ export const renderHeader = () => {
                 <!-- Drawer Search Bar -->
                 <div class="drawer-search-container">
                     <span class="drawer-search-icon">🔍</span>
-                    <input type="text" id="drawerSearchInput" placeholder="Search 20+ free tools..." aria-label="Search tools">
+                    <input type="text" id="drawerSearchInput" placeholder="Search 50+ free tools..." aria-label="Search tools in drawer">
                 </div>
 
                 <!-- Desktop / Main Search Bar -->
                 <div class="search-container desktop-search-only">
                     <span class="search-icon">🔍</span>
-                    <input type="text" id="globalSearch" placeholder="Search (Ctrl + K)" accesskey="k">
+                    <input type="text" id="globalSearch" placeholder="Search (Ctrl + K)" accesskey="k" aria-label="Global tool search">
                     <span class="search-shortcut">Ctrl K</span>
                 </div>
 
                 <!-- Drawer Navigation Items -->
                 <nav class="main-nav">
-                    <a href="#" class="nav-link drawer-item"><span class="item-icon">🏠</span> Home</a>
-                    <a href="#article-image-tools" class="nav-link drawer-item"><span class="item-icon">🛠</span> About Tools</a>
-                    <a href="#popular-tools" class="nav-link drawer-item" id="popularToolsLink"><span class="item-icon">⭐</span> Popular Tools</a>
-                    <a href="#category-filters" class="nav-link drawer-item" id="categoriesLink"><span class="item-icon">📚</span> Categories</a>
-                    <a href="#footer" class="nav-link drawer-item" id="contactLink"><span class="item-icon">📞</span> Contact</a>
+                    <a href="/" class="nav-link drawer-item"><span class="item-icon">🏠</span> Home</a>
+                    <a href="/pdf-tools" class="nav-link drawer-item"><span class="item-icon">📄</span> PDF Tools</a>
+                    <a href="/image-tools" class="nav-link drawer-item"><span class="item-icon">🖼️</span> Image Tools</a>
+                    <a href="/developer-tools" class="nav-link drawer-item"><span class="item-icon">💻</span> Dev Tools</a>
+                    <a href="/calculators" class="nav-link drawer-item"><span class="item-icon">🧮</span> Calculators</a>
                 </nav>
 
                 <!-- iOS-Style Dark Mode Toggle -->
                 <div class="ios-theme-container">
                     <span class="ios-theme-label" id="themeLabel">🌙 Dark Mode</span>
-                    <label class="ios-toggle-wrapper">
+                    <label class="ios-toggle-wrapper" aria-label="Toggle Theme">
                         <input type="checkbox" id="iosThemeToggle" aria-label="Toggle dark mode">
                         <span class="ios-toggle-track">
                             <span class="ios-toggle-knob"></span>
@@ -61,13 +61,13 @@ export const renderHeader = () => {
 
                 <!-- Explore CTA Button -->
                 <div class="drawer-cta-container">
-                    <a href="#tool-grid-section" class="drawer-cta-btn" id="exploreToolsBtn">🚀 Explore All Tools</a>
+                    <a href="/" class="drawer-cta-btn" id="exploreToolsBtn">🚀 Explore All 75+ Tools</a>
                 </div>
 
                 <!-- Drawer Footer -->
                 <div class="drawer-footer">
                     <div class="drawer-footer-brand">🚀 Student Utility Hub</div>
-                    <div class="drawer-footer-tagline">20+ Free Client-Side Online Tools</div>
+                    <div class="drawer-footer-tagline">50+ Free Client-Side Online Tools</div>
                     <div class="drawer-footer-links">
                         <a href="#article-image-tools">Privacy</a> • <a href="#article-image-tools">Terms</a>
                     </div>
@@ -78,7 +78,31 @@ export const renderHeader = () => {
                 <div id="themeToggleContainer" class="desktop-theme-only"></div>
             </div>
         </div>
+        
+        <!-- Backdrop Overlays -->
         <div class="mobile-nav-overlay" id="mobileNavOverlay" aria-hidden="true"></div>
+
+        <!-- Global Dedicated Mobile Search Overlay -->
+        <div class="mobile-search-overlay" id="mobileSearchOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Search tools">
+            <div class="mobile-search-box-wrapper">
+                <div class="mobile-search-box">
+                    <span class="mobile-search-box-icon">🔍</span>
+                    <input type="text" id="mobileSearchBoxInput" placeholder="Search 50+ free tools..." aria-label="Search tools input">
+                    <button type="button" class="clear-search-btn" id="clearMobileSearchBtn" aria-label="Clear search" style="display:none;">✕</button>
+                    <button type="button" class="close-search-btn" id="closeMobileSearchBtn">Cancel</button>
+                </div>
+                <div class="search-suggestions">
+                    <span class="suggestion-label">Popular Searches</span>
+                    <div class="suggestion-pills">
+                        <button type="button" class="suggestion-pill" data-query="PDF">📄 PDF Merger</button>
+                        <button type="button" class="suggestion-pill" data-query="Image">🖼️ Image Converter</button>
+                        <button type="button" class="suggestion-pill" data-query="CGPA">🎓 CGPA Calculator</button>
+                        <button type="button" class="suggestion-pill" data-query="EMI">📊 EMI Calculator</button>
+                        <button type="button" class="suggestion-pill" data-query="Password">🔒 Password Generator</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     `;
 
     // References
@@ -91,7 +115,27 @@ export const renderHeader = () => {
     const overlay = header.querySelector('#mobileNavOverlay');
     const iosThemeToggle = header.querySelector('#iosThemeToggle');
     const themeLabel = header.querySelector('#themeLabel');
-    let isPushedState = false;
+
+    // Mobile Search Overlay References
+    const mobileSearchOverlay = header.querySelector('#mobileSearchOverlay');
+    const mobileSearchBoxInput = header.querySelector('#mobileSearchBoxInput');
+    const clearMobileSearchBtn = header.querySelector('#clearMobileSearchBtn');
+    const closeMobileSearchBtn = header.querySelector('#closeMobileSearchBtn');
+
+    let isDrawerPushedState = false;
+    let isSearchPushedState = false;
+
+    // Suggestion Pills Click Listeners
+    header.querySelectorAll('.suggestion-pill').forEach(pill => {
+        pill.addEventListener('click', () => {
+            const query = pill.getAttribute('data-query');
+            syncSearch(query);
+            closeSearchOverlay();
+            const gridEl = document.querySelector('.tool-grid');
+            if (gridEl) gridEl.scrollIntoView({ behavior: 'smooth' });
+        });
+    });
+
 
     // Theme Management Logic (Preserves existing theme attributes)
     const currentTheme = safeStorage.getItem('theme', 'dark');
@@ -112,22 +156,87 @@ export const renderHeader = () => {
         updateTheme(newTheme);
     });
 
-    // Keyboard shortcut (Ctrl + K)
+    // Sync Live Search between inputs
+    const syncSearch = (val) => {
+        if (searchInput) searchInput.value = val;
+        if (drawerSearchInput) drawerSearchInput.value = val;
+        if (mobileSearchBoxInput) mobileSearchBoxInput.value = val;
+        
+        if (clearMobileSearchBtn) {
+            clearMobileSearchBtn.style.display = val ? 'flex' : 'none';
+        }
+        
+        if (searchInput) {
+            searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+    };
+
+    drawerSearchInput.addEventListener('input', (e) => syncSearch(e.target.value));
+    mobileSearchBoxInput.addEventListener('input', (e) => syncSearch(e.target.value));
+    
+    clearMobileSearchBtn.addEventListener('click', () => {
+        syncSearch('');
+        mobileSearchBoxInput.focus();
+    });
+
+    // Mobile Search Overlay Functions
+    const openSearchOverlay = () => {
+        if (mobileSearchOverlay.classList.contains('active')) return;
+        
+        // Close drawer if open
+        closeMenu();
+
+        mobileSearchOverlay.classList.add('active');
+        mobileSearchOverlay.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+
+        if (!isSearchPushedState) {
+            window.history.pushState({ searchOpen: true }, '');
+            isSearchPushedState = true;
+        }
+
+        setTimeout(() => mobileSearchBoxInput.focus(), 100);
+    };
+
+    const closeSearchOverlay = (fromPopState = false) => {
+        if (!mobileSearchOverlay.classList.contains('active')) return;
+
+        mobileSearchOverlay.classList.remove('active');
+        mobileSearchOverlay.setAttribute('aria-hidden', 'true');
+        
+        if (!navMenu.classList.contains('active')) {
+            document.body.style.overflow = '';
+        }
+
+        if (isSearchPushedState && !fromPopState) {
+            isSearchPushedState = false;
+            if (window.history.state?.searchOpen) {
+                window.history.back();
+            }
+        }
+        if (fromPopState) {
+            isSearchPushedState = false;
+        }
+
+        setTimeout(() => mobileHeaderSearchBtn.focus(), 50);
+    };
+
+    mobileHeaderSearchBtn.addEventListener('click', openSearchOverlay);
+    closeMobileSearchBtn.addEventListener('click', () => closeSearchOverlay());
+    mobileSearchOverlay.addEventListener('click', (e) => {
+        if (e.target === mobileSearchOverlay) closeSearchOverlay();
+    });
+
+    // Global Keyboard Shortcut (Ctrl + K)
     document.addEventListener('keydown', (e) => {
-        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
             e.preventDefault();
             if (window.innerWidth <= 768) {
-                openMenu(true);
-            } else {
+                openSearchOverlay();
+            } else if (searchInput) {
                 searchInput.focus();
             }
         }
-    });
-
-    // Sync Live Search between Drawer & Main Search Engine
-    drawerSearchInput.addEventListener('input', (e) => {
-        searchInput.value = e.target.value;
-        searchInput.dispatchEvent(new Event('input', { bubbles: true }));
     });
 
     // Drawer Open / Close Functions
@@ -144,24 +253,28 @@ export const renderHeader = () => {
         overlay.classList.remove('active');
         overlay.setAttribute('aria-hidden', 'true');
         
-        document.body.style.overflow = '';
+        if (!mobileSearchOverlay.classList.contains('active')) {
+            document.body.style.overflow = '';
+        }
 
-        if (isPushedState && !fromPopState) {
-            isPushedState = false;
+        if (isDrawerPushedState && !fromPopState) {
+            isDrawerPushedState = false;
             if (window.history.state?.drawerOpen) {
                 window.history.back();
             }
         }
         if (fromPopState) {
-            isPushedState = false;
+            isDrawerPushedState = false;
         }
 
-        // Return focus to hamburger button
         setTimeout(() => mobileBtn.focus(), 50);
     };
 
     const openMenu = (focusSearch = false) => {
         if (navMenu.classList.contains('active')) return;
+
+        // Close search overlay if open
+        closeSearchOverlay();
 
         mobileBtn.classList.add('active');
         mobileBtn.setAttribute('aria-expanded', 'true');
@@ -175,14 +288,13 @@ export const renderHeader = () => {
         
         document.body.style.overflow = 'hidden';
 
-        if (!isPushedState) {
+        if (!isDrawerPushedState) {
             window.history.pushState({ drawerOpen: true }, '');
-            isPushedState = true;
+            isDrawerPushedState = true;
         }
 
-        // Focus trap & auto-focus logic
         setTimeout(() => {
-            if (focusSearch) {
+            if (focusSearch && drawerSearchInput) {
                 drawerSearchInput.focus();
             } else {
                 drawerCloseBtn.focus();
@@ -200,48 +312,44 @@ export const renderHeader = () => {
 
     // Event Listeners
     mobileBtn.addEventListener('click', toggleMenu);
-    mobileHeaderSearchBtn.addEventListener('click', () => openMenu(true));
     drawerCloseBtn.addEventListener('click', () => closeMenu());
     overlay.addEventListener('click', () => closeMenu());
 
     // Navigation Links Click Handler
     header.querySelectorAll('.nav-link, .drawer-cta-btn').forEach(link => {
-        link.addEventListener('click', (e) => {
-            const targetId = link.getAttribute('href');
+        link.addEventListener('click', () => {
             closeMenu();
-            
-            // Custom scroll logic for categories / popular
-            if (targetId === '#category-filters') {
-                const categoryEl = document.querySelector('.category-filters');
-                if (categoryEl) categoryEl.scrollIntoView({ behavior: 'smooth' });
-            } else if (targetId === '#popular-tools') {
-                const popularBtn = document.querySelector('.filter-btn[data-category="popular"]');
-                if (popularBtn) popularBtn.click();
-            }
         });
     });
 
     // Keyboard Accessibility: Escape key and Focus Trap
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && navMenu.classList.contains('active')) {
-            closeMenu();
+        if (e.key === 'Escape') {
+            if (navMenu.classList.contains('active')) {
+                closeMenu();
+            }
+            if (mobileSearchOverlay.classList.contains('active')) {
+                closeSearchOverlay();
+            }
         }
 
         // Focus Trap inside drawer
         if (navMenu.classList.contains('active') && e.key === 'Tab') {
             const focusableEls = navMenu.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-            const firstFocusable = focusableEls[0];
-            const lastFocusable = focusableEls[focusableEls.length - 1];
+            if (focusableEls.length > 0) {
+                const firstFocusable = focusableEls[0];
+                const lastFocusable = focusableEls[focusableEls.length - 1];
 
-            if (e.shiftKey) {
-                if (document.activeElement === firstFocusable) {
-                    e.preventDefault();
-                    lastFocusable.focus();
-                }
-            } else {
-                if (document.activeElement === lastFocusable) {
-                    e.preventDefault();
-                    firstFocusable.focus();
+                if (e.shiftKey) {
+                    if (document.activeElement === firstFocusable) {
+                        e.preventDefault();
+                        lastFocusable.focus();
+                    }
+                } else {
+                    if (document.activeElement === lastFocusable) {
+                        e.preventDefault();
+                        firstFocusable.focus();
+                    }
                 }
             }
         }
@@ -252,7 +360,11 @@ export const renderHeader = () => {
         if (navMenu.classList.contains('active')) {
             closeMenu(true);
         }
+        if (mobileSearchOverlay.classList.contains('active')) {
+            closeSearchOverlay(true);
+        }
     });
 
     return header;
 };
+

@@ -1,16 +1,18 @@
 import './styles/variables.css';
 import './styles/main.css';
 
-import { tools } from './tools/toolRegistry.js';
+import { tools, categories } from './tools/toolRegistry.js';
 import { renderHeader } from './components/Header.js';
 import { renderHero } from './components/Hero.js';
-import { renderModal } from './components/Modal.js';
 import { renderFooter } from './components/Footer.js';
 import { createToolCard } from './utils/dom.js';
 import { safeStorage } from './utils/safeStorage.js';
 import { initErrorHandling } from './utils/errorHandler.js';
 import { Analytics, AnalyticsEvents } from './analytics/analytics.js';
 import { updateSEO } from './seo.js';
+import { initRouter, navigate } from './router.js';
+import { renderToolPage } from './components/LandingPage.js';
+import { renderCategoryPage } from './components/CategoryPage.js';
 
 // Update SEO dynamically based on central config
 updateSEO();
@@ -22,7 +24,7 @@ initErrorHandling();
 Analytics.init();
 Analytics.pageView();
 
-// PWA Service Worker Registration & Update Flow
+// PWA Service Worker Registration
 let newWorker;
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -76,105 +78,70 @@ function showUpdateBanner() {
     });
 }
 
-// Install PWA Flow
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    
-    if (safeStorage.getItem('pwa-dismissed') === 'true') {
-        return;
-    }
-    
-    showInstallBanner();
-});
-
-function showInstallBanner() {
-    if (document.querySelector('.install-banner')) return;
-    
-    const banner = document.createElement('div');
-    banner.className = 'pwa-banner install-banner';
-    banner.innerHTML = `
-        <div class="banner-content">
-            <strong>Install App</strong>
-            <span>Get the Student Utility Hub for offline use.</span>
-        </div>
-        <div class="banner-actions">
-            <button id="pwa-install-btn" class="btn-primary">Install</button>
-            <button id="pwa-dismiss-install" class="btn-secondary">Not Now</button>
-        </div>
-    `;
-    document.body.appendChild(banner);
-
-    document.getElementById('pwa-install-btn').addEventListener('click', async () => {
-        banner.remove();
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') {
-                Analytics.event(AnalyticsEvents.PWA_INSTALL_ACCEPTED);
-                console.log('User accepted the install prompt');
-            }
-            deferredPrompt = null;
-        }
-    });
-
-    document.getElementById('pwa-dismiss-install').addEventListener('click', () => {
-        banner.remove();
-        safeStorage.setItem('pwa-dismissed', 'true');
-        Analytics.event(AnalyticsEvents.PWA_INSTALL_DISMISSED);
-    });
-}
-
-window.addEventListener('appinstalled', () => {
-    const banner = document.querySelector('.install-banner');
-    if (banner) banner.remove();
-    deferredPrompt = null;
-    
-    // Show success toast
-    const toast = document.createElement('div');
-    toast.className = 'pwa-toast success-toast';
-    toast.textContent = 'App installed successfully!';
-    document.body.appendChild(toast);
-    
-    setTimeout(() => {
-        toast.style.opacity = '0';
-        setTimeout(() => toast.remove(), 500);
-    }, 3000);
-});
-
 document.addEventListener('DOMContentLoaded', () => {
     const app = document.getElementById('app');
-    app.innerHTML = ''; // Clear prerendered SEO fallback HTML
+    app.innerHTML = ''; // Clear prerendered HTML
     
-    // 1. Render Header
+    // 1. Render static Header
     const header = renderHeader();
     app.appendChild(header);
 
-    // 2. Main content area with top ad
-    const main = document.createElement('main');
-    
-    const topAd = document.createElement('div');
-    topAd.className = 'ad-placeholder top-ad';
-    topAd.innerHTML = '<p>Top Banner Ad (728x90 or Responsive)</p>';
-    main.appendChild(topAd);
-    
-    app.appendChild(main);
+    // 2. Main content wrapper (the Router view)
+    const mainContent = document.createElement('main');
+    mainContent.id = 'router-view';
+    app.appendChild(mainContent);
 
-    // 3. Render Hero Section
-    renderHero(main);
+    // 3. Render static Footer
+    const footer = renderFooter();
+    app.appendChild(footer);
 
-    const afterHeroAd = document.createElement('div');
-    afterHeroAd.className = 'ad-placeholder inline-ad';
-    afterHeroAd.innerHTML = '<p>After Hero Ad (Responsive)</p>';
-    main.appendChild(afterHeroAd);
+    // 4. Initialize History Router
+    initRouter((path) => {
+        // Track analytics page view on route transition
+        Analytics.pageView(path);
+        
+        if (path === '/' || path === '/index.html') {
+            renderHomePage(mainContent);
+        } else if (path.startsWith('/tools/')) {
+            const slug = path.split('/tools/')[1];
+            const tool = tools.find(t => t.slug === slug || t.id === slug);
+            if (tool) {
+                renderToolPage(mainContent, tool);
+            } else {
+                render404(mainContent);
+            }
+        } else if (path.endsWith('-tools') || path === '/calculators') {
+            const categoryId = path.replace('-tools', '').replace('/', '');
+            const category = categories.find(c => c.id === categoryId);
+            if (category) {
+                renderCategoryPage(mainContent, category);
+            } else {
+                render404(mainContent);
+            }
+        } else {
+            render404(mainContent);
+        }
+    });
+});
 
-    // 4. Render Tools Grid
-    const toolGrid = document.createElement('div');
-    toolGrid.className = 'tool-grid';
-    main.appendChild(toolGrid);
-    
-    // Global function to render skeleton
+// Render Home Page Layout
+const renderHomePage = (container) => {
+    container.innerHTML = `
+        <div class="ad-placeholder top-ad" style="margin-top:1rem;">
+            <p>Top Banner Ad (728x90 or Responsive)</p>
+        </div>
+        <div id="hero-section"></div>
+        <div class="ad-placeholder inline-ad" style="margin: 1.5rem 0;">
+            <p>After Hero Ad (Responsive)</p>
+        </div>
+        <div class="tool-grid"></div>
+    `;
+
+    const heroSection = container.querySelector('#hero-section');
+    renderHero(heroSection);
+
+    const toolGrid = container.querySelector('.tool-grid');
+
     const renderSkeleton = () => {
         toolGrid.innerHTML = '';
         for (let i = 0; i < 8; i++) {
@@ -197,18 +164,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const filteredTools = tools.filter(tool => {
             const matchesCategory = categoryFilter === 'all' || tool.category === categoryFilter;
-            const matchesSearch = tool.name.toLowerCase().includes(lowerQuery) || tool.description.toLowerCase().includes(lowerQuery);
+            const matchesSearch = tool.name.toLowerCase().includes(lowerQuery) || 
+                                  tool.description.toLowerCase().includes(lowerQuery) ||
+                                  (tool.keywords && tool.keywords.some(k => k.toLowerCase().includes(lowerQuery)));
             return matchesCategory && matchesSearch;
         });
 
-        // Simulate tiny network delay for skeleton showcase if not searching instantly
         const isInitialRender = toolGrid.children.length === 0 || toolGrid.querySelector('.skeleton-card');
         
         if (isInitialRender) {
             renderSkeleton();
             setTimeout(() => {
                 populateGrid();
-            }, 400); // 400ms premium skeleton delay
+            }, 300); // Premium skeleton delay
         } else {
             populateGrid();
         }
@@ -217,19 +185,38 @@ document.addEventListener('DOMContentLoaded', () => {
             toolGrid.innerHTML = '';
             
             if (filteredTools.length === 0) {
-                toolGrid.innerHTML = '<div class="no-results"><span style="font-size:3rem">🔍</span><p>No tools found matching your search.</p></div>';
+                toolGrid.innerHTML = `
+                    <div class="no-results">
+                        <span class="no-results-icon">🔍</span>
+                        <h3>No matching tools found</h3>
+                        <p>We couldn't find any tools matching your query. Try resetting your search or exploring all categories.</p>
+                        <button type="button" class="primary-btn reset-search-btn" id="resetSearchBtn" style="min-height:44px; padding:0.6rem 1.4rem; font-size:0.95rem;">Clear Search & Show All Tools</button>
+                    </div>
+                `;
+                const resetBtn = toolGrid.querySelector('#resetSearchBtn');
+                if (resetBtn) {
+                    resetBtn.addEventListener('click', () => {
+                        const searchInput = document.getElementById('globalSearch');
+                        if (searchInput) searchInput.value = '';
+                        renderTools('all', '');
+                    });
+                }
                 return;
             }
 
             filteredTools.forEach((tool, index) => {
                 const card = createToolCard(tool);
-                // Staggered entrance animation
-                card.style.animation = `fadeInUp 0.5s ease forwards ${index * 0.05}s`;
+                card.style.animation = `fadeInUp 0.5s ease forwards ${index * 0.04}s`;
                 card.style.opacity = '0';
                 
-                card.querySelector('.tool-button').addEventListener('click', () => {
-                    window.openModal(tool);
-                });
+                // Intercept tool link click for SPA transitions
+                const btn = card.querySelector('.tool-button');
+                if (btn) {
+                    btn.onclick = (e) => {
+                        e.preventDefault();
+                        navigate(`/tools/${tool.slug}`);
+                    };
+                }
                 
                 toolGrid.appendChild(card);
             });
@@ -238,19 +225,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     renderTools();
 
-    // 5. Setup Event Listeners for Filters & Search
-    document.querySelector('.category-filters').addEventListener('click', (e) => {
-        if (e.target.classList.contains('filter-btn')) {
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            e.target.classList.add('active');
-            
-            const category = e.target.getAttribute('data-category');
-            const searchInput = document.getElementById('globalSearch');
-            renderTools(category, searchInput.value);
-            
-            Analytics.event(AnalyticsEvents.CATEGORY_FILTER, { category });
-        }
-    });
+    // Setup filter categories click events
+    const filterContainer = container.querySelector('.category-filters');
+    if (filterContainer) {
+        filterContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('filter-btn')) {
+                document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
+                
+                const category = e.target.getAttribute('data-category');
+                const searchInput = document.getElementById('globalSearch');
+                renderTools(category, searchInput ? searchInput.value : '');
+                
+                Analytics.event(AnalyticsEvents.CATEGORY_FILTER, { category });
+            }
+        });
+    }
 
     const debounce = (func, delay) => {
         let timeoutId;
@@ -263,20 +253,31 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const searchInput = document.getElementById('globalSearch');
-    searchInput.addEventListener('input', debounce((e) => {
-        const activeCategory = document.querySelector('.filter-btn.active').getAttribute('data-category');
-        renderTools(activeCategory, e.target.value);
-        
-        if (e.target.value.trim().length > 0) {
-            Analytics.event(AnalyticsEvents.SEARCH, { query: e.target.value.trim() });
-        }
-    }, 500));
+    if (searchInput) {
+        searchInput.addEventListener('input', debounce((e) => {
+            const activeFilter = document.querySelector('.filter-btn.active');
+            const activeCategory = activeFilter ? activeFilter.getAttribute('data-category') : 'all';
+            renderTools(activeCategory, e.target.value);
+            
+            if (e.target.value.trim().length > 0) {
+                Analytics.event(AnalyticsEvents.SEARCH, { query: e.target.value.trim() });
+            }
+        }, 300));
+    }
+};
 
-    // 6. Render Modal System
-    const modal = renderModal();
-    app.appendChild(modal);
-    
-    // 7. Render Footer
-    const footer = renderFooter();
-    app.appendChild(footer);
-});
+// Render 404 Page View
+const render404 = (container) => {
+    container.innerHTML = `
+        <div style="max-width: var(--max-width); margin: 0 auto; padding: 4rem 1.5rem; text-align: center;">
+            <div style="font-size: 5rem; margin-bottom: 1rem;">🛰️</div>
+            <h1 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; color: var(--text-primary);">404 - Page Not Found</h1>
+            <p style="font-size: 1.15rem; color: var(--text-secondary); margin-bottom: 2rem;">
+                The tool or category you are looking for does not exist or has been moved.
+            </p>
+            <a href="/" class="primary-button" style="text-decoration:none; display:inline-flex; align-items:center; gap:0.5rem; padding:0.75rem 1.5rem;">
+                🏠 Back to Home Page
+            </a>
+        </div>
+    `;
+};

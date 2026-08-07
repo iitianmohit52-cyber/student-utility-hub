@@ -39,10 +39,10 @@ export const createToolCard = (tool) => {
             <p>${tool.description}</p>
         </div>
         <div class="card-footer">
-            <button class="tool-button" data-tool="${tool.id}">
+            <a class="tool-button" href="/tools/${tool.slug}" data-tool="${tool.id}" style="text-decoration: none;">
                 <span>Open Tool</span>
                 <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-            </button>
+            </a>
         </div>
     `;
     

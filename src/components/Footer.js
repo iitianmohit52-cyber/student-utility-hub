@@ -17,30 +17,30 @@ export const renderFooter = () => {
             
             <div class="footer-links-grid">
                 <div class="footer-column">
-                    <h4>Top Calculators</h4>
+                    <h4>PDF & Dev Tools</h4>
                     <ul>
-                        <li><a href="#emiCalculator" onclick="window.location.reload()">EMI Calculator</a></li>
-                        <li><a href="#sipCalculator" onclick="window.location.reload()">SIP Calculator</a></li>
-                        <li><a href="#ageCalculator" onclick="window.location.reload()">Age Calculator</a></li>
-                        <li><a href="#bmiCalculator" onclick="window.location.reload()">BMI Calculator</a></li>
+                        <li><a href="#pdfMerge">PDF Merger</a></li>
+                        <li><a href="#pdfSplit">PDF Splitter</a></li>
+                        <li><a href="#jwtDecoder">JWT Decoder</a></li>
+                        <li><a href="#htmlFormatter">HTML Formatter</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
-                    <h4>Media Tools</h4>
+                    <h4>Calculators & Student</h4>
                     <ul>
-                        <li><a href="#imageCompressor" onclick="window.location.reload()">Image Compressor</a></li>
-                        <li><a href="#imageConverter" onclick="window.location.reload()">Image Converter</a></li>
-                        <li><a href="#audioTrimmer" onclick="window.location.reload()">Audio Trimmer</a></li>
-                        <li><a href="#videoConverter" onclick="window.location.reload()">Video Converter</a></li>
+                        <li><a href="#cgpaCalculator">CGPA Calculator</a></li>
+                        <li><a href="#emiCalculator">EMI Calculator</a></li>
+                        <li><a href="#sipCalculator">SIP Calculator</a></li>
+                        <li><a href="#pomodoroTimer">Pomodoro Timer</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
                     <h4>Legal & Trust</h4>
                     <ul>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms of Service</a></li>
-                        <li><a href="#">Disclaimer</a></li>
-                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#article-image-tools">Privacy Policy</a></li>
+                        <li><a href="#article-image-tools">Terms of Service</a></li>
+                        <li><a href="#article-image-tools">Disclaimer</a></li>
+                        <li><a href="#footer">Contact Us</a></li>
                     </ul>
                 </div>
             </div>

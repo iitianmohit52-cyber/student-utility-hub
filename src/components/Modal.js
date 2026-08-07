@@ -8,17 +8,20 @@ export const renderModal = () => {
     const modal = document.createElement('div');
     modal.className = 'modal';
     modal.id = 'toolModal';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-labelledby', 'modalTitle');
     
     modal.innerHTML = `
         <div class="modal-content">
-            <span class="close-button">&times;</span>
+            <button type="button" class="close-button" aria-label="Close modal">&times;</button>
             <h2 id="modalTitle">Tool Title</h2>
             <div id="modalBody" class="modal-body">
                 <!-- Tool-specific content will be injected here -->
             </div>
             <center>
-                <div class="ad-placeholder" style="margin-top: 20px;">
-                    <p>Ad Placeholder (728x90)</p>
+                <div class="ad-placeholder inline-ad" style="margin-top: 20px;">
+                    <p>Ad Placeholder (Responsive)</p>
                 </div>
             </center>
             <div id="modalAlert" class="modal-alert" style="display:none;"></div>
@@ -31,6 +34,9 @@ export const renderModal = () => {
     const modalAlert = modal.querySelector('#modalAlert');
 
     let currentToolId = null;
+
+    let originalTitle = '';
+    let originalMetaDesc = '';
 
     const closeModal = () => {
         if (currentToolId) {
@@ -46,18 +52,30 @@ export const renderModal = () => {
         const oldSchema = document.getElementById('dynamic-breadcrumb-schema');
         if (oldSchema) oldSchema.remove();
 
+        // Restore SEO
+        if (originalTitle) document.title = originalTitle;
+        const metaDesc = document.querySelector('meta[name="description"]');
+        if (metaDesc && originalMetaDesc) metaDesc.setAttribute('content', originalMetaDesc);
+
         if (window.currentToolCleanup) {
             window.currentToolCleanup();
             window.currentToolCleanup = null;
         }
     };
 
-    closeButton.onclick = closeModal;
-    window.onclick = (event) => {
+    closeButton.addEventListener('click', closeModal);
+    modal.addEventListener('click', (event) => {
         if (event.target === modal) {
             closeModal();
         }
-    };
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.style.display === 'block') {
+            closeModal();
+        }
+    });
+
 
     // SEO Procedural Content Generator
     const generateSEOContent = (tool) => {
@@ -169,6 +187,16 @@ export const renderModal = () => {
         document.body.style.overflow = 'hidden'; // prevent background scrolling
         
         currentToolId = tool.id;
+        
+        // Save and Update Document SEO
+        originalTitle = document.title;
+        const metaDesc = document.querySelector('meta[name="description"]');
+        originalMetaDesc = metaDesc ? metaDesc.getAttribute('content') : '';
+        document.title = tool.seoTitle || `${tool.name} - Free Online Tool | Student Utility Hub`;
+        if (metaDesc) {
+            metaDesc.setAttribute('content', tool.seoDescription || tool.description);
+        }
+
         Analytics.tool(AnalyticsEvents.TOOL_OPEN, tool.id, { category: tool.category });
         
         const toolFunction = await loadTool(tool.id);
