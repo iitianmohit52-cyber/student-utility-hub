@@ -30,7 +30,7 @@ export const renderArticlePage = (container, article) => {
     `).join('');
 
     container.innerHTML = `
-        <div class="article-page-container" style="max-width: var(--max-width, 1400px); margin: 0 auto; padding: 2rem 1.5rem; animation: fadeIn 0.3s ease-out;">
+        <div class="article-page-container">
             <!-- Breadcrumbs -->
             <nav class="breadcrumb" style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem; font-weight: 500;">
                 <a href="/">Home</a> &gt; 
@@ -114,7 +114,7 @@ export const renderArticlePage = (container, article) => {
                     <!-- Interactive Tool Launcher CTA Card (Cross-linking Engine) -->
                     ${relatedTool ? `
                         <div class="tool-launcher-card" style="background: var(--surface-elevated); border: 2px solid var(--primary-color); border-radius: var(--radius-lg); padding: 2rem; text-align: center; margin: 3rem 0; box-shadow: var(--shadow-sm);">
-                            <span style="font-size: 3rem; display: block; margin-bottom: 0.75rem;">🚀</span>
+                            <span style="font-size: 3rem; display: block; margin-bottom: 0.75rem;">${relatedTool.icon}</span>
                             <h3 style="margin: 0 0 0.5rem 0; font-size: 1.4rem; color: var(--text-primary);">Launch the Live ${relatedTool.name}</h3>
                             <p style="margin: 0 0 1.5rem 0; font-size: 1rem; color: var(--text-secondary); max-width: 600px; margin-left: auto; margin-right: auto;">
                                 Test your files or calculate rates instantly. Runs 100% locally in your browser sandbox with zero uploads.

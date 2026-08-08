@@ -59,7 +59,7 @@ export const renderCategoryPage = (container, category) => {
     }
 
     container.innerHTML = `
-        <div class="category-page-container" style="max-width: var(--max-width, 1400px); margin: 0 auto; padding: 2rem 1.5rem; animation: fadeIn 0.3s ease-out;">
+        <div class="category-page-container">
             <!-- Breadcrumbs -->
             <nav class="breadcrumb" style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem; font-weight: 500;">
                 <a href="/">Home</a> &gt; 
@@ -67,7 +67,7 @@ export const renderCategoryPage = (container, category) => {
             </nav>
 
             <!-- Category Hero -->
-            <header class="category-hero" style="margin-bottom: 3rem; text-align: left; padding: 2.5rem; background: var(--surface-elevated); border-radius: var(--radius-lg); border: 1px solid var(--tool-card-border);">
+            <header class="category-hero" style="margin-bottom: 2rem; text-align: left; padding: 2rem; background: var(--surface-elevated); border-radius: var(--radius-lg); border: 1px solid var(--tool-card-border);">
                 <div style="font-size: 3rem; margin-bottom: 1rem;">${category.icon || '🛠️'}</div>
                 <h1 style="font-size: 2.4rem; margin: 0 0 0.75rem 0; font-weight: 800; color: var(--text-primary);">${catName}</h1>
                 <p style="font-size: 1.15rem; color: var(--text-secondary); margin: 0; max-width: 800px; line-height: 1.6;">
@@ -76,7 +76,7 @@ export const renderCategoryPage = (container, category) => {
             </header>
 
             <!-- EEAT Authority Indicators -->
-            <div style="background: rgba(52, 152, 219, 0.05); border-left: 4px solid var(--primary-color); padding: 1.5rem; border-radius: var(--radius-md); margin-bottom: 3rem;">
+            <div style="background: rgba(52, 152, 219, 0.05); border-left: 4px solid var(--primary-color); padding: 1.5rem; border-radius: var(--radius-md); margin-bottom: 2rem;">
                 <h3 style="margin: 0 0 0.75rem 0; font-size: 1.15rem; color: var(--text-primary);">Why This Category Matters</h3>
                 <p style="margin: 0; font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6;">
                     ${categoryWhyItMatters}
@@ -84,7 +84,7 @@ export const renderCategoryPage = (container, category) => {
             </div>
 
             <!-- Best Use Cases -->
-            <section style="margin-bottom: 3rem;">
+            <section style="margin-bottom: 2.5rem;">
                 <h3 style="font-size: 1.35rem; margin-bottom: 1rem; color: var(--text-primary);">Key Use Cases</h3>
                 <ul style="line-height: 1.8; color: var(--text-secondary); padding-left: 1.5rem;">
                     ${categoryUseCases}
@@ -92,9 +92,9 @@ export const renderCategoryPage = (container, category) => {
             </section>
 
             <!-- Grid of Tools -->
-            <section style="margin-bottom: 4rem;">
+            <section style="margin-bottom: 3rem;">
                 <h2 style="font-size: 1.6rem; margin-bottom: 1.5rem; color: var(--text-primary);">Available Tools in ${catName}</h2>
-                <div class="tool-grid" id="categoryToolsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(285px, 1fr)); gap: 1.5rem;"></div>
+                <div class="tool-grid" id="categoryToolsGrid"></div>
             </section>
 
             <!-- Category FAQS Section -->

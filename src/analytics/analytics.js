@@ -72,8 +72,31 @@ class AnalyticsSystem {
      * Tool Specific Tracking
      */
     tool(action, toolId, extraData = {}) {
-        // e.g. action: TOOL_OPEN, toolId: 'json_formatter'
         this.track(action, { tool_id: toolId, ...extraData });
+        this.updateFunnelMetric(action);
+    }
+
+    /**
+     * Funnel Metric Aggregator (Local anonymous counter for Growth Dashboard)
+     */
+    updateFunnelMetric(eventName) {
+        if (!window.growthAnalytics) {
+            window.growthAnalytics = {
+                toolViews: 0,
+                toolStarts: 0,
+                toolSuccesses: 0,
+                downloads: 0,
+                guideClicks: 0,
+                relatedClicks: 0
+            };
+        }
+
+        if (eventName === AnalyticsEvents.TOOL_VIEW) window.growthAnalytics.toolViews++;
+        if (eventName === AnalyticsEvents.TOOL_START) window.growthAnalytics.toolStarts++;
+        if (eventName === AnalyticsEvents.TOOL_SUCCESS) window.growthAnalytics.toolSuccesses++;
+        if (eventName === AnalyticsEvents.TOOL_DOWNLOAD || eventName === AnalyticsEvents.DOWNLOAD) window.growthAnalytics.downloads++;
+        if (eventName === AnalyticsEvents.GUIDE_CTA_CLICK) window.growthAnalytics.guideClicks++;
+        if (eventName === AnalyticsEvents.RELATED_TOOL_CLICK) window.growthAnalytics.relatedClicks++;
     }
 
     /**
@@ -86,8 +109,9 @@ class AnalyticsSystem {
     /**
      * General Event Shortcut
      */
-    event(name, data) {
+    event(name, data = {}) {
         this.track(name, data);
+        this.updateFunnelMetric(name);
     }
 
     /**
@@ -99,7 +123,7 @@ class AnalyticsSystem {
         const cleanData = { ...data };
         
         // Never send raw passwords, emails, or file contents
-        const sensitiveKeys = ['password', 'email', 'credit_card', 'file_content', 'file', 'content', 'input'];
+        const sensitiveKeys = ['password', 'email', 'credit_card', 'file_content', 'file', 'content', 'input', 'pdf', 'image'];
         for (const key of Object.keys(cleanData)) {
             if (sensitiveKeys.includes(key.toLowerCase())) {
                 cleanData[key] = '[REDACTED]';

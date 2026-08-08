@@ -29,11 +29,18 @@ body {
 }
 
 main {
-    max-width: var(--max-width, 1400px);
+    max-width: var(--max-width, 1440px);
     margin: 0 auto;
     padding: 0 1.5rem;
     position: relative;
     z-index: 1;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    main {
+        padding: 0 1rem;
+    }
 }
 
 /* Animations */
@@ -68,7 +75,7 @@ main {
 /* Header & Navigation (Glassmorphism) */
 .app-header {
     background-color: var(--header-background);
-    padding: 1rem 1.5rem;
+    padding: 0.85rem 1.5rem;
     position: sticky;
     top: 0;
     z-index: 100;
@@ -78,12 +85,19 @@ main {
     transition: all var(--transition-normal);
 }
 
+@media (max-width: 768px) {
+    .app-header {
+        padding: 0.75rem 1rem;
+    }
+}
+
 .header-container {
-    max-width: var(--max-width, 1400px);
+    max-width: var(--max-width, 1440px);
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
 }
 
 .sr-only {
@@ -104,8 +118,10 @@ main {
     gap: 0.5rem;
 }
 
-.logo-icon {
-    font-size: 1.8rem;
+.brand-logo {
+    height: 48px;
+    width: auto;
+    object-fit: contain;
 }
 
 .logo h1 {
@@ -113,6 +129,13 @@ main {
     font-weight: 700;
     color: var(--text-primary);
     letter-spacing: -0.03em;
+    white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+    .logo h1 {
+        display: none;
+    }
 }
 
 .header-actions {
@@ -1551,7 +1574,7 @@ main {
     main { padding: 0 0.8rem; }
     .app-header { padding: 0.8rem 1rem; }
     .logo h1 { font-size: 1.3rem; }
-    .logo-icon { font-size: 1.5rem; }
+    .brand-logo { height: 38px; }
     .hero-content h2 { font-size: 1.6rem; }
     .hero-badge { font-size: 0.75rem; padding: 0.3rem 0.8rem; }
     .modal-content { padding: 1.2rem 0.8rem; }
@@ -1778,17 +1801,26 @@ main {
 
 /* 1. Page Shell Layout */
 .landing-page-container,
-.tool-page-shell {
-    max-width: var(--max-width, 1400px);
+.tool-page-shell,
+.category-page-container,
+.content-hub-container,
+.article-page-container,
+.admin-dashboard-container {
+    max-width: var(--max-width, 1440px);
     margin: 0 auto;
-    padding: 2rem 1.5rem;
+    padding: 1.5rem 0;
+    width: 100%;
     animation: fadeInUp 0.3s ease-out;
 }
 
 @media (max-width: 600px) {
     .landing-page-container,
-    .tool-page-shell {
-        padding: 1rem;
+    .tool-page-shell,
+    .category-page-container,
+    .content-hub-container,
+    .article-page-container,
+    .admin-dashboard-container {
+        padding: 1rem 0;
     }
 }
 
@@ -2456,10 +2488,32 @@ button.secondary-button {
     font-size: 0.95rem;
 }
 
+@media (min-width: 1024px) {
+    .tool-layout.two-column,
+    .workspace-split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        align-items: start;
+    }
+    .tool-layout.two-column .tool-inputs,
+    .workspace-split .tool-inputs {
+        grid-column: 1;
+    }
+    .tool-layout.two-column .result-area,
+    .tool-layout.two-column .result-box,
+    .workspace-split .result-area {
+        grid-column: 2;
+        margin-top: 0;
+    }
+}
+
 @media (max-width: 600px) {
     .live-tool-workspace,
     .tool-workspace-card {
-        padding: 1.25rem;
+        padding: 1.25rem 1rem;
+        margin-bottom: 1.5rem;
+        border-radius: var(--radius-lg);
     }
     .tool-actions button,
     .primary-button,
@@ -2467,6 +2521,18 @@ button.secondary-button {
     .secondary-button,
     .secondary-btn {
         width: 100%;
+    }
+    .eeat-badge-panel,
+    .trust-indicator-grid {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+    .tool-faq-item,
+    .faq-item details {
+        padding: 0.85rem 1rem;
+        margin-bottom: 0.75rem;
     }
 }
 

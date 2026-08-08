@@ -32,18 +32,21 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://student-utility-hub-2ss3.vercel.app/">
     <meta property="og:site_name" content="Student Utility Hub">
+    <meta property="og:image" content="https://student-utility-hub-2ss3.vercel.app/logo.png">
 
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Student Utility Hub - 50+ Free Online Tools">
     <meta name="twitter:description" content="Your one-stop hub for versatile online tools: PDF utilities, converters, calculators, generators, developer tools, and more. Fully responsive and client-side.">
+    <meta name="twitter:image" content="https://student-utility-hub-2ss3.vercel.app/logo.png">
 
     <!-- PWA & App Icons -->
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#238636">
-    <link rel="apple-touch-icon" href="/icon.svg">
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16x16.png">
     <link rel="icon" href="/favicon.ico" sizes="any">
-    
     <!-- Security Headers (CSP, Permissions, Referrer) -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com https://www.clarity.ms; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https://www.google-analytics.com https://www.clarity.ms; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com https://www.clarity.ms; frame-src https://www.googletagmanager.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self';">
     <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -111,8 +114,10 @@
         <header class="app-header">
             <div class="header-container">
                 <div class="logo">
-                    <span class="logo-icon">🚀</span>
-                    <h1>Student Utility Hub<span class="sr-only"> - 20+ Free Online Tools &amp; Calculators</span></h1>
+                    <a href="/" style="display:flex; align-items:center; text-decoration:none; gap:0.5rem;">
+                        <img src="/logo.png" alt="Student Utility Hub Logo" class="brand-logo" />
+                        <h1>Student Utility Hub<span class="sr-only"> - 75+ Free Online Tools</span></h1>
+                    </a>
                 </div>
                 
             <div class="mobile-header-controls">

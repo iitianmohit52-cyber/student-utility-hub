@@ -6,9 +6,13 @@ import { withErrorBoundary } from '../utils/errorHandler.js';
 import { generateSEOHTML, injectJSONLDSchemas } from './SEOContentEngine.js';
 import { navigate } from '../router.js';
 import { addRecentlyUsed, isFavorite, toggleFavorite } from '../utils/userStorage.js';
+import { Analytics, AnalyticsEvents } from '../analytics/analytics.js';
+import { createAdSlot } from '../monetization/AdSlot.js';
 
 export const renderToolPage = async (container, tool) => {
     addRecentlyUsed(tool.id);
+    Analytics.tool(AnalyticsEvents.TOOL_VIEW, tool.id);
+    
     const catName = tool.category.charAt(0).toUpperCase() + tool.category.slice(1);
     const relatedGuide = articles.find(a => a.toolId === tool.id);
     const initialFav = isFavorite(tool.id);
@@ -90,13 +94,22 @@ export const renderToolPage = async (container, tool) => {
             <!-- 4. Dynamic SEO Guide Content & Trust Signals -->
             <div id="seoContentContainer"></div>
 
+            <!-- Centralized Non-Intrusive Ad Placement (Below Workspace & Guide) -->
+            <div id="toolAdPlacement"></div>
+
             <!-- 5. Related Tools Grid -->
-            <section class="related-tools-section" style="margin-top: 4rem; padding-top: 3rem; border-top: 1px solid var(--tool-card-border);">
+            <section class="related-tools-section" style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--tool-card-border);">
                 <h3 style="font-size: 1.5rem; margin-bottom: 2rem; color: var(--text-primary); font-weight: 700;">Related ${catName} Tools</h3>
                 <div class="tool-grid" id="relatedToolsGrid"></div>
             </section>
         </div>
     `;
+
+    // Append Centralized AdSlot
+    const adContainer = container.querySelector('#toolAdPlacement');
+    if (adContainer) {
+        adContainer.appendChild(createAdSlot('toolPage'));
+    }
 
     // Hero Action Handlers
     const favBtn = container.querySelector('#favToolBtn');
@@ -120,6 +133,7 @@ export const renderToolPage = async (container, tool) => {
     if (viewGuideBtn && relatedGuide) {
         viewGuideBtn.onclick = (e) => {
             e.preventDefault();
+            Analytics.event(AnalyticsEvents.GUIDE_CTA_CLICK, { guide_slug: relatedGuide.slug });
             navigate(`/guides/${relatedGuide.slug}`);
         };
     }
@@ -128,6 +142,7 @@ export const renderToolPage = async (container, tool) => {
 
     if (shareBtn) {
         shareBtn.onclick = () => {
+            Analytics.event(AnalyticsEvents.SHARE, { tool_id: tool.id });
             if (navigator.share) {
                 navigator.share({
                     title: document.title,
@@ -145,6 +160,7 @@ export const renderToolPage = async (container, tool) => {
 
     if (copyBtn) {
         copyBtn.onclick = () => {
+            Analytics.event(AnalyticsEvents.COPY, { tool_id: tool.id });
             navigator.clipboard.writeText(pageUrl);
             const originalText = copyBtn.textContent;
             copyBtn.textContent = 'Copied!';
@@ -167,11 +183,14 @@ export const renderToolPage = async (container, tool) => {
     const seoContentContainer = container.querySelector('#seoContentContainer');
     seoContentContainer.innerHTML = generateSEOHTML(tool);
 
-    // Populate Related Tools
+    // Populate Related Tools (Smart Internal Linking 3.0: prioritize category tools, then complementary tools)
     const relatedGrid = container.querySelector('#relatedToolsGrid');
-    const relatedList = tools
-        .filter(t => t.category === tool.category && t.id !== tool.id)
-        .slice(0, 6);
+    let relatedList = tools.filter(t => t.category === tool.category && t.id !== tool.id);
+    if (relatedList.length < 6) {
+        const otherTools = tools.filter(t => t.category !== tool.category && t.id !== tool.id);
+        relatedList = [...relatedList, ...otherTools];
+    }
+    relatedList = relatedList.slice(0, 6);
 
     relatedList.forEach(rt => {
         const card = createToolCard(rt);
@@ -179,6 +198,7 @@ export const renderToolPage = async (container, tool) => {
         if (btn) {
             btn.onclick = (e) => {
                 e.preventDefault();
+                Analytics.event(AnalyticsEvents.RELATED_TOOL_CLICK, { current_tool: tool.id, clicked_tool: rt.id });
                 navigate(`/tools/${rt.slug}`);
             };
         }

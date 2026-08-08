@@ -16,6 +16,10 @@ import { renderCategoryPage } from './components/CategoryPage.js';
 import { renderArticlePage } from './components/ArticlePage.js';
 import { renderContentHubPage } from './components/ContentHubPage.js';
 import { renderAdminDashboard } from './components/AdminDashboard.js';
+import { renderPrivacyPolicy } from './components/legal/PrivacyPolicy.js';
+import { renderTermsOfService } from './components/legal/TermsOfService.js';
+import { renderDisclaimer } from './components/legal/Disclaimer.js';
+import { renderContact } from './components/legal/Contact.js';
 import { articles } from './tools/articleRegistry.js';
 import { initWebVitals } from './utils/webVitals.js';
 import { getFavorites, getRecentlyUsed, isFavorite, logSearchQuery } from './utils/userStorage.js';
@@ -108,6 +112,13 @@ document.addEventListener('DOMContentLoaded', () => {
     initRouter((path) => {
         // Track analytics page view on route transition
         Analytics.pageView(path);
+
+        // Update Canonical URL dynamically
+        const metaCanonical = document.querySelector('link[rel="canonical"]');
+        if (metaCanonical) {
+            const cleanPath = path === '/index.html' ? '/' : path;
+            metaCanonical.setAttribute('href', `${window.location.origin}${cleanPath === '/' ? '' : cleanPath}`);
+        }
         
         if (path === '/' || path === '/index.html') {
             renderHomePage(mainContent);
@@ -131,6 +142,14 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 render404(mainContent);
             }
+        } else if (path === '/privacy-policy') {
+            renderPrivacyPolicy(mainContent);
+        } else if (path === '/terms-of-service') {
+            renderTermsOfService(mainContent);
+        } else if (path === '/disclaimer') {
+            renderDisclaimer(mainContent);
+        } else if (path === '/contact') {
+            renderContact(mainContent);
         } else if (path.endsWith('-tools') || path === '/calculators') {
             const categoryId = path.replace('-tools', '').replace('/', '');
             const category = categories.find(c => c.id === categoryId);
@@ -349,15 +368,51 @@ const renderHomePage = (container) => {
 // Render 404 Page View
 const render404 = (container) => {
     container.innerHTML = `
-        <div style="max-width: var(--max-width); margin: 0 auto; padding: 4rem 1.5rem; text-align: center;">
-            <div style="font-size: 5rem; margin-bottom: 1rem;">🛰️</div>
-            <h1 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; color: var(--text-primary);">404 - Page Not Found</h1>
-            <p style="font-size: 1.15rem; color: var(--text-secondary); margin-bottom: 2rem;">
-                The tool or category you are looking for does not exist or has been moved.
+        <div style="max-width: 800px; margin: 0 auto; padding: 5rem 1.5rem; text-align: center; animation: fadeIn 0.4s ease-out;">
+            <div style="font-size: 5rem; margin-bottom: 1.5rem;">🛰️</div>
+            <h1 style="font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; margin-bottom: 1rem; color: var(--text-primary); line-height: 1.2;">Page Not Found</h1>
+            <p style="font-size: 1.15rem; color: var(--text-secondary); margin-bottom: 2.5rem; line-height: 1.6;">
+                The tool or category you are looking for does not exist or has been moved. 
+                Don't worry, you can search our 75+ free tools below or head back to the homepage.
             </p>
-            <a href="/" class="primary-button" style="text-decoration:none; display:inline-flex; align-items:center; gap:0.5rem; padding:0.75rem 1.5rem;">
-                🏠 Back to Home Page
-            </a>
+            
+            <div style="max-width: 500px; margin: 0 auto 3rem auto; position: relative;">
+                <input type="text" id="notFoundSearch" placeholder="Search for PDF, Image, Converters..." style="width: 100%; padding: 1.25rem 1.5rem 1.25rem 3rem; border-radius: var(--radius-lg); border: 1px solid var(--tool-card-border); background: var(--surface-color); color: var(--text-primary); font-size: 1.05rem; box-shadow: var(--shadow-sm);" />
+                <span style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); font-size: 1.2rem;">🔍</span>
+            </div>
+
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="/" class="primary-btn" style="text-decoration:none; display:inline-flex; align-items:center; gap:0.5rem; padding:1rem 2rem; border-radius: var(--radius-md);">
+                    🏠 Back to Home
+                </a>
+                <a href="/tools/pdf-merge" class="secondary-btn" style="text-decoration:none; display:inline-flex; align-items:center; gap:0.5rem; padding:1rem 2rem; border-radius: var(--radius-md); border: 1px solid var(--tool-card-border);">
+                    📄 Try PDF Merger
+                </a>
+            </div>
         </div>
     `;
+
+    setTimeout(() => {
+        const searchInput = document.getElementById('notFoundSearch');
+        if (searchInput) {
+            searchInput.focus();
+            searchInput.addEventListener('input', (e) => {
+                const val = e.target.value;
+                const globalSearch = document.getElementById('globalSearch');
+                if (globalSearch && val.trim().length > 0) {
+                    globalSearch.value = val;
+                    // Trigger global search UI or navigate home to search
+                    navigate('/');
+                    setTimeout(() => {
+                        const newGlobal = document.getElementById('globalSearch');
+                        if (newGlobal) {
+                            newGlobal.value = val;
+                            newGlobal.dispatchEvent(new Event('input', { bubbles: true }));
+                            newGlobal.focus();
+                        }
+                    }, 100);
+                }
+            });
+        }
+    }, 100);
 };

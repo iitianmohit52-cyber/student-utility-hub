@@ -311,7 +311,7 @@ export const injectJSONLDSchemas = (toolOrCategory, isCategory = false) => {
         "@type": "Organization",
         "name": "Student Utility Hub Community",
         "url": siteUrl,
-        "logo": `${siteUrl}/assets/logo.png`
+        "logo": `${siteUrl}/logo.png`
     };
 
     const schemas = [websiteSchema, orgSchema];

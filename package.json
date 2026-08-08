@@ -2,7 +2,12 @@
   "name": "student-utility-hub",
   "version": "1.0.0",
   "description": "Student Utility Hub – modular static site with Vite development server",
-  "keywords": ["utility", "student", "static", "vite"],
+  "keywords": [
+    "utility",
+    "student",
+    "static",
+    "vite"
+  ],
   "author": "",
   "license": "MIT",
   "scripts": {

@@ -8,8 +8,10 @@ export const renderHeader = () => {
     header.innerHTML = `
         <div class="header-container">
             <div class="logo">
-                <span class="logo-icon">🚀</span>
-                <h1>Student Utility Hub<span class="sr-only"> - 20+ Free Online Tools &amp; Calculators</span></h1>
+                <a href="/" style="display:flex; align-items:center; text-decoration:none; gap:0.5rem;">
+                    <img src="/logo.png" alt="Student Utility Hub Logo" class="brand-logo" />
+                    <h1>Student Utility Hub<span class="sr-only"> - 75+ Free Online Tools</span></h1>
+                </a>
             </div>
             
             <div class="mobile-header-controls">
@@ -61,15 +63,15 @@ export const renderHeader = () => {
 
                 <!-- Explore CTA Button -->
                 <div class="drawer-cta-container">
-                    <a href="/" class="drawer-cta-btn" id="exploreToolsBtn">🚀 Explore All 75+ Tools</a>
+                    <a href="/" class="drawer-cta-btn" id="exploreToolsBtn">Explore All 75+ Tools</a>
                 </div>
 
                 <!-- Drawer Footer -->
                 <div class="drawer-footer">
-                    <div class="drawer-footer-brand">🚀 Student Utility Hub</div>
+                    <div class="drawer-footer-brand">Student Utility Hub</div>
                     <div class="drawer-footer-tagline">50+ Free Client-Side Online Tools</div>
                     <div class="drawer-footer-links">
-                        <a href="#article-image-tools">Privacy</a> • <a href="#article-image-tools">Terms</a>
+                        <a href="/privacy-policy" class="nav-link">Privacy</a> • <a href="/terms-of-service" class="nav-link">Terms</a>
                     </div>
                     <div class="drawer-footer-version">v1.0.0 • Production Ready</div>
                 </div>
@@ -166,6 +168,10 @@ export const renderHeader = () => {
             clearMobileSearchBtn.style.display = val ? 'flex' : 'none';
         }
         
+        if (val && val.trim().length >= 2) {
+            Analytics.event(AnalyticsEvents.SEARCH, { query: val });
+        }
+
         if (searchInput) {
             searchInput.dispatchEvent(new Event('input', { bubbles: true }));
         }

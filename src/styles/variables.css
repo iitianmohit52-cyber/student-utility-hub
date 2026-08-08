@@ -1,6 +1,8 @@
 /* Design System 2.0 - Enterprise SaaS Tokens */
 :root {
-    --max-width: 1400px;
+    --max-width: 1440px;
+    --page-padding-mobile: 1rem;
+    --page-padding-desktop: 1.75rem;
     
     /* Dark Mode (Default Premium Obsidian / Slate) */
     --background-color: #090d16;

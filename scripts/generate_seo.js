@@ -3,15 +3,71 @@ import path from 'path';
 import { tools } from '../src/tools/toolRegistry.js';
 import { articles } from '../src/tools/articleRegistry.js';
 
-const SITE_URL = process.env.VITE_SITE_URL || "https://student-utility-hub-2ss3.vercel.app";
+import { SITE_URL } from '../src/config.js';
+
+// SEO REGRESSION PROTECTION (Requirement 16)
+const validateSEORequirements = () => {
+    console.log('Running pre-build SEO Regression Protection checks...');
+
+    // 1. Production URL Validation
+    if (!SITE_URL || !SITE_URL.startsWith('http') || SITE_URL.includes('localhost') || SITE_URL.includes('127.0.0.1')) {
+        throw new Error(`[SEO REGRESSION] Invalid production SITE_URL: "${SITE_URL}". Localhost/Dev URLs are forbidden in production sitemaps.`);
+    }
+
+    // 2. Registry Validation (Titles, descriptions, H1s, Canonical references)
+    tools.forEach(tool => {
+        if (!tool.seoTitle || tool.seoTitle.trim() === '') {
+            throw new Error(`[SEO REGRESSION] Tool "${tool.name}" is missing a valid seoTitle.`);
+        }
+        if (!tool.seoDescription || tool.seoDescription.trim() === '') {
+            throw new Error(`[SEO REGRESSION] Tool "${tool.name}" is missing a valid seoDescription.`);
+        }
+        if (tool.status === 'draft') {
+            throw new Error(`[SEO REGRESSION] Tool "${tool.name}" is marked as draft but has sitemap inclusion attempt.`);
+        }
+    });
+
+    articles.forEach(art => {
+        if (!art.title || art.title.trim() === '') {
+            throw new Error(`[SEO REGRESSION] Article "${art.slug}" is missing a title.`);
+        }
+        if (!art.summary || art.summary.trim() === '') {
+            throw new Error(`[SEO REGRESSION] Article "${art.slug}" is missing a description summary.`);
+        }
+    });
+};
+
+validateSEORequirements();
 
 // Helper to write sitemap files
 const writeSitemap = (filename, urls) => {
     const filePath = path.resolve(process.cwd(), `public/${filename}`);
+    const seenUrls = new Set();
+
+    urls.forEach(u => {
+        const fullUrl = `${SITE_URL}/${u.loc}`;
+        
+        // 1. Duplicate check
+        if (seenUrls.has(fullUrl)) {
+            throw new Error(`[SITEMAP QUALITY] Duplicate URL detected in ${filename}: "${fullUrl}"`);
+        }
+        seenUrls.add(fullUrl);
+
+        // 2. Hash check
+        if (u.loc.includes('#')) {
+            throw new Error(`[SITEMAP QUALITY] Hash URL detected in ${filename}: "${fullUrl}"`);
+        }
+
+        // 3. Localhost check
+        if (fullUrl.includes('localhost') || fullUrl.includes('127.0.0.1')) {
+            throw new Error(`[SITEMAP QUALITY] Localhost reference detected in sitemap: "${fullUrl}"`);
+        }
+    });
+
     const sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls.map(u => `    <url>
-        <loc>${SITE_URL}/${u.loc}</loc>
+        <loc>${SITE_URL}/${u.loc === '' ? '' : u.loc}</loc>
         <changefreq>${u.changefreq}</changefreq>
         <priority>${u.priority}</priority>
     </url>`).join('\n')}
@@ -22,9 +78,9 @@ ${urls.map(u => `    <url>
 
 // 1. Generate robots.txt
 const robotsTxtPath = path.resolve(process.cwd(), 'public/robots.txt');
-const robotsTxt = `User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`;
+const robotsTxt = `User-agent: *\nAllow: /\nDisallow: /analytics-dashboard\n\nSitemap: ${SITE_URL}/sitemap.xml\n`;
 fs.writeFileSync(robotsTxtPath, robotsTxt, 'utf8');
-console.log(`Generated robots.txt with Sitemap: ${SITE_URL}/sitemap.xml`);
+console.log(`Generated robots.txt with Disallow: /analytics-dashboard and Sitemap: ${SITE_URL}/sitemap.xml`);
 
 // 2. Generate sitemap-tools.xml
 const toolUrls = tools.map(tool => ({
@@ -57,12 +113,32 @@ const blogUrls = [
 ];
 writeSitemap('sitemap-blog.xml', blogUrls);
 
-// 5. Generate main sitemap.xml (Index Sitemap)
+// 5. Generate sitemap-legal.xml
+const legalUrls = [
+    { loc: 'privacy-policy', changefreq: 'monthly', priority: '0.5' },
+    { loc: 'terms-of-service', changefreq: 'monthly', priority: '0.5' },
+    { loc: 'disclaimer', changefreq: 'monthly', priority: '0.5' },
+    { loc: 'contact', changefreq: 'monthly', priority: '0.8' }
+];
+writeSitemap('sitemap-legal.xml', legalUrls);
+
+// 6. Generate sitemap-main.xml
+const mainUrls = [
+    { loc: '', changefreq: 'daily', priority: '1.0' },
+    { loc: 'analytics-dashboard', changefreq: 'weekly', priority: '0.6' }
+];
+writeSitemap('sitemap-main.xml', mainUrls);
+
+// 7. Generate main sitemap.xml (Index Sitemap)
 const sitemapIndexXmlPath = path.resolve(process.cwd(), 'public/sitemap.xml');
 const today = new Date().toISOString().split('T')[0];
 
 const indexSitemapContent = `<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <sitemap>
+        <loc>${SITE_URL}/sitemap-main.xml</loc>
+        <lastmod>${today}</lastmod>
+    </sitemap>
     <sitemap>
         <loc>${SITE_URL}/sitemap-tools.xml</loc>
         <lastmod>${today}</lastmod>
@@ -75,7 +151,11 @@ const indexSitemapContent = `<?xml version="1.0" encoding="UTF-8"?>
         <loc>${SITE_URL}/sitemap-blog.xml</loc>
         <lastmod>${today}</lastmod>
     </sitemap>
+    <sitemap>
+        <loc>${SITE_URL}/sitemap-legal.xml</loc>
+        <lastmod>${today}</lastmod>
+    </sitemap>
 </sitemapindex>`;
 
 fs.writeFileSync(sitemapIndexXmlPath, indexSitemapContent, 'utf8');
-console.log(`Generated Sitemap Index sitemap.xml listing 3 sub-sitemaps`);
+console.log(`Generated Sitemap Index sitemap.xml listing 5 sub-sitemaps`);

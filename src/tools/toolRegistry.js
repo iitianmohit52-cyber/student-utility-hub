@@ -94,8 +94,9 @@ const rawTools = [
 export const tools = rawTools.map((tool, index, arr) => {
     const slug = tool.id;
     const title = tool.name;
-    const seoTitle = `${tool.name} - Free Online Tool | Student Utility Hub`;
-    const seoDescription = tool.description;
+    const categoryName = tool.category === 'developer' ? 'Developer' : (tool.category === 'student' ? 'Student' : tool.category.toUpperCase());
+    const seoTitle = `${tool.name} – Free Online ${categoryName} Tool | Student Utility Hub`;
+    const seoDescription = `Use our free online ${tool.name} to ${tool.description.toLowerCase().replace(/\.$/, '')} safely. Runs 100% client-side in your browser for absolute privacy.`;
     const searchTags = tool.keywords || [];
     const popularity = index % 3 === 0 ? 'high' : 'medium';
     const version = '1.0.0';
