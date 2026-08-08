@@ -121,6 +121,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         if (path === '/' || path === '/index.html') {
+            document.title = 'Student Utility Hub - 50+ Free Online Tools & Calculators';
+            const metaDesc = document.querySelector('meta[name="description"]');
+            if (metaDesc) {
+                metaDesc.setAttribute('content', 'Student Utility Hub offers 75+ free online client-side tools for PDF, images, calculators, and developers. Fast, secure, and processes all files locally.');
+            }
             renderHomePage(mainContent);
         } else if (path.startsWith('/tools/')) {
             const slug = path.split('/tools/')[1];

@@ -70,8 +70,8 @@ export const runIndexingHealthAudit = () => {
         group: 'Homepage',
         intendedIndex: true,
         title: 'Student Utility Hub - 50+ Free Online Tools & Calculators',
-        description: 'Student Utility Hub offers 50+ free online calculators, PDF utilities, developer tools, and productivity suite.',
-        h1: 'Student Utility Hub',
+        description: 'Student Utility Hub offers 75+ free online client-side tools for PDF, images, calculators, and developers. Fast, secure, and processes all files locally.',
+        h1: 'Free Online Tools for Students, Developers & Everyday Tasks',
         robots: 'index, follow',
         inSitemap: true,
         incomingLinks: 5 // Header, Footer, and PWA shortcuts link to root

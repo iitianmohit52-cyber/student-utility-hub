@@ -10,7 +10,7 @@ export const renderHeader = () => {
             <div class="logo">
                 <a href="/" style="display:flex; align-items:center; text-decoration:none; gap:0.5rem;">
                     <img src="/logo.png" alt="Student Utility Hub Logo" class="brand-logo" />
-                    <h1>Student Utility Hub<span class="sr-only"> - 75+ Free Online Tools</span></h1>
+                    <span class="logo-title">Student Utility Hub<span class="sr-only"> - 75+ Free Online Tools</span></span>
                 </a>
             </div>
             

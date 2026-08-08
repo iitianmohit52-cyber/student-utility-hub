@@ -124,7 +124,7 @@ main {
     object-fit: contain;
 }
 
-.logo h1 {
+.logo h1, .logo .logo-title {
     font-size: 1.6rem;
     font-weight: 700;
     color: var(--text-primary);
@@ -133,7 +133,7 @@ main {
 }
 
 @media (max-width: 480px) {
-    .logo h1 {
+    .logo h1, .logo .logo-title {
         display: none;
     }
 }
@@ -437,7 +437,7 @@ main {
     transform: translateY(-2px);
 }
 
-.hero-content h2 {
+.hero-content h1, .hero-content h2 {
     font-size: 3.5rem;
     font-weight: 800;
     line-height: 1.2;
@@ -1163,7 +1163,7 @@ main {
 @media (max-width: 1024px) {
     .search-container input { width: 200px; }
     .search-container input:focus { width: 250px; }
-    .hero-content h2 { font-size: 3rem; }
+    .hero-content h1, .hero-content h2 { font-size: 3rem; }
     .tool-grid { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
     .top-ad, .footer-ad { max-width: 100%; height: auto; min-height: 90px; }
 }
@@ -1474,7 +1474,7 @@ main {
     }
 
     .hero-section { padding: 3rem 1rem 2rem; }
-    .hero-content h2 { font-size: 2.4rem; }
+    .hero-content h1, .hero-content h2 { font-size: 2.4rem; }
     .hero-stats { flex-direction: column; align-items: stretch; gap: 1rem; }
     .stat-card { justify-content: flex-start; }
 
@@ -1562,20 +1562,20 @@ main {
 }
 
 @media (max-width: 480px) {
-    .hero-content h2 { font-size: 1.8rem; }
+    .hero-content h1, .hero-content h2 { font-size: 1.8rem; }
     .hero-content p { font-size: 0.95rem; }
     .primary-btn { width: 100%; min-height: 48px; }
     .footer-links-grid { grid-template-columns: 1fr; }
-    .seo-article h2 { font-size: 1.6rem; }
+    .seo-article h1, .seo-article h2 { font-size: 1.6rem; }
     .seo-article h3 { font-size: 1.3rem; }
 }
 
 @media (max-width: 390px) {
     main { padding: 0 0.8rem; }
     .app-header { padding: 0.8rem 1rem; }
-    .logo h1 { font-size: 1.3rem; }
+    .logo h1, .logo .logo-title { font-size: 1.3rem; }
     .brand-logo { height: 38px; }
-    .hero-content h2 { font-size: 1.6rem; }
+    .hero-content h1, .hero-content h2 { font-size: 1.6rem; }
     .hero-badge { font-size: 0.75rem; padding: 0.3rem 0.8rem; }
     .modal-content { padding: 1.2rem 0.8rem; }
 }
@@ -1590,13 +1590,13 @@ main {
     box-shadow: var(--soft-box-shadow);
 }
 
-.seo-article h2, .seo-article h3 {
+.seo-article h1, .seo-article h2, .seo-article h3 {
     color: var(--text-primary);
     margin-bottom: 1rem;
     font-weight: 600;
 }
 
-.seo-article h2 { font-size: 2rem; margin-bottom: 1.5rem; }
+.seo-article h1, .seo-article h2 { font-size: 2rem; margin-bottom: 1.5rem; }
 .seo-article h3 { font-size: 1.5rem; margin-top: 2rem; color: var(--accent-color); }
 
 .seo-article p {

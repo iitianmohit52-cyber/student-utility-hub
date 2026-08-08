@@ -45,9 +45,9 @@ export const renderHero = (container) => {
         <div class="hero-content">
             ${retentionHTML}
             <span class="hero-badge">⚡ 100% Client-Side Processing</span>
-            <h2>
-                Your Enterprise Hub for <span class="gradient-text">Free Online Tools</span>
-            </h2>
+            <h1>
+                Free Online Tools for <span class="gradient-text">Students, Developers & Everyday Tasks</span>
+            </h1>
             <p>
                 Access a powerful suite of 75+ client-side utilities for PDF management, image editing, developer formatting, calculations, and student productivity. Zero uploads, zero latency.
             </p>
