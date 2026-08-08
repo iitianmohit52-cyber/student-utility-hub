@@ -5,12 +5,13 @@ import { createToolCard } from '../utils/dom.js';
 import { withErrorBoundary } from '../utils/errorHandler.js';
 import { generateSEOHTML, injectJSONLDSchemas } from './SEOContentEngine.js';
 import { navigate } from '../router.js';
-import { addRecentlyUsed } from '../utils/userStorage.js';
+import { addRecentlyUsed, isFavorite, toggleFavorite } from '../utils/userStorage.js';
 
 export const renderToolPage = async (container, tool) => {
     addRecentlyUsed(tool.id);
     const catName = tool.category.charAt(0).toUpperCase() + tool.category.slice(1);
     const relatedGuide = articles.find(a => a.toolId === tool.id);
+    const initialFav = isFavorite(tool.id);
     
     // Set dynamically the Document Title & Meta tags
     document.title = tool.seoTitle || `${tool.name} - Free Online Tool | Student Utility Hub`;
@@ -22,69 +23,99 @@ export const renderToolPage = async (container, tool) => {
     // Inject Schemas
     injectJSONLDSchemas(tool);
 
-    // Build the page structure
+    // Build the page structure using the centralized Tool Page Design System
     container.innerHTML = `
-        <div class="landing-page-container" style="max-width: var(--max-width, 1400px); margin: 0 auto; padding: 2rem 1.5rem; animation: fadeIn 0.3s ease-out;">
+        <div class="landing-page-container tool-page-shell">
             <!-- 1. Breadcrumbs -->
-            <nav class="breadcrumb" aria-label="Breadcrumb" style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem; font-weight: 500;">
-                <a href="/">Home</a> &gt; 
-                <a href="/${tool.category}-tools">${catName} Tools</a> &gt; 
-                <span style="color: var(--text-primary);">${tool.name}</span>
+            <nav class="tool-breadcrumbs" aria-label="Breadcrumb">
+                <a href="/"><span>🏠</span> Home</a>
+                <span class="breadcrumb-separator">&gt;</span>
+                <a href="/${tool.category}-tools">${catName} Tools</a>
+                <span class="breadcrumb-separator">&gt;</span>
+                <span style="color: var(--text-primary); font-weight: 600;">${tool.name}</span>
             </nav>
 
             <!-- 2. Hero Section -->
-            <header class="tool-hero" style="margin-bottom: 2.5rem; text-align: left;">
-                <div style="display: flex; gap: 0.75rem; margin-bottom: 1rem; align-items: center; flex-wrap: wrap;">
-                    <span class="category-badge" style="background: var(--primary-light); color: var(--primary-color); padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600;">
-                        ${catName}
-                    </span>
-                    <span class="popularity-badge" style="background: var(--surface-elevated); border: 1px solid var(--tool-card-border); color: var(--text-secondary); padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.8rem; font-weight: 500;">
-                        ⭐ ${tool.popularity.toUpperCase()}
-                    </span>
+            <header class="tool-hero">
+                <div class="tool-hero-badge-row">
+                    <span class="tool-hero-badge badge-category">${tool.icon} ${catName}</span>
+                    <span class="tool-hero-badge badge-popularity">⭐ ${tool.popularity.toUpperCase()}</span>
+                    <span class="tool-hero-badge badge-status">⚡ 100% Client-Side Safe</span>
                 </div>
-                <h1 style="font-size: 2.2rem; margin: 0 0 0.75rem 0; font-weight: 800; color: var(--text-primary); display: flex; align-items: center; gap: 0.75rem;">
-                    <span>${tool.icon}</span> ${tool.name}
-                </h1>
-                <p style="font-size: 1.1rem; color: var(--text-secondary); margin: 0 0 1.5rem 0; max-width: 800px; line-height: 1.5;">
-                    ${tool.description}
-                </p>
-                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                    <button type="button" class="primary-button" id="sharePageBtn" style="gap: 0.5rem;">🔗 Share Tool</button>
-                    <button type="button" class="secondary-button" id="copyLinkBtn">Copy Link</button>
+                <div class="tool-hero-main">
+                    <div class="tool-hero-icon-box">
+                        <span>${tool.icon}</span>
+                    </div>
+                    <div class="tool-hero-header-text">
+                        <h1 class="tool-hero-title">${tool.name}</h1>
+                        <p class="tool-hero-description">${tool.description}</p>
+                    </div>
+                </div>
+                <div class="tool-hero-actions">
+                    <button type="button" class="secondary-button ${initialFav ? 'active' : ''}" id="favToolBtn">
+                        ${initialFav ? '❤️ Favorited' : '⭐ Favorite'}
+                    </button>
+                    <button type="button" class="secondary-button" id="sharePageBtn">🔗 Share Tool</button>
+                    <button type="button" class="secondary-button" id="copyLinkBtn">📋 Copy Link</button>
                 </div>
             </header>
 
             <!-- Related Guides Section -->
             ${relatedGuide ? `
-                <div class="related-guide-notice" style="background: rgba(52, 152, 219, 0.05); border: 1px solid var(--tool-card-border); padding: 1.25rem; border-radius: var(--radius-md); margin-bottom: 2.5rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
-                    <div style="text-align: left;">
-                        <h4 style="margin: 0 0 0.25rem 0; color: var(--text-primary); font-size: 1.05rem;">📖 Need help using this tool?</h4>
-                        <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary);">${relatedGuide.summary}</p>
+                <div class="tool-guide-card">
+                    <div class="tool-guide-info">
+                        <h4>📖 Step-by-Step Guide for ${tool.name}</h4>
+                        <p>${relatedGuide.summary}</p>
                     </div>
-                    <a href="/guides/${relatedGuide.slug}" class="secondary-button" id="viewGuideBtn" style="text-decoration: none; padding: 0.5rem 1rem; font-size: 0.85rem; white-space: nowrap;">Read Complete Guide</a>
+                    <a href="/guides/${relatedGuide.slug}" class="secondary-button" id="viewGuideBtn" style="text-decoration: none; white-space: nowrap;">Read Guide →</a>
                 </div>
             ` : ''}
 
-            <!-- 3. The Live Tool Workspace -->
-            <div id="liveToolContainer" class="live-tool-workspace" style="background: var(--surface-card); border: 1px solid var(--tool-card-border); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-sm); margin-bottom: 3rem;">
-                <div style="text-align:center; padding:2rem;"><div class="skeleton-icon" style="margin: 0 auto;"></div><p style="margin-top:1rem; color:var(--text-secondary);">Loading Live Tool...</p></div>
+            <!-- 3. The Live Tool Workspace Card -->
+            <div class="live-tool-workspace tool-workspace-card">
+                <div class="workspace-header">
+                    <h2 class="workspace-title">
+                        <span>⚡ ${tool.name} Workspace</span>
+                    </h2>
+                    <span class="workspace-badge">Browser Execution Engine</span>
+                </div>
+                <div id="liveToolContainer" class="workspace-content">
+                    <div style="text-align:center; padding:3rem 1rem;">
+                        <div class="skeleton-icon" style="margin: 0 auto 1rem;"></div>
+                        <p style="color:var(--text-secondary);">Initializing interactive tool workspace...</p>
+                    </div>
+                </div>
             </div>
 
-            <!-- 4. Dynamic SEO Guide Content -->
+            <!-- 4. Dynamic SEO Guide Content & Trust Signals -->
             <div id="seoContentContainer"></div>
 
             <!-- 5. Related Tools Grid -->
             <section class="related-tools-section" style="margin-top: 4rem; padding-top: 3rem; border-top: 1px solid var(--tool-card-border);">
-                <h3 style="font-size: 1.5rem; margin-bottom: 2rem; color: var(--text-primary);">Related ${catName} Tools</h3>
-                <div class="tool-grid" id="relatedToolsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(285px, 1fr)); gap: 1.5rem;"></div>
+                <h3 style="font-size: 1.5rem; margin-bottom: 2rem; color: var(--text-primary); font-weight: 700;">Related ${catName} Tools</h3>
+                <div class="tool-grid" id="relatedToolsGrid"></div>
             </section>
         </div>
     `;
 
-    // Share & Copy buttons
+    // Hero Action Handlers
+    const favBtn = container.querySelector('#favToolBtn');
     const shareBtn = container.querySelector('#sharePageBtn');
     const copyBtn = container.querySelector('#copyLinkBtn');
     const viewGuideBtn = container.querySelector('#viewGuideBtn');
+
+    if (favBtn) {
+        favBtn.onclick = () => {
+            const isFavNow = toggleFavorite(tool.id);
+            if (isFavNow) {
+                favBtn.classList.add('active');
+                favBtn.innerHTML = '❤️ Favorited';
+            } else {
+                favBtn.classList.remove('active');
+                favBtn.innerHTML = '⭐ Favorite';
+            }
+        };
+    }
     
     if (viewGuideBtn && relatedGuide) {
         viewGuideBtn.onclick = (e) => {
@@ -95,27 +126,33 @@ export const renderToolPage = async (container, tool) => {
     
     const pageUrl = window.location.href;
 
-    shareBtn.onclick = () => {
-        if (navigator.share) {
-            navigator.share({
-                title: document.title,
-                text: tool.description,
-                url: pageUrl
-            }).catch(console.error);
-        } else {
+    if (shareBtn) {
+        shareBtn.onclick = () => {
+            if (navigator.share) {
+                navigator.share({
+                    title: document.title,
+                    text: tool.description,
+                    url: pageUrl
+                }).catch(console.error);
+            } else {
+                navigator.clipboard.writeText(pageUrl);
+                const orig = shareBtn.textContent;
+                shareBtn.textContent = 'Copied Link!';
+                setTimeout(() => shareBtn.textContent = orig, 2000);
+            }
+        };
+    }
+
+    if (copyBtn) {
+        copyBtn.onclick = () => {
             navigator.clipboard.writeText(pageUrl);
-            alert('Link copied to clipboard!');
-        }
-    };
+            const originalText = copyBtn.textContent;
+            copyBtn.textContent = 'Copied!';
+            setTimeout(() => copyBtn.textContent = originalText, 2000);
+        };
+    }
 
-    copyBtn.onclick = () => {
-        navigator.clipboard.writeText(pageUrl);
-        const originalText = copyBtn.textContent;
-        copyBtn.textContent = 'Copied!';
-        setTimeout(() => copyBtn.textContent = originalText, 2000);
-    };
-
-    // Load and run the live tool logic
+    // Load and run the live tool logic into liveToolContainer
     const liveToolContainer = container.querySelector('#liveToolContainer');
     const toolFunction = await loadTool(tool.id);
 
@@ -123,7 +160,7 @@ export const renderToolPage = async (container, tool) => {
         liveToolContainer.innerHTML = '';
         withErrorBoundary(() => toolFunction(liveToolContainer), liveToolContainer, tool.id);
     } else {
-        liveToolContainer.innerHTML = '<p style="color:var(--danger); text-align:center;">Failed to load live tool module. Try reloading.</p>';
+        liveToolContainer.innerHTML = '<p style="color:var(--danger-color,#ef4444); text-align:center; padding: 2rem;">Failed to load live tool module. Please try reloading the page.</p>';
     }
 
     // Populate SEO Content
@@ -138,7 +175,6 @@ export const renderToolPage = async (container, tool) => {
 
     relatedList.forEach(rt => {
         const card = createToolCard(rt);
-        // Intercept clicks for SPA transition
         const btn = card.querySelector('.tool-button');
         if (btn) {
             btn.onclick = (e) => {

@@ -169,9 +169,9 @@ export const generateSEOHTML = (tool) => {
     ];
 
     const faqHTML = faqsList.map((faq) => `
-        <details style="margin-bottom: 1rem; background: var(--surface-elevated); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--tool-card-border);">
-            <summary style="font-weight: 600; cursor: pointer; color: var(--text-primary);">${faq.q}</summary>
-            <p style="margin-top: 0.75rem; color: var(--text-secondary); line-height: 1.5; font-size: 0.95rem;">${faq.a}</p>
+        <details class="tool-faq-item">
+            <summary class="tool-faq-summary">${faq.q}</summary>
+            <div class="tool-faq-answer"><p>${faq.a}</p></div>
         </details>
     `).join('');
 
@@ -179,7 +179,7 @@ export const generateSEOHTML = (tool) => {
         <div class="seo-landing-content" style="margin-top: 3.5rem; padding-top: 2rem; border-top: 1px solid var(--tool-card-border);">
             
             <!-- EEAT Verification & Metadata Indicators -->
-            <div class="eeat-badge-panel" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; background: var(--surface-elevated); border: 1px solid var(--tool-card-border); padding: 1.25rem; border-radius: var(--radius-lg); margin-bottom: 2.5rem; font-size: 0.85rem;">
+            <div class="eeat-badge-panel">
                 <div>
                     <span style="color: var(--text-secondary); display: block; margin-bottom: 0.25rem;">Reviewed By</span>
                     <strong style="color: var(--text-primary);">SUH Security & Editorial Panel</strong>
@@ -199,32 +199,32 @@ export const generateSEOHTML = (tool) => {
             </div>
 
             <!-- Trust Indicator Grid -->
-            <div class="trust-indicator-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 3rem;">
-                <div style="border: 1px dashed var(--tool-card-border); padding: 1rem; border-radius: var(--radius-md); text-align: center;">
-                    <span style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;">🔒</span>
-                    <strong style="font-size: 0.9rem; color: var(--text-primary); display: block;">Local Processing</strong>
-                    <span style="font-size: 0.8rem; color: var(--text-secondary);">No data leaves device</span>
+            <div class="trust-indicator-grid">
+                <div class="trust-indicator-card">
+                    <span class="trust-indicator-icon">🔒</span>
+                    <strong class="trust-indicator-title">Local Processing</strong>
+                    <span class="trust-indicator-desc">No data leaves your device</span>
                 </div>
-                <div style="border: 1px dashed var(--tool-card-border); padding: 1rem; border-radius: var(--radius-md); text-align: center;">
-                    <span style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;">🚫</span>
-                    <strong style="font-size: 0.9rem; color: var(--text-primary); display: block;">No Uploads</strong>
-                    <span style="font-size: 0.8rem; color: var(--text-secondary);">Privacy-first sandboxing</span>
+                <div class="trust-indicator-card">
+                    <span class="trust-indicator-icon">🚫</span>
+                    <strong class="trust-indicator-title">No Server Uploads</strong>
+                    <span class="trust-indicator-desc">Browser sandbox privacy</span>
                 </div>
-                <div style="border: 1px dashed var(--tool-card-border); padding: 1rem; border-radius: var(--radius-md); text-align: center;">
-                    <span style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;">🔑</span>
-                    <strong style="font-size: 0.9rem; color: var(--text-primary); display: block;">No Signup</strong>
-                    <span style="font-size: 0.8rem; color: var(--text-secondary);">Free unlimited access</span>
+                <div class="trust-indicator-card">
+                    <span class="trust-indicator-icon">🔑</span>
+                    <strong class="trust-indicator-title">Zero Signup Required</strong>
+                    <span class="trust-indicator-desc">Free unlimited access</span>
                 </div>
-                <div style="border: 1px dashed var(--tool-card-border); padding: 1rem; border-radius: var(--radius-md); text-align: center;">
-                    <span style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;">📶</span>
-                    <strong style="font-size: 0.9rem; color: var(--text-primary); display: block;">Offline Ready</strong>
-                    <span style="font-size: 0.8rem; color: var(--text-secondary);">PWA cache operational</span>
+                <div class="trust-indicator-card">
+                    <span class="trust-indicator-icon">📶</span>
+                    <strong class="trust-indicator-title">PWA Offline Ready</strong>
+                    <span class="trust-indicator-desc">Works without active internet</span>
                 </div>
             </div>
 
             <!-- Detailed Guide Introduction -->
             <section style="margin-bottom: 2.5rem;">
-                <h2 style="font-size: 1.6rem; color: var(--primary-color); margin-bottom: 1.2rem;">Detailed Guide & Verification for ${name}</h2>
+                <h2 style="font-size: 1.6rem; color: var(--primary-color); margin-bottom: 1.2rem; font-weight: 700;">Detailed Guide & Verification for ${name}</h2>
                 <p style="line-height: 1.7; color: var(--text-secondary); margin-bottom: 1.2rem;">
                     The <strong>${name}</strong> is a high-performance browser-native utility engineered to simplify your ${catName.toLowerCase()} workflows. 
                     Unlike traditional web tools that transfer files to a cloud database, our programmatic engine runs 100% client-side. 
@@ -237,8 +237,8 @@ export const generateSEOHTML = (tool) => {
             </section>
 
             <!-- Warning Box (Common Mistakes) -->
-            <div class="callout-box warning-box" style="background: rgba(255, 71, 87, 0.05); border-left: 4px solid var(--danger-color, #ff4757); padding: 1.25rem; border-radius: var(--radius-md); margin-bottom: 2.5rem;">
-                <h4 style="margin: 0 0 0.5rem 0; color: var(--text-primary); font-size: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+            <div class="callout-box warning-box">
+                <h4 style="margin: 0 0 0.5rem 0; color: var(--text-primary); font-size: 1rem; display: flex; align-items: center; gap: 0.5rem; font-weight: 700;">
                     <span>⚠️</span> Common Mistakes to Avoid
                 </h4>
                 <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5;">
@@ -247,8 +247,8 @@ export const generateSEOHTML = (tool) => {
             </div>
 
             <!-- Info Box (Pro Tips) -->
-            <div class="callout-box info-box" style="background: rgba(52, 152, 219, 0.05); border-left: 4px solid var(--primary-color); padding: 1.25rem; border-radius: var(--radius-md); margin-bottom: 2.5rem;">
-                <h4 style="margin: 0 0 0.5rem 0; color: var(--text-primary); font-size: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+            <div class="callout-box info-box">
+                <h4 style="margin: 0 0 0.5rem 0; color: var(--text-primary); font-size: 1rem; display: flex; align-items: center; gap: 0.5rem; font-weight: 700;">
                     <span>💡</span> Pro Tips & Best Practices
                 </h4>
                 <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5;">
@@ -258,7 +258,7 @@ export const generateSEOHTML = (tool) => {
 
             <!-- Practical Examples -->
             <section style="margin-bottom: 2.5rem;">
-                <h3 style="font-size: 1.35rem; margin-bottom: 1.2rem; color: var(--text-primary);">Real-Life Applications & Examples</h3>
+                <h3 style="font-size: 1.35rem; margin-bottom: 1.2rem; color: var(--text-primary); font-weight: 700;">Real-Life Applications & Examples</h3>
                 <div style="display: grid; gap: 1rem;">
                     ${categoryExamples}
                 </div>
@@ -266,7 +266,7 @@ export const generateSEOHTML = (tool) => {
 
             <!-- Detailed Step-by-Step Instructions -->
             <section style="margin-bottom: 2.5rem;">
-                <h3 style="font-size: 1.35rem; margin-bottom: 1.2rem; color: var(--text-primary);">How to Use</h3>
+                <h3 style="font-size: 1.35rem; margin-bottom: 1.2rem; color: var(--text-primary); font-weight: 700;">How to Use</h3>
                 <ol style="line-height: 1.8; color: var(--text-secondary); padding-left: 1.5rem;">
                     <li>Select or input the source data (such as files, strings, dates, or values) in the workspace inputs above.</li>
                     <li>Configure the operational variables (such as formatting specifications, passwords, or ranges).</li>
@@ -277,14 +277,14 @@ export const generateSEOHTML = (tool) => {
             </section>
 
             <!-- FAQ Section -->
-            <section style="margin-bottom: 3rem;">
-                <h3 style="font-size: 1.4rem; margin-bottom: 1.8rem; color: var(--text-primary);">Frequently Asked Questions (FAQ)</h3>
+            <section class="tool-faq-section" style="margin-bottom: 3rem;">
+                <h3 style="font-size: 1.4rem; margin-bottom: 1.8rem; color: var(--text-primary); font-weight: 700;">Frequently Asked Questions (FAQ)</h3>
                 ${faqHTML}
             </section>
 
             <!-- Browser Compatibility -->
             <section style="margin-bottom: 2.5rem; background: var(--surface-elevated); padding: 1.5rem; border-radius: var(--radius-lg); border: 1px solid var(--tool-card-border);">
-                <h4 style="margin: 0 0 1rem 0; color: var(--text-primary); font-size: 1.1rem;">Browser & Device Support</h4>
+                <h4 style="margin: 0 0 1rem 0; color: var(--text-primary); font-size: 1.1rem; font-weight: 700;">Browser & Device Support</h4>
                 <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6;">
                     This tool is fully WCAG AA accessible and compatible with Apple Safari, Google Chrome, Mozilla Firefox, Microsoft Edge, and Opera. It is tested on iOS, Android, macOS, Linux, and Windows platforms.
                 </p>
