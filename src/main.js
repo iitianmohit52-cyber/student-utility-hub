@@ -28,7 +28,7 @@ import { getFavorites, getRecentlyUsed, isFavorite, logSearchQuery } from './uti
 initWebVitals();
 
 // Update SEO dynamically based on central config
-updateSEO();
+updateSEO(window.location.pathname);
 
 // Initialize Global Security Error Boundaries
 initErrorHandling();
@@ -113,12 +113,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Track analytics page view on route transition
         Analytics.pageView(path);
 
-        // Update Canonical URL dynamically
-        const metaCanonical = document.querySelector('link[rel="canonical"]');
-        if (metaCanonical) {
-            const cleanPath = path === '/index.html' ? '/' : path;
-            metaCanonical.setAttribute('href', `${window.location.origin}${cleanPath === '/' ? '' : cleanPath}`);
-        }
+        // Update SEO dynamically (Canonical, OG URL, JSON-LD)
+        updateSEO(path);
         
         if (path === '/' || path === '/index.html') {
             document.title = 'Student Utility Hub - 50+ Free Online Tools & Calculators';

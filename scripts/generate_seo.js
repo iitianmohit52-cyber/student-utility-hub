@@ -27,12 +27,49 @@ const validateSEORequirements = () => {
         }
     });
 
+    // 3. Simulated Canonical Route Checks (Requirement Check)
+    tools.forEach(tool => {
+        const cleanPath = `/tools/${tool.slug}`;
+        const canonical = `${SITE_URL}${cleanPath}`;
+        
+        if (cleanPath === '/') {
+            throw new Error(`[SEO REGRESSION] Tool "${tool.name}" canonical points to homepage "/" root.`);
+        }
+        if (canonical.includes('#')) {
+            throw new Error(`[SEO REGRESSION] Tool "${tool.name}" canonical contains a "#" hash: "${canonical}"`);
+        }
+        if (canonical.includes('localhost') || canonical.includes('127.0.0.1')) {
+            throw new Error(`[SEO REGRESSION] Tool "${tool.name}" canonical contains development host: "${canonical}"`);
+        }
+        const expected = `${SITE_URL}/tools/${tool.slug}`;
+        if (canonical !== expected) {
+            throw new Error(`[SEO REGRESSION] Tool "${tool.name}" canonical "${canonical}" does not match clean route "${expected}"`);
+        }
+    });
+
     articles.forEach(art => {
         if (!art.title || art.title.trim() === '') {
             throw new Error(`[SEO REGRESSION] Article "${art.slug}" is missing a title.`);
         }
         if (!art.summary || art.summary.trim() === '') {
             throw new Error(`[SEO REGRESSION] Article "${art.slug}" is missing a description summary.`);
+        }
+
+        const cleanPath = `/guides/${art.slug}`;
+        const canonical = `${SITE_URL}${cleanPath}`;
+        
+        if (cleanPath === '/') {
+            throw new Error(`[SEO REGRESSION] Article "${art.slug}" canonical points to homepage "/" root.`);
+        }
+        if (canonical.includes('#')) {
+            throw new Error(`[SEO REGRESSION] Article "${art.slug}" canonical contains a "#" hash: "${canonical}"`);
+        }
+        if (canonical.includes('localhost') || canonical.includes('127.0.0.1')) {
+            throw new Error(`[SEO REGRESSION] Article "${art.slug}" canonical contains development host: "${canonical}"`);
+        }
+        const expected = `${SITE_URL}/guides/${art.slug}`;
+        if (canonical !== expected) {
+            throw new Error(`[SEO REGRESSION] Article "${art.slug}" canonical "${canonical}" does not match clean route "${expected}"`);
         }
     });
 };
