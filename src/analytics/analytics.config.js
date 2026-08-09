@@ -3,7 +3,7 @@ export const AnalyticsConfig = {
     enabled: true,
 
     // Debug mode logs events to the console instead of sending them (ideal for development)
-    debugMode: import.meta.env.MODE === 'development', // Automatically true in dev, false in prod
+    debugMode: (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.MODE === 'development') || false, // Automatically true in dev, false in prod
 
     // Data sampling (1.0 = 100% of events, 0.1 = 10% of events)
     samplingRate: 1.0,

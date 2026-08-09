@@ -1,7 +1,7 @@
 import './styles/variables.css';
 import './styles/main.css';
 
-import { tools, categories } from './tools/toolRegistry.js';
+import { tools, categories, toKebabCase } from './tools/toolRegistry.js';
 import { renderHeader } from './components/Header.js';
 import { renderHero } from './components/Hero.js';
 import { renderFooter } from './components/Footer.js';
@@ -90,6 +90,28 @@ function showUpdateBanner() {
         banner.remove();
     });
 }
+const getCategoryByPath = (path) => {
+    const clean = path.toLowerCase().replace(/^\/+/, '').replace(/\/+$/, '');
+    if (clean === 'calculators' || clean === 'calculator') {
+        return categories.find(c => c.id === 'calculator');
+    }
+    if (clean === 'dev-tools' || clean === 'developer-tools' || clean === 'developer') {
+        return categories.find(c => c.id === 'developer');
+    }
+    const suffixIndex = clean.indexOf('-tools');
+    if (suffixIndex !== -1) {
+        const catId = clean.substring(0, suffixIndex);
+        return categories.find(c => c.id === catId);
+    }
+    return categories.find(c => c.id === clean);
+};
+
+const getCategoryCanonicalPath = (category) => {
+    if (category.id === 'calculator') {
+        return '/calculators';
+    }
+    return `/${category.id}-tools`;
+};
 
 document.addEventListener('DOMContentLoaded', () => {
     const app = document.getElementById('app');
@@ -109,11 +131,28 @@ document.addEventListener('DOMContentLoaded', () => {
     app.appendChild(footer);
 
     // 4. Initialize History Router
-    initRouter((path) => {
+    initRouter((rawPath) => {
         // Track analytics page view on route transition
-        Analytics.pageView(path);
+        Analytics.pageView(rawPath);
 
-        // Update SEO dynamically (Canonical, OG URL, JSON-LD)
+        // Remove pre-rendered SEO content silo to prevent duplicate H1 tags and content
+        const seoSilo = document.getElementById('seo-content-silo');
+        if (seoSilo) {
+            seoSilo.remove();
+        }
+
+        // Normalize path: trim whitespace and strip trailing slash (except homepage)
+        let path = rawPath.trim();
+        if (path.length > 1 && path.endsWith('/')) {
+            path = path.slice(0, -1);
+        }
+
+        // Silent browser URL rewrite if it has trailing slashes
+        if (rawPath !== path) {
+            window.history.replaceState({}, '', path);
+        }
+
+        // Update SEO dynamically (Canonical, OG URL, JSON-LD) using normalized path
         updateSEO(path);
         
         if (path === '/' || path === '/index.html') {
@@ -125,8 +164,20 @@ document.addEventListener('DOMContentLoaded', () => {
             renderHomePage(mainContent);
         } else if (path.startsWith('/tools/')) {
             const slug = path.split('/tools/')[1];
-            const tool = tools.find(t => t.slug === slug || t.id === slug);
+            const cleanSlug = slug.toLowerCase().replace(/\/+$/, '');
+            const tool = tools.find(t => {
+                const tSlug = (t.slug || '').toLowerCase();
+                const tId = (t.id || '').toLowerCase();
+                return tSlug === cleanSlug || 
+                       tId === cleanSlug ||
+                       toKebabCase(tSlug) === toKebabCase(cleanSlug) ||
+                       toKebabCase(tId) === toKebabCase(cleanSlug);
+            });
             if (tool) {
+                const canonicalPath = `/tools/${tool.slug}`;
+                if (path !== canonicalPath) {
+                    window.history.replaceState({}, '', canonicalPath);
+                }
                 renderToolPage(mainContent, tool);
             } else {
                 render404(mainContent);
@@ -137,8 +188,16 @@ document.addEventListener('DOMContentLoaded', () => {
             renderAdminDashboard(mainContent);
         } else if (path.startsWith('/guides/')) {
             const slug = path.split('/guides/')[1];
-            const article = articles.find(a => a.slug === slug || a.id === slug);
+            const cleanSlug = slug.toLowerCase().replace(/\/+$/, '');
+            const article = articles.find(a => 
+                (a.slug || '').toLowerCase() === cleanSlug || 
+                (a.id || '').toLowerCase() === cleanSlug
+            );
             if (article) {
+                const canonicalPath = `/guides/${article.slug}`;
+                if (path !== canonicalPath) {
+                    window.history.replaceState({}, '', canonicalPath);
+                }
                 renderArticlePage(mainContent, article);
             } else {
                 render404(mainContent);
@@ -151,16 +210,17 @@ document.addEventListener('DOMContentLoaded', () => {
             renderDisclaimer(mainContent);
         } else if (path === '/contact') {
             renderContact(mainContent);
-        } else if (path.endsWith('-tools') || path === '/calculators') {
-            const categoryId = path.replace('-tools', '').replace('/', '');
-            const category = categories.find(c => c.id === categoryId);
+        } else {
+            const category = getCategoryByPath(path);
             if (category) {
+                const canonicalPath = getCategoryCanonicalPath(category);
+                if (path !== canonicalPath) {
+                    window.history.replaceState({}, '', canonicalPath);
+                }
                 renderCategoryPage(mainContent, category);
             } else {
                 render404(mainContent);
             }
-        } else {
-            render404(mainContent);
         }
     });
 });

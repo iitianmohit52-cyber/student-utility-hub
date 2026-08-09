@@ -1,137 +1,137 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/pdfMerge</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/pdf-merge</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/pdfSplit</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/pdf-split</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/pdfToImage</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/pdf-to-image</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/imageToPdf</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/image-to-pdf</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/pdfWatermark</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/pdf-watermark</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/pdfPageRotator</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/pdf-page-rotator</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/pdfCompress</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/pdf-compress</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/pdfUnlock</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/pdf-unlock</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/pdfProtect</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/pdf-protect</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/pdfSign</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/pdf-sign</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/pdfRemovePages</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/pdf-remove-pages</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/imageConverter</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/image-converter</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/imageCompressor</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/image-compressor</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/imageCropper</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/image-cropper</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/imageResizer</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/image-resizer</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/imageFilter</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/image-filter</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/svgToPng</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/svg-to-png</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/imageColorExtractor</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/image-color-extractor</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/faviconGenerator</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/favicon-generator</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/imageBackgroundRemover</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/image-background-remover</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/imageWatermark</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/image-watermark</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/imageMetadata</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/image-metadata</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/imageRotateFlip</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/image-rotate-flip</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/screenshotToPdf</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/screenshot-to-pdf</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/qrCodeGenerator</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/qr-code-generator</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/passwordGenerator</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/password-generator</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/wordCounter</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/word-counter</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
@@ -141,227 +141,227 @@
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/jsonFormatter</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/json-formatter</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/caseConverter</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/case-converter</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/diffChecker</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/diff-checker</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/markdownPreviewer</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/markdown-previewer</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/loremIpsum</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/lorem-ipsum</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/slugGenerator</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/slug-generator</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/textCleaner</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/text-cleaner</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/textToSpeech</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/text-to-speech</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/speechToText</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/speech-to-text</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/duplicateLineRemover</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/duplicate-line-remover</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/textSorter</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/text-sorter</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/reverseText</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/reverse-text</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/randomTextGenerator</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/random-text-generator</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/htmlEncoderDecoder</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/html-encoder-decoder</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/htmlFormatter</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/html-formatter</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/cssMinifier</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/css-minifier</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/jsFormatter</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/js-formatter</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/jwtDecoder</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/jwt-decoder</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/hashGenerator</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/hash-generator</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/urlEncoder</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/url-encoder</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/regexTester</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/regex-tester</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/colorPicker</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/color-picker</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/uuidGenerator</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/uuid-generator</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/timestampConverter</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/timestamp-converter</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/sqlFormatter</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/sql-formatter</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/xmlFormatter</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/xml-formatter</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/qrCodeScanner</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/qr-code-scanner</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/ageCalculator</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/age-calculator</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/emiCalculator</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/emi-calculator</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/sipCalculator</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/sip-calculator</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/bmiCalculator</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/bmi-calculator</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/percentageCalculator</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/percentage-calculator</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/cgpaCalculator</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/cgpa-calculator</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/discountCalculator</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/discount-calculator</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/compoundInterest</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/compound-interest</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/gpaCalculator</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/gpa-calculator</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/unitConverter</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/unit-converter</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/gstCalculator</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/gst-calculator</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/fuelCostCalculator</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/fuel-cost-calculator</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/salaryCalculator</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/salary-calculator</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/timeDurationCalculator</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/time-duration-calculator</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/scientificCalculator</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/scientific-calculator</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/pomodoroTimer</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/pomodoro-timer</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/citationGenerator</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/citation-generator</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/gpaScaleConverter</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/gpa-scale-converter</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
@@ -371,17 +371,17 @@
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/videoConverter</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/video-converter</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/audioConverter</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/audio-converter</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/tools/audioTrimmer</loc>
+        <loc>https://student-utility-hub-2ss3.vercel.app/tools/audio-trimmer</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>

@@ -91,8 +91,16 @@ const rawTools = [
     { id: 'audioTrimmer', name: 'Audio Trimmer & Cutter', category: 'media', icon: '✂️', description: 'Trim and extract audio clips effortlessly.', keywords: ['audio', 'trimmer', 'cutter', 'clip', 'media', 'music'] }
 ];
 
+export const toKebabCase = (str) => {
+    if (!str) return '';
+    return str
+        .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+        .replace(/([A-Z])([A-Z][a-z])/g, '$1-$2')
+        .toLowerCase();
+};
+
 export const tools = rawTools.map((tool, index, arr) => {
-    const slug = tool.id;
+    const slug = toKebabCase(tool.id);
     const title = tool.name;
     const categoryName = tool.category === 'developer' ? 'Developer' : (tool.category === 'student' ? 'Student' : tool.category.toUpperCase());
     const seoTitle = `${tool.name} – Free Online ${categoryName} Tool | Student Utility Hub`;
