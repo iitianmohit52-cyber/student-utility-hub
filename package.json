@@ -14,7 +14,7 @@
   "scripts": {
     "dev": "vite",
     "prebuild": "node scripts/generate_seo.js && node scripts/test_seo_dom.js",
-    "build": "vite build",
+    "build": "vite build && node scripts/test_prod_server.js",
     "preview": "vite preview",
     "update-seo": "node scripts/generate_seo.js",
     "indexnow": "node scripts/submit_indexnow.js"
