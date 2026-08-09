@@ -28,13 +28,8 @@ export const createAdSlot = (placementType = 'topContent', customStyle = {}) => 
 
     Object.assign(wrapper.style, customStyle);
 
-    // Ad content placeholder / AdSense script target
-    wrapper.innerHTML = `
-        <div style="font-size: 0.8rem; color: var(--text-secondary); text-align: center; opacity: 0.8; padding: 0.5rem;">
-            <span>${placement.label}</span>
-            <div style="font-size: 0.72rem; opacity: 0.6; margin-top: 0.2rem;">AdSense Ready (Slot #${placement.slotId})</div>
-        </div>
-    `;
+    // Reserved CLS container for post-approval ad placement
+    wrapper.innerHTML = '';
 
     // Initialize IntersectionObserver visibility tracking
     trackAdVisibility(wrapper, placementType);

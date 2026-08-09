@@ -23,6 +23,6 @@ export const LegalConfig = {
         usesThirdPartyAds: true
     },
     
-    // Placeholder for governing law jurisdiction (configure when legal entity is established)
-    governingLaw: '[Governing Jurisdiction - To Be Configured]'
+    // Governing law jurisdiction
+    governingLaw: 'India'
 };

@@ -228,13 +228,9 @@ document.addEventListener('DOMContentLoaded', () => {
 // Render Home Page Layout
 const renderHomePage = (container) => {
     container.innerHTML = `
-        <div class="ad-placeholder top-ad" style="margin-top:1rem;">
-            <p>Top Banner Ad (728x90 or Responsive)</p>
-        </div>
+        <div class="ad-placeholder top-ad" style="margin-top:1rem;"></div>
         <div id="hero-section"></div>
-        <div class="ad-placeholder inline-ad" style="margin: 1.5rem 0;">
-            <p>After Hero Ad (Responsive)</p>
-        </div>
+        <div class="ad-placeholder inline-ad" style="margin: 1.5rem 0;"></div>
         <div class="tool-grid"></div>
     `;
 

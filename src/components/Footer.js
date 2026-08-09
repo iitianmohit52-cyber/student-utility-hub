@@ -43,9 +43,7 @@ export const renderFooter = () => {
         </div>
         <div class="footer-bottom">
             <p>&copy; ${new Date().getFullYear()} Student Utility Hub. All rights reserved. Made with ❤️ for Students and Professionals.</p>
-            <div class="ad-placeholder footer-ad">
-                <p>Footer Ad Placeholder (728x90)</p>
-            </div>
+            <div class="ad-placeholder footer-ad"></div>
         </div>
     `;
 

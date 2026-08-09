@@ -20,9 +20,7 @@ export const renderModal = () => {
                 <!-- Tool-specific content will be injected here -->
             </div>
             <center>
-                <div class="ad-placeholder inline-ad" style="margin-top: 20px;">
-                    <p>Ad Placeholder (Responsive)</p>
-                </div>
+                <div class="ad-placeholder inline-ad" style="margin-top: 20px;"></div>
             </center>
             <div id="modalAlert" class="modal-alert" style="display:none;"></div>
         </div>
@@ -97,9 +95,7 @@ export const renderModal = () => {
 
         return `
             <div class="tool-seo-content" style="margin-top: 3rem;">
-                <div class="ad-placeholder inline-ad" style="margin-bottom: 2rem;">
-                    <p>Inside Article Ad (Responsive)</p>
-                </div>
+                <div class="ad-placeholder inline-ad" style="margin-bottom: 2rem;"></div>
 
                 <h3>Introduction</h3>
                 <p>The <strong>${tool.name}</strong> is a highly optimized, 100% client-side utility designed specifically for processing your data securely and instantly. Whether you are a student, professional, or developer, this ${catName} tool provides exactly what you need without the bloat.</p>
@@ -133,9 +129,7 @@ export const renderModal = () => {
                     <p style="margin-top: 0.5rem; color: var(--text-secondary);">Absolutely. All calculations and processing for the ${tool.name} happen directly on your device.</p>
                 </details>
 
-                <div class="ad-placeholder inline-ad" style="margin-top: 2rem; margin-bottom: 2rem;">
-                    <p>After FAQ Ad (Responsive)</p>
-                </div>
+                <div class="ad-placeholder inline-ad" style="margin-top: 2rem; margin-bottom: 2rem;"></div>
 
                 <h3>Conclusion</h3>
                 <p>The <strong>${tool.name}</strong> stands out as a premier ${catName} utility. Its combination of speed, privacy, and simplicity makes it an indispensable tool for your digital toolkit.</p>

@@ -832,17 +832,17 @@ main {
 }
 
 
-/* Adsense Placeholders */
+/* Reserved Ad Containers (CLS Protected) */
 .ad-placeholder {
-    background: var(--ad-placeholder-bg);
-    border: 1px dashed var(--ad-placeholder-border);
+    background: transparent;
+    border: none;
     border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--text-secondary);
     font-size: 0.9rem;
-    margin: 2rem auto;
+    margin: 1.5rem auto;
     width: 100%;
 }
 
