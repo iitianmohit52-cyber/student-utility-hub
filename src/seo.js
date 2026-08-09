@@ -30,6 +30,12 @@ export function updateSEO(path = window.location.pathname) {
         ogUrl.content = currentCanonicalUrl;
     }
 
+    // 3. Reset Robots directive to index, follow for valid routes
+    let robotsMeta = document.querySelector('meta[name="robots"]');
+    if (robotsMeta) {
+        robotsMeta.setAttribute('content', 'index, follow');
+    }
+
     // 3. JSON-LD Website URL updates
     const jsonLds = document.querySelectorAll('script[type="application/ld+json"]');
     jsonLds.forEach(jsonLd => {

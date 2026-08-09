@@ -428,6 +428,22 @@ const renderHomePage = (container) => {
 
 // Render 404 Page View
 const render404 = (container) => {
+    document.title = 'Page Not Found - Student Utility Hub';
+
+    // Set noindex meta tag for search engines to prevent soft-404 indexing
+    let robotsMeta = document.querySelector('meta[name="robots"]');
+    if (!robotsMeta) {
+        robotsMeta = document.createElement('meta');
+        robotsMeta.setAttribute('name', 'robots');
+        document.head.appendChild(robotsMeta);
+    }
+    robotsMeta.setAttribute('content', 'noindex, follow');
+
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+        metaDesc.setAttribute('content', 'The page or tool you are looking for does not exist.');
+    }
+
     container.innerHTML = `
         <div style="max-width: 800px; margin: 0 auto; padding: 5rem 1.5rem; text-align: center; animation: fadeIn 0.4s ease-out;">
             <div style="font-size: 5rem; margin-bottom: 1.5rem;">🛰️</div>
