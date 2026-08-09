@@ -7,7 +7,7 @@
 export const MonetizationConfig = {
     // Global Ad Switch & Provider Details
     enabled: true,
-    adsensePublisherId: 'ca-pub-XXXXXXXXXXXXXXX', // Replace with production Publisher ID when approved
+    adsensePublisherId: 'ca-pub-709465335735977',
     debugMode: process.env.NODE_ENV !== 'production',
 
     // Placement Configurations (Reserved Heights prevent CLS)
