@@ -12,13 +12,14 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite",
-    "prebuild": "node scripts/generate_seo.js",
+    "prebuild": "node scripts/generate_seo.js && node scripts/test_seo_dom.js",
     "build": "vite build",
     "preview": "vite preview",
     "update-seo": "node scripts/generate_seo.js",
     "indexnow": "node scripts/submit_indexnow.js"
   },
   "devDependencies": {
+    "jsdom": "^30.0.1",
     "vite": "^5.0.0"
   }
 }
