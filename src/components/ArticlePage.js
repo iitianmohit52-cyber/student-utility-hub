@@ -179,13 +179,8 @@ export const renderArticlePage = (container, article) => {
     container.querySelectorAll('a[href^="/guides/"]').forEach(link => {
         link.onclick = (e) => {
             e.preventDefault();
-            const slug = link.getAttribute('href').split('/guides/')[1];
-            const targetArt = articles.find(a => a.slug === slug);
-            if (targetArt) {
-                renderArticlePage(container, targetArt);
-                window.scrollTo({ top: 0, behavior: 'instant' });
-                window.history.pushState({}, '', `/guides/${slug}`);
-            }
+            const href = link.getAttribute('href');
+            navigate(href);
         };
     });
 };
@@ -220,7 +215,7 @@ const injectArticleSchemas = (article) => {
             "name": "Student Utility Hub",
             "logo": {
                 "@type": "ImageObject",
-                "url": `${siteUrl}/assets/logo.png`
+                "url": `${siteUrl}/logo.png`
             }
         }
     };

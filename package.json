@@ -13,7 +13,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "node scripts/test_tools_functional.js && node scripts/generate_seo.js && node scripts/test_seo_dom.js",
+    "prebuild": "node scripts/test_tools_functional.js && node scripts/generate_seo.js && node scripts/test_seo_dom.js && node scripts/audit_indexing_architecture.js",
     "build": "vite build && node scripts/test_prod_server.js",
     "preview": "vite preview",
     "update-seo": "node scripts/generate_seo.js",

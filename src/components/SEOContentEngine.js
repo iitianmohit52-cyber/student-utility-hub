@@ -318,7 +318,7 @@ export const injectJSONLDSchemas = (toolOrCategory, isCategory = false) => {
 
     if (isCategory) {
         const catName = toolOrCategory.name;
-        const catUrl = `${siteUrl}/${toolOrCategory.id}-tools`;
+        const catUrl = toolOrCategory.id === 'calculator' ? `${siteUrl}/calculators` : `${siteUrl}/${toolOrCategory.id}-tools`;
 
         const collectionSchema = {
             "@context": "https://schema.org",
@@ -341,7 +341,7 @@ export const injectJSONLDSchemas = (toolOrCategory, isCategory = false) => {
     } else {
         const toolUrl = `${siteUrl}/tools/${toolOrCategory.slug}`;
         const catName = toolOrCategory.category.charAt(0).toUpperCase() + toolOrCategory.category.slice(1);
-        const catUrl = `${siteUrl}/${toolOrCategory.category}-tools`;
+        const catUrl = toolOrCategory.category === 'calculator' ? `${siteUrl}/calculators` : `${siteUrl}/${toolOrCategory.category}-tools`;
 
         const webpageSchema = {
             "@context": "https://schema.org",

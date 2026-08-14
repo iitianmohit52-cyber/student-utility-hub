@@ -14,6 +14,7 @@ export const renderToolPage = async (container, tool) => {
     Analytics.tool(AnalyticsEvents.TOOL_VIEW, tool.id);
     
     const catName = tool.category.charAt(0).toUpperCase() + tool.category.slice(1);
+    const catPath = tool.category === 'calculator' ? '/calculators' : `/${tool.category}-tools`;
     const relatedGuide = articles.find(a => a.toolId === tool.id);
     const initialFav = isFavorite(tool.id);
     
@@ -34,7 +35,7 @@ export const renderToolPage = async (container, tool) => {
             <nav class="tool-breadcrumbs" aria-label="Breadcrumb">
                 <a href="/"><span>🏠</span> Home</a>
                 <span class="breadcrumb-separator">&gt;</span>
-                <a href="/${tool.category}-tools">${catName} Tools</a>
+                <a href="${catPath}">${catName} Tools</a>
                 <span class="breadcrumb-separator">&gt;</span>
                 <span style="color: var(--text-primary); font-weight: 600;">${tool.name}</span>
             </nav>

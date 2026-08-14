@@ -13,13 +13,14 @@ export const initRouter = (onRouteChanged) => {
     // Intercept click events on standard anchors to prevent full-page reload
     document.addEventListener('click', (e) => {
         const link = e.target.closest('a');
-        if (link && link.href && link.host === window.location.host) {
+        if (link && link.href && link.host === window.location.host && !link.hasAttribute('download') && link.target !== '_blank') {
             const path = link.pathname;
-            // Let normal clicks pass through unless they match our routing patterns
-            if (path === '/' || path.startsWith('/tools/') || path.endsWith('-tools') || path === '/calculators' || path.startsWith('/blog') || path.startsWith('/guides') || path.startsWith('/tutorials')) {
-                e.preventDefault();
-                navigate(path);
+            // Allow in-page hash jumps to proceed naturally
+            if (link.pathname === window.location.pathname && link.hash) {
+                return;
             }
+            e.preventDefault();
+            navigate(path);
         }
     });
 

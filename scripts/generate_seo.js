@@ -159,10 +159,9 @@ const legalUrls = [
 ];
 writeSitemap('sitemap-legal.xml', legalUrls);
 
-// 6. Generate sitemap-main.xml
+// 6. Generate sitemap-main.xml (Homepage)
 const mainUrls = [
-    { loc: '', changefreq: 'daily', priority: '1.0' },
-    { loc: 'analytics-dashboard', changefreq: 'weekly', priority: '0.6' }
+    { loc: '', changefreq: 'daily', priority: '1.0' }
 ];
 writeSitemap('sitemap-main.xml', mainUrls);
 

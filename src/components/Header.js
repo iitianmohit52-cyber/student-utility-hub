@@ -46,8 +46,12 @@ export const renderHeader = () => {
                     <a href="/" class="nav-link drawer-item"><span class="item-icon">🏠</span> Home</a>
                     <a href="/pdf-tools" class="nav-link drawer-item"><span class="item-icon">📄</span> PDF Tools</a>
                     <a href="/image-tools" class="nav-link drawer-item"><span class="item-icon">🖼️</span> Image Tools</a>
+                    <a href="/text-tools" class="nav-link drawer-item"><span class="item-icon">📝</span> Text Tools</a>
                     <a href="/developer-tools" class="nav-link drawer-item"><span class="item-icon">💻</span> Dev Tools</a>
                     <a href="/calculators" class="nav-link drawer-item"><span class="item-icon">🧮</span> Calculators</a>
+                    <a href="/student-tools" class="nav-link drawer-item"><span class="item-icon">🎓</span> Student Tools</a>
+                    <a href="/media-tools" class="nav-link drawer-item"><span class="item-icon">🎵</span> Media Tools</a>
+                    <a href="/blog" class="nav-link drawer-item"><span class="item-icon">📚</span> Guides & Blog</a>
                 </nav>
 
                 <!-- iOS-Style Dark Mode Toggle -->

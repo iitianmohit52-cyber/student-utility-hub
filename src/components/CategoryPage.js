@@ -122,7 +122,7 @@ export const renderCategoryPage = (container, category) => {
                 <h3 style="font-size: 1.4rem; margin-bottom: 1.2rem; color: var(--text-primary);">Other Categories</h3>
                 <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
                     ${categories.filter(c => c.id !== category.id && c.id !== 'all').map(c => `
-                        <a href="/${c.id}-tools" class="secondary-button" style="text-decoration:none; display:flex; align-items:center; gap:0.5rem; padding:0.6rem 1.2rem;">
+                        <a href="${c.id === 'calculator' ? '/calculators' : `/${c.id}-tools`}" class="secondary-button" style="text-decoration:none; display:flex; align-items:center; gap:0.5rem; padding:0.6rem 1.2rem;">
                             <span>${c.icon}</span> <span>${c.name}</span>
                         </a>
                     `).join('')}
