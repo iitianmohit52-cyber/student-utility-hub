@@ -1,5 +1,5 @@
 import { createTool } from '../core/ToolFactory.js';
-import { createInput, createButton, createToolLayout, createResultBox, createSelect } from '../../components/ui/index.js';
+import { createInput, createButton, createToolLayout, createResultBox } from '../../components/ui/index.js';
 
 const loadPdfLib = async () => {
     if (window.PDFLib) return window.PDFLib;
@@ -15,11 +15,10 @@ const loadPdfLib = async () => {
 export default createTool('pdfSign', ({ container, showAlert, hideAlert }) => {
     let selectedFile = null;
     let pageNum = 1;
+    let isDrawing = false;
     let signatureCanvas = null;
     let ctx = null;
-    let isDrawing = false;
 
-    // Elements
     const fileInput = createInput({
         id: 'pdfFile',
         type: 'file',
@@ -34,19 +33,17 @@ export default createTool('pdfSign', ({ container, showAlert, hideAlert }) => {
     const pageInput = createInput({
         id: 'pageNum',
         type: 'number',
-        label: 'Page to place signature (1-indexed):',
+        label: 'Page Number to Sign (1-indexed):',
         value: '1',
         min: 1,
-        onChange: (val) => {
-            pageNum = parseInt(val) || 1;
-        }
+        onChange: (val) => pageNum = parseInt(val) || 1
     });
 
-    // Signature Pad Container
+    // Signature Pad
     const sigPadWrapper = document.createElement('div');
     sigPadWrapper.className = 'form-group';
-    sigPadWrapper.style.marginBottom = '1.5rem';
-    
+    sigPadWrapper.style.marginBottom = '1rem';
+
     const sigLabel = document.createElement('label');
     sigLabel.textContent = 'Draw Your Signature below:';
     sigLabel.style.display = 'block';
@@ -65,9 +62,11 @@ export default createTool('pdfSign', ({ container, showAlert, hideAlert }) => {
     sigPadWrapper.appendChild(signatureCanvas);
 
     ctx = signatureCanvas.getContext('2d');
-    ctx.strokeStyle = '#000000';
-    ctx.lineWidth = 3;
-    ctx.lineCap = 'round';
+    if (ctx) {
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 3;
+        ctx.lineCap = 'round';
+    }
 
     // Canvas Drawing Logic
     const getCoordinates = (e) => {
@@ -87,13 +86,14 @@ export default createTool('pdfSign', ({ container, showAlert, hideAlert }) => {
     const startDraw = (e) => {
         e.preventDefault();
         isDrawing = true;
+        if (!ctx) return;
         const coords = getCoordinates(e);
         ctx.beginPath();
         ctx.moveTo(coords.x, coords.y);
     };
 
     const draw = (e) => {
-        if (!isDrawing) return;
+        if (!isDrawing || !ctx) return;
         e.preventDefault();
         const coords = getCoordinates(e);
         ctx.lineTo(coords.x, coords.y);
@@ -117,7 +117,9 @@ export default createTool('pdfSign', ({ container, showAlert, hideAlert }) => {
         text: 'Clear Signature',
         variant: 'secondary',
         onClick: () => {
-            ctx.clearRect(0, 0, signatureCanvas.width, signatureCanvas.height);
+            if (ctx) {
+                ctx.clearRect(0, 0, signatureCanvas.width, signatureCanvas.height);
+            }
         }
     });
 
@@ -191,11 +193,12 @@ export default createTool('pdfSign', ({ container, showAlert, hideAlert }) => {
             const signedPdfBytes = await pdfDoc.save();
             const blob = new Blob([signedPdfBytes], { type: 'application/pdf' });
             const url = URL.createObjectURL(blob);
+            const safeName = selectedFile.name.replace(/[^a-zA-Z0-9._-]/g, '_');
 
             resultBox.update(`
                 <div style="text-align: center;">
                     <p style="color:var(--success-color); font-weight:600; margin-bottom:1rem;">✅ PDF Signed Successfully!</p>
-                    <a href="${url}" download="signed_${selectedFile.name}" class="primary-button" style="text-decoration:none; display:inline-flex; align-items:center; gap:0.5rem;">📥 Download Signed PDF</a>
+                    <a href="${url}" download="signed_${safeName}" class="primary-button" style="text-decoration:none; display:inline-flex; align-items:center; gap:0.5rem;">📥 Download Signed PDF</a>
                 </div>
             `);
         } catch (err) {

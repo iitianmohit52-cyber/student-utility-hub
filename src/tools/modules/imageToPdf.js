@@ -14,12 +14,12 @@ const loadPdfLib = async () => {
 export default (container) => {
     container.innerHTML = `
         <div class="tool-form">
-            <label for="imgPdfFiles">Select Images (JPG, PNG, WEBP):</label>
+            <label for="imgPdfFiles">Select Images (JPG, PNG, WEBP, GIF, SVG):</label>
             <input type="file" id="imgPdfFiles" accept="image/*" multiple>
             <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:0.3rem;">Hold Ctrl/Cmd to select multiple images.</p>
 
             <button id="convertImgToPdfBtn" style="margin-top:1.2rem;">📸 Convert Images to PDF</button>
-            <div id="imgPdfResult" class="result-area" style="display:none; text-align:center;"></div>
+            <div id="imgPdfResult" class="result-area" style="display:none; text-align:center; margin-top:1.2rem;"></div>
         </div>
     `;
 
@@ -43,7 +43,6 @@ export default (container) => {
             const pdfDoc = await PDFDocument.create();
 
             for (const file of files) {
-                // Convert any image format to JPEG or PNG via HTML Canvas
                 const imgUrl = URL.createObjectURL(file);
                 const img = new Image();
                 await new Promise((resolve, reject) => {
@@ -53,12 +52,16 @@ export default (container) => {
                 });
 
                 const canvas = document.createElement('canvas');
-                canvas.width = img.naturalWidth || img.width;
-                canvas.height = img.naturalHeight || img.height;
+                canvas.width = img.naturalWidth || img.width || 800;
+                canvas.height = img.naturalHeight || img.height || 600;
                 const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0);
+                
+                // Fill with white background first so transparent PNGs/SVGs don't turn black in JPEG
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-                const jpegDataUrl = canvas.toDataURL('image/jpeg', 0.9);
+                const jpegDataUrl = canvas.toDataURL('image/jpeg', 0.92);
                 const jpegBytes = await fetch(jpegDataUrl).then(res => res.arrayBuffer());
 
                 const imageEmbed = await pdfDoc.embedJpg(jpegBytes);
@@ -77,10 +80,11 @@ export default (container) => {
             const downloadUrl = URL.createObjectURL(blob);
 
             resultDiv.innerHTML = `
-                <p style="color:var(--accent-color); font-weight:600; margin-bottom:1rem;">✅ PDF Created from ${files.length} Image(s)!</p>
-                <a href="${downloadUrl}" download="images-converted.pdf" class="primary-btn" style="text-decoration:none; display:inline-flex; align-items:center; gap:0.5rem;">📥 Download PDF Document</a>
+                <p style="color:var(--success-color); font-weight:600; font-size:1.1rem; margin-bottom:1rem;">✅ PDF Created from ${files.length} Image(s)!</p>
+                <a href="${downloadUrl}" download="images-converted.pdf" class="primary-button" style="text-decoration:none; display:inline-flex; align-items:center; gap:0.5rem;">📥 Download PDF Document</a>
             `;
             resultDiv.style.display = 'block';
+            showAlert(`Successfully converted ${files.length} image(s) to PDF!`, 'success');
         } catch (err) {
             console.error(err);
             showAlert('Error converting images to PDF. Please try again.', 'error');

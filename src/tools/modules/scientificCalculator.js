@@ -3,11 +3,12 @@ import { createButton, createToolLayout, createResultBox } from '../../component
 
 export default createTool('scientificCalculator', ({ container, showAlert, hideAlert }) => {
     let expression = '';
+    let isDegreeMode = false; // false = Radians, true = Degrees
 
     // Calculator Display Wrapper
     const displayWrapper = document.createElement('div');
     displayWrapper.className = 'form-group';
-    displayWrapper.style.marginBottom = '1.5rem';
+    displayWrapper.style.marginBottom = '1rem';
 
     const displayInput = document.createElement('input');
     displayInput.type = 'text';
@@ -24,16 +25,25 @@ export default createTool('scientificCalculator', ({ container, showAlert, hideA
     displayInput.value = '0';
     displayWrapper.appendChild(displayInput);
 
+    // Mode Indicator
+    const modeBadge = document.createElement('div');
+    modeBadge.style.fontSize = '0.8rem';
+    modeBadge.style.color = 'var(--text-secondary)';
+    modeBadge.style.marginTop = '0.3rem';
+    modeBadge.style.textAlign = 'right';
+    modeBadge.textContent = 'Mode: RAD (Radians)';
+    displayWrapper.appendChild(modeBadge);
+
     // Calculator Grid Layout
     const gridContainer = document.createElement('div');
     gridContainer.style.display = 'grid';
     gridContainer.style.gridTemplateColumns = 'repeat(5, 1fr)';
     gridContainer.style.gap = '0.5rem';
-    gridContainer.style.marginTop = '1rem';
+    gridContainer.style.marginTop = '0.5rem';
 
     // Buttons definition: [label, action/char, isCommand]
     const calcButtons = [
-        ['sin', 'sin(', false], ['cos', 'cos(', false], ['tan', 'tan(', false], ['deg', 'deg', true], ['C', 'clear', true],
+        ['sin', 'sin(', false], ['cos', 'cos(', false], ['tan', 'tan(', false], ['DEG/RAD', 'toggle_deg', true], ['C', 'clear', true],
         ['ln', 'ln(', false], ['log', 'log(', false], ['π', 'pi', false], ['(', '(', false], [')', ')', false],
         ['√', 'sqrt(', false], ['^', '^', false], ['e', 'e', false], ['mod', '%', false], ['⌫', 'backspace', true],
         ['7', '7', false], ['8', '8', false], ['9', '9', false], ['/', '/', false], ['*', '*', false],
@@ -52,7 +62,6 @@ export default createTool('scientificCalculator', ({ container, showAlert, hideA
         btn.style.borderRadius = 'var(--radius-sm)';
         btn.style.cursor = 'pointer';
         
-        // Premium coloring
         if (isCmd) {
             btn.style.background = action === 'equal' ? 'var(--primary-color)' : 'var(--surface-elevated)';
             btn.style.color = action === 'equal' ? 'white' : 'var(--text-primary)';
@@ -98,9 +107,10 @@ export default createTool('scientificCalculator', ({ container, showAlert, hideA
             displayInput.value = expression || '0';
         } else if (action === 'equal') {
             evaluateExpression();
-        } else if (action === 'deg') {
-            // Toggle angle unit (show premium toast/alert)
-            showAlert('Calculator operates in Radians mode for trigonometric functions.', 'success');
+        } else if (action === 'toggle_deg') {
+            isDegreeMode = !isDegreeMode;
+            modeBadge.textContent = isDegreeMode ? 'Mode: DEG (Degrees)' : 'Mode: RAD (Radians)';
+            showAlert(`Switched to ${isDegreeMode ? 'Degrees (DEG)' : 'Radians (RAD)'} mode.`, 'info');
         } else {
             expression += action;
             displayInput.value = expression;
@@ -111,43 +121,62 @@ export default createTool('scientificCalculator', ({ container, showAlert, hideA
         if (!expression) return;
 
         try {
-            // Rewrite standard names to Math operations safely
+            // Helpers for degree/rad trigonometric functions
+            const degToRad = (x) => isDegreeMode ? (x * Math.PI) / 180 : x;
+            const _sin = (x) => Math.sin(degToRad(x));
+            const _cos = (x) => Math.cos(degToRad(x));
+            const _tan = (x) => Math.tan(degToRad(x));
+            const _sqrt = (x) => Math.sqrt(x);
+            const _log = (x) => Math.log10(x);
+            const _ln = (x) => Math.log(x);
+            const _pi = Math.PI;
+            const _e = Math.E;
+
+            // Safe token replacement
             let parsedExpr = expression
-                .replace(/sin\(/g, 'Math.sin(')
-                .replace(/cos\(/g, 'Math.cos(')
-                .replace(/tan\(/g, 'Math.tan(')
-                .replace(/log\(/g, 'Math.log10(')
-                .replace(/ln\(/g, 'Math.log(')
-                .replace(/sqrt\(/g, 'Math.sqrt(')
-                .replace(/pi/g, 'Math.PI')
-                .replace(/e/g, 'Math.E')
+                .replace(/sin\(/g, '_sin(')
+                .replace(/cos\(/g, '_cos(')
+                .replace(/tan\(/g, '_tan(')
+                .replace(/sqrt\(/g, '_sqrt(')
+                .replace(/log\(/g, '_log(')
+                .replace(/ln\(/g, '_ln(')
+                .replace(/\bpi\b/g, '_pi')
+                .replace(/\be\b/g, '_e')
                 .replace(/\^/g, '**');
 
-            // Sanitize expression
-            const cleanExpr = parsedExpr.replace(/[^-+*/().0-9eE%Math.sinco\s]/g, '');
-            
-            const evaluateFn = new Function(`return (${cleanExpr})`);
-            const result = evaluateFn();
-
-            if (result === undefined || isNaN(result)) {
-                throw new Error();
+            // Sanitize expression allowing only math operations and identifiers
+            if (!/^[0-9+\-*/().%*\s_sinco_ta_sqr_lg_p_e]+$/.test(parsedExpr)) {
+                // Double check with safe allowed characters
+                const isSafe = /^[_a-zA-Z0-9+\-*/().%\s]+$/.test(parsedExpr);
+                if (!isSafe) throw new Error('Unsafe tokens in expression');
             }
 
-            const formattedResult = Number.isInteger(result) ? result : result.toFixed(8).replace(/\.?0+$/, '');
+            const evaluateFn = new Function('_sin', '_cos', '_tan', '_sqrt', '_log', '_ln', '_pi', '_e', `return (${parsedExpr});`);
+            const rawResult = evaluateFn(_sin, _cos, _tan, _sqrt, _log, _ln, _pi, _e);
+
+            if (rawResult === undefined || isNaN(rawResult) || !isFinite(rawResult)) {
+                throw new Error('Calculation error');
+            }
+
+            const formattedResult = Number.isInteger(rawResult) 
+                ? rawResult 
+                : parseFloat(rawResult.toFixed(8)).toString();
             
             // Log to History
-            const historyItem = `<div style="font-family:monospace; margin-bottom:0.5rem; display:flex; justify-content:space-between;">
+            const historyItem = `<div style="font-family:monospace; margin-bottom:0.5rem; display:flex; justify-content:space-between; border-bottom:1px solid var(--tool-card-border); padding-bottom:0.3rem;">
                 <span>${expression} =</span>
                 <strong style="color:var(--primary-color);">${formattedResult}</strong>
             </div>`;
             
-            const existingHistory = resultBox.querySelector('.result-content').innerHTML;
-            resultBox.update(historyItem + existingHistory);
+            const historyContainer = resultBox.querySelector('.result-content');
+            if (historyContainer) {
+                historyContainer.innerHTML = historyItem + historyContainer.innerHTML;
+            }
 
             expression = formattedResult.toString();
             displayInput.value = expression;
         } catch (err) {
-            showAlert('Invalid expression or calculation error.', 'error');
+            showAlert('Invalid mathematical expression.', 'error');
         }
     };
 });

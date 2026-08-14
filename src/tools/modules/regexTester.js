@@ -9,8 +9,8 @@ export default (container) => {
                     <input type="text" id="regexPattern" placeholder="e.g. [a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}">
                 </div>
                 <div>
-                    <label for="regexFlags">Flags:</label>
-                    <input type="text" id="regexFlags" value="g" placeholder="gi">
+                    <label for="regexFlags">Flags (g, i, m, s, u):</label>
+                    <input type="text" id="regexFlags" value="g" placeholder="g">
                 </div>
             </div>
 
@@ -31,7 +31,7 @@ export default (container) => {
 
     testBtn.onclick = () => {
         const pattern = patternInput.value;
-        const flags = flagsInput.value.trim();
+        const userFlags = flagsInput.value.trim();
         const text = textInput.value;
 
         if (!pattern) {
@@ -41,7 +41,9 @@ export default (container) => {
 
         try {
             hideAlert();
-            const regex = new RegExp(pattern, flags);
+            // matchAll requires 'g' flag in standard JavaScript
+            const executionFlags = userFlags.includes('g') ? userFlags : userFlags + 'g';
+            const regex = new RegExp(pattern, executionFlags);
             const matches = [...text.matchAll(regex)];
 
             let html = `<p style="font-weight:600; color:var(--accent-color); margin-bottom:0.8rem;">Found ${matches.length} match(es):</p>`;
@@ -49,15 +51,15 @@ export default (container) => {
             if (matches.length > 0) {
                 html += '<ul style="padding-left:1.2rem; color:var(--text-primary); margin-bottom:1rem;">';
                 matches.forEach((m, idx) => {
-                    html += `<li><strong>Match ${idx + 1}:</strong> <code>${escapeHtml(m[0])}</code> at index ${m.index}</li>`;
+                    html += `<li><strong>Match ${idx + 1}:</strong> <code>${escapeHtml(m[0])}</code> at character index ${m.index}</li>`;
                 });
                 html += '</ul>';
 
                 // Highlighted text
                 const highlighted = text.replace(regex, match => `<mark style="background:var(--accent-glow); color:var(--accent-color); font-weight:bold; padding:2px 4px; border-radius:4px;">${escapeHtml(match)}</mark>`);
-                html += `<div style="background:var(--surface-color); padding:1rem; border-radius:8px; white-space:pre-wrap;">${highlighted}</div>`;
+                html += `<div style="background:var(--surface-color); padding:1rem; border-radius:8px; border:1px solid var(--tool-card-border); white-space:pre-wrap;">${highlighted}</div>`;
             } else {
-                html += '<p style="color:var(--text-secondary);">No matches found for the pattern.</p>';
+                html += '<p style="color:var(--text-secondary);">No matches found for the given pattern in this text.</p>';
             }
 
             resultArea.innerHTML = html;

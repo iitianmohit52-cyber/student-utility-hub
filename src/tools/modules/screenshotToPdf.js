@@ -1,5 +1,5 @@
 import { createTool } from '../core/ToolFactory.js';
-import { createInput, createButton, createToolLayout, createResultBox } from '../../components/ui/index.js';
+import { createButton, createToolLayout, createResultBox } from '../../components/ui/index.js';
 
 const loadPdfLib = async () => {
     if (window.PDFLib) return window.PDFLib;
@@ -26,12 +26,11 @@ export default createTool('screenshotToPdf', ({ container, showAlert, hideAlert 
     uploadBox.innerHTML = `
         <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📸</div>
         <p style="margin:0 0 0.5rem 0; font-weight:600; color:var(--text-primary);">Paste Screenshot (Ctrl + V) or Click to Upload</p>
-        <p style="margin:0; font-size:0.8rem; color:var(--text-secondary);">Supports PNG, JPG, WEBP. Combine multiple images.</p>
+        <p style="margin:0; font-size:0.8rem; color:var(--text-secondary);">Supports PNG, JPG, WEBP, and Clipboard Pastes. Combine multiple images.</p>
         <input type="file" id="screenshotFiles" accept="image/*" multiple style="display:none;">
     `;
     const hiddenFileInput = uploadBox.querySelector('#screenshotFiles');
 
-    // Click to upload
     uploadBox.addEventListener('click', () => {
         hiddenFileInput.click();
     });
@@ -61,7 +60,7 @@ export default createTool('screenshotToPdf', ({ container, showAlert, hideAlert 
     
     document.addEventListener('paste', handlePaste);
 
-    // Dynamic Preview Grid of pasted screenshots
+    // Dynamic Preview Grid of screenshots
     const previewGrid = document.createElement('div');
     previewGrid.style.display = 'grid';
     previewGrid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(100px, 1fr))';
@@ -157,17 +156,28 @@ export default createTool('screenshotToPdf', ({ container, showAlert, hideAlert 
             const { PDFDocument } = await loadPdfLib();
             const pdfDoc = await PDFDocument.create();
 
-            for (const img of imagesList) {
-                const imgBytes = await fetch(img.dataUrl).then(res => res.arrayBuffer());
-                let embeddedImage;
-                
-                if (img.type === 'image/jpeg' || img.type === 'image/jpg') {
-                    embeddedImage = await pdfDoc.embedJpg(imgBytes);
-                } else {
-                    embeddedImage = await pdfDoc.embedPng(imgBytes);
-                }
+            for (const imgItem of imagesList) {
+                // Safely load and convert image to raster JPEG bytes using canvas
+                const img = new Image();
+                await new Promise((resolve, reject) => {
+                    img.onload = resolve;
+                    img.onerror = reject;
+                    img.src = imgItem.dataUrl;
+                });
 
-                // Add page matching screenshot dimensions
+                const canvas = document.createElement('canvas');
+                canvas.width = img.naturalWidth || img.width || 800;
+                canvas.height = img.naturalHeight || img.height || 600;
+                const ctx = canvas.getContext('2d');
+
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                const jpegDataUrl = canvas.toDataURL('image/jpeg', 0.92);
+                const jpegBytes = await fetch(jpegDataUrl).then(res => res.arrayBuffer());
+
+                const embeddedImage = await pdfDoc.embedJpg(jpegBytes);
                 const page = pdfDoc.addPage([embeddedImage.width, embeddedImage.height]);
                 page.drawImage(embeddedImage, {
                     x: 0,
@@ -183,10 +193,11 @@ export default createTool('screenshotToPdf', ({ container, showAlert, hideAlert 
 
             resultBox.update(`
                 <div style="text-align: center;">
-                    <p style="color:var(--success-color); font-weight:600; margin-bottom:1rem;">✅ PDF Compiled Successfully!</p>
+                    <p style="color:var(--success-color); font-weight:600; margin-bottom:1rem;">✅ PDF Compiled from ${imagesList.length} Screenshot(s)!</p>
                     <a href="${url}" download="screenshot_compilation.pdf" class="primary-button" style="text-decoration:none; display:inline-flex; align-items:center; gap:0.5rem;">📥 Download PDF Document</a>
                 </div>
             `);
+            showAlert('PDF compiled successfully!', 'success');
         } catch (err) {
             console.error(err);
             showAlert('Error generating PDF from screenshots.', 'error');
@@ -196,7 +207,6 @@ export default createTool('screenshotToPdf', ({ container, showAlert, hideAlert 
         }
     };
 
-    // Ensure clipboard event is cleaned up when module unmounts
     window.currentToolCleanup = () => {
         document.removeEventListener('paste', handlePaste);
     };

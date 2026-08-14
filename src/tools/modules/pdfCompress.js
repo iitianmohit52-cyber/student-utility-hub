@@ -1,6 +1,5 @@
 import { createTool } from '../core/ToolFactory.js';
 import { createInput, createButton, createToolLayout, createResultBox } from '../../components/ui/index.js';
-import { downloadFile } from '../../utils/fileHandling.js';
 
 const loadPdfLib = async () => {
     if (window.PDFLib) return window.PDFLib;
@@ -62,28 +61,56 @@ export default createTool('pdfCompress', ({ container, showAlert, hideAlert }) =
             const arrayBuffer = await selectedFile.arrayBuffer();
             const pdfDoc = await PDFDocument.load(arrayBuffer);
 
-            // Save with maximum compression settings available in pdf-lib
+            // Optimize object streams in pdf-lib
             const compressedPdfBytes = await pdfDoc.save({
                 useObjectStreams: true,
                 objectsPerUncompressedStream: 50
             });
 
-            const blob = new Blob([compressedPdfBytes], { type: 'application/pdf' });
-            const url = URL.createObjectURL(blob);
-            
-            const origSize = (selectedFile.size / 1024).toFixed(1);
-            const compSize = (blob.size / 1024).toFixed(1);
-            const savings = ((1 - blob.size / selectedFile.size) * 100).toFixed(0);
+            const origSizeBytes = selectedFile.size;
+            const origSizeKb = (origSizeBytes / 1024).toFixed(1);
+            const compSizeBytes = compressedPdfBytes.length;
+            const compSizeKb = (compSizeBytes / 1024).toFixed(1);
 
-            resultBox.update(`
-                <div style="text-align: center;">
-                    <p style="color:var(--success-color); font-weight:600; margin-bottom:1rem;">✅ PDF Compressed Successfully!</p>
-                    <p style="margin-bottom:1.5rem; font-size:0.9rem; color:var(--text-secondary);">
-                        Original Size: <strong>${origSize} KB</strong> | Compressed Size: <strong>${compSize} KB</strong> (${savings}% smaller)
-                    </p>
-                    <a href="${url}" download="compressed_${selectedFile.name}" class="primary-button" style="text-decoration:none; display:inline-flex; align-items:center; gap:0.5rem;">📥 Download Compressed PDF</a>
-                </div>
-            `);
+            const isReduced = compSizeBytes < origSizeBytes;
+            const finalBytes = isReduced ? compressedPdfBytes : arrayBuffer;
+            const blob = new Blob([finalBytes], { type: 'application/pdf' });
+            const url = URL.createObjectURL(blob);
+            const safeFileName = selectedFile.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+            const downloadName = isReduced ? `compressed_${safeFileName}` : selectedFile.name;
+
+            if (isReduced) {
+                const savings = ((1 - compSizeBytes / origSizeBytes) * 100).toFixed(1);
+                resultBox.update(`
+                    <div style="text-align: center;">
+                        <p style="color:var(--success-color); font-weight:700; font-size:1.1rem; margin-bottom:0.5rem;">
+                            🎉 PDF Compressed Successfully! Reduced by ${savings}%
+                        </p>
+                        <p style="margin-bottom:1.5rem; font-size:0.9rem; color:var(--text-secondary);">
+                            Original: <strong>${origSizeKb} KB</strong> ➔ Compressed: <strong>${compSizeKb} KB</strong>
+                        </p>
+                        <a href="${url}" download="${downloadName}" class="primary-button" style="text-decoration:none; display:inline-flex; align-items:center; gap:0.5rem;">
+                            📥 Download Compressed PDF
+                        </a>
+                    </div>
+                `);
+                showAlert(`PDF compressed successfully! Saved ${((origSizeBytes - compSizeBytes) / 1024).toFixed(1)} KB (${savings}%).`, 'success');
+            } else {
+                resultBox.update(`
+                    <div style="text-align: center;">
+                        <p style="color:var(--primary-color); font-weight:600; font-size:1.05rem; margin-bottom:0.5rem;">
+                            ⚡ PDF is Already Optimally Compressed
+                        </p>
+                        <p style="margin-bottom:1.5rem; font-size:0.85rem; color:var(--text-secondary);">
+                            The original PDF (${origSizeKb} KB) is already as compact as possible. Preserving the original file ensures zero degradation.
+                        </p>
+                        <a href="${url}" download="${downloadName}" class="secondary-button" style="text-decoration:none; display:inline-flex; align-items:center; gap:0.5rem;">
+                            📥 Download Original PDF (${origSizeKb} KB)
+                        </a>
+                    </div>
+                `);
+                showAlert('PDF is already optimal. Preserved original file.', 'info');
+            }
         } catch (err) {
             console.error(err);
             showAlert('Error compressing PDF. Make sure it is a valid, unencrypted PDF.', 'error');
