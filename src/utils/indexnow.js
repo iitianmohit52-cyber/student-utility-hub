@@ -2,7 +2,7 @@
  * Utility to submit URLs to the IndexNow API.
  * Can be used in both browser and Node.js (v18+) environments.
  */
-export async function submitToIndexNow(urls, host = "student-utility-hub-2ss3.vercel.app") {
+export async function submitToIndexNow(urls, host = "studentutilityhub.in") {
     const key = "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6";
     const keyLocation = `https://${host}/${key}.txt`;
 

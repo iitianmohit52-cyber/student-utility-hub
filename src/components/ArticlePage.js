@@ -2,6 +2,7 @@ import { tools } from '../tools/toolRegistry.js';
 import { articles } from '../tools/articleRegistry.js';
 import { navigate } from '../router.js';
 import { addRecentlyRead } from '../utils/userStorage.js';
+import { SITE_URL } from '../config.js';
 
 export const renderArticlePage = (container, article) => {
     addRecentlyRead(article.slug);
@@ -186,7 +187,7 @@ export const renderArticlePage = (container, article) => {
 };
 
 const injectArticleSchemas = (article) => {
-    const siteUrl = "https://student-utility-hub-2ss3.vercel.app";
+    const siteUrl = SITE_URL;
     const articleUrl = `${siteUrl}/guides/${article.slug}`;
 
     const breadcrumbSchema = {

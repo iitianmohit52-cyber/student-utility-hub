@@ -211,7 +211,7 @@ const runTest = async () => {
         }
 
         // Setup fresh JSDOM for checking SEO tags
-        const dom = new JSDOM(htmlTemplate, { url: `https://student-utility-hub-2ss3.vercel.app${routePath}` });
+        const dom = new JSDOM(htmlTemplate, { url: `${SITE_URL}${routePath}` });
         
         // Mock globals safely
         global.window = dom.window;

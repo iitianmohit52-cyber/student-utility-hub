@@ -11,6 +11,47 @@ if (!fs.existsSync(DIST_DIR) || !fs.existsSync(path.join(DIST_DIR, 'index.html')
     process.exit(1);
 }
 
+// CRITICAL PRODUCTION SEO VALIDATION ON DIST & PUBLIC
+console.log('🔍 Validating SEO artifacts in dist/ and public/ ...');
+const seoFiles = [
+    'robots.txt',
+    'sitemap.xml',
+    'sitemap-main.xml',
+    'sitemap-tools.xml',
+    'sitemap-categories.xml',
+    'sitemap-blog.xml',
+    'sitemap-legal.xml'
+];
+
+for (const file of seoFiles) {
+    // Check public
+    const publicPath = path.resolve(process.cwd(), 'public', file);
+    if (!fs.existsSync(publicPath)) {
+        throw new Error(`[PRODUCTION REGRESSION] Missing public/${file}`);
+    }
+    const publicContent = fs.readFileSync(publicPath, 'utf8');
+    if (publicContent.includes('student-utility-hub-2ss3.vercel.app') || publicContent.includes('.vercel.app')) {
+        throw new Error(`[PRODUCTION REGRESSION] Legacy Vercel domain found in public/${file}!`);
+    }
+    if (!publicContent.includes('studentutilityhub.in')) {
+        throw new Error(`[PRODUCTION REGRESSION] Production domain "studentutilityhub.in" missing from public/${file}!`);
+    }
+
+    // Check dist
+    const distPath = path.join(DIST_DIR, file);
+    if (!fs.existsSync(distPath)) {
+        throw new Error(`[PRODUCTION REGRESSION] Missing dist/${file}`);
+    }
+    const distContent = fs.readFileSync(distPath, 'utf8');
+    if (distContent.includes('student-utility-hub-2ss3.vercel.app') || distContent.includes('.vercel.app')) {
+        throw new Error(`[PRODUCTION REGRESSION] Legacy Vercel domain found in dist/${file}!`);
+    }
+    if (!distContent.includes('studentutilityhub.in')) {
+        throw new Error(`[PRODUCTION REGRESSION] Production domain "studentutilityhub.in" missing from dist/${file}!`);
+    }
+}
+console.log('✅ Passed SEO verification: All public/ and dist/ SEO files strictly use studentutilityhub.in with ZERO legacy references.\n');
+
 function startServer() {
     return new Promise((resolve) => {
         const server = http.createServer((req, res) => {

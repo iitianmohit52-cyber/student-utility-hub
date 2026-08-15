@@ -3,6 +3,7 @@ import { tools } from '../tools/toolRegistry.js';
 import { createToolCard } from '../utils/dom.js';
 import { withErrorBoundary } from '../utils/errorHandler.js';
 import { Analytics, AnalyticsEvents } from '../analytics/analytics.js';
+import { SITE_URL } from '../config.js';
 
 export const renderModal = () => {
     const modal = document.createElement('div');
@@ -150,6 +151,9 @@ export const renderModal = () => {
         `;
         
         // Inject Breadcrumb Schema dynamically
+        const catUrl = tool.category === 'calculator' ? `${SITE_URL}/calculators` : `${SITE_URL}/${tool.category}-tools`;
+        const toolUrl = `${SITE_URL}/tools/${tool.slug || tool.id}`;
+
         const breadcrumbSchema = document.createElement('script');
         breadcrumbSchema.type = 'application/ld+json';
         breadcrumbSchema.id = 'dynamic-breadcrumb-schema';
@@ -160,17 +164,17 @@ export const renderModal = () => {
                 "@type": "ListItem",
                 "position": 1,
                 "name": "Home",
-                "item": "https://student-utility-hub-2ss3.vercel.app/"
+                "item": `${SITE_URL}/`
             },{
                 "@type": "ListItem",
                 "position": 2,
                 "name": catName,
-                "item": `https://student-utility-hub-2ss3.vercel.app/#${tool.category}`
+                "item": catUrl
             },{
                 "@type": "ListItem",
                 "position": 3,
                 "name": tool.name,
-                "item": `https://student-utility-hub-2ss3.vercel.app/#${tool.id}`
+                "item": toolUrl
             }]
         });
         document.head.appendChild(breadcrumbSchema);

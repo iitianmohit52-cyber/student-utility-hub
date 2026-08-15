@@ -7,6 +7,7 @@
 
 import { tools, categories } from '../tools/toolRegistry.js';
 import { articles } from '../tools/articleRegistry.js';
+import { SITE_URL } from '../config.js';
 
 export const runSEOAudit = () => {
     const toolAudits = tools.map(tool => auditToolPage(tool));
@@ -62,7 +63,7 @@ const auditToolPage = (tool) => {
     }
 
     // 3. Canonical URL
-    checks.push({ name: 'Canonical URL', pass: true, msg: `https://student-utility-hub-2ss3.vercel.app${url}` });
+    checks.push({ name: 'Canonical URL', pass: true, msg: `${SITE_URL}${url}` });
 
     // 4. H1 Heading
     checks.push({ name: 'H1 Heading', pass: !!tool.name, msg: tool.name ? 'Present' : 'Missing H1' });
@@ -133,7 +134,7 @@ const auditArticlePage = (article) => {
     }
 
     // Canonical
-    checks.push({ name: 'Canonical URL', pass: true, msg: `https://student-utility-hub-2ss3.vercel.app${url}` });
+    checks.push({ name: 'Canonical URL', pass: true, msg: `${SITE_URL}${url}` });
 
     // Tool Link
     const linkedTool = tools.find(t => t.id === article.toolId);
@@ -168,7 +169,7 @@ const auditCategoryPage = (category) => {
     const catTools = tools.filter(t => t.category === category.id);
 
     checks.push({ name: 'Title & Meta', pass: !!category.name, msg: `${category.name} Tools` });
-    checks.push({ name: 'Canonical URL', pass: true, msg: `https://student-utility-hub-2ss3.vercel.app${url}` });
+    checks.push({ name: 'Canonical URL', pass: true, msg: `${SITE_URL}${url}` });
     checks.push({ name: 'Tool Inventory', pass: catTools.length > 0, msg: `${catTools.length} tools registered` });
 
     const status = catTools.length === 0 ? 'NEEDS ATTENTION' : 'PASS';

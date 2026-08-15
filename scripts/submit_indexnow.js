@@ -1,6 +1,7 @@
 import { submitToIndexNow } from '../src/utils/indexnow.js';
+import { SITE_URL } from '../src/config.js';
 
-const defaultUrl = 'https://student-utility-hub-2ss3.vercel.app/';
+const defaultUrl = `${SITE_URL}/`;
 const urlsToSubmit = process.argv.slice(2).length > 0 ? process.argv.slice(2) : [defaultUrl];
 
 console.log('Submitting URLs to IndexNow:', urlsToSubmit);

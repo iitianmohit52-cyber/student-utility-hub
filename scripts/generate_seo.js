@@ -10,8 +10,8 @@ const validateSEORequirements = () => {
     console.log('Running pre-build SEO Regression Protection checks...');
 
     // 1. Production URL Validation
-    if (!SITE_URL || !SITE_URL.startsWith('http') || SITE_URL.includes('localhost') || SITE_URL.includes('127.0.0.1')) {
-        throw new Error(`[SEO REGRESSION] Invalid production SITE_URL: "${SITE_URL}". Localhost/Dev URLs are forbidden in production sitemaps.`);
+    if (!SITE_URL || !SITE_URL.startsWith('http') || SITE_URL.includes('localhost') || SITE_URL.includes('127.0.0.1') || SITE_URL.includes('vercel.app') || SITE_URL.includes('student-utility-hub-2ss3')) {
+        throw new Error(`[SEO REGRESSION] Invalid production SITE_URL: "${SITE_URL}". Localhost/Vercel legacy URLs are forbidden in production sitemaps.`);
     }
 
     // 2. Registry Validation (Titles, descriptions, H1s, Canonical references)
@@ -195,3 +195,30 @@ const indexSitemapContent = `<?xml version="1.0" encoding="UTF-8"?>
 
 fs.writeFileSync(sitemapIndexXmlPath, indexSitemapContent, 'utf8');
 console.log(`Generated Sitemap Index sitemap.xml listing 5 sub-sitemaps`);
+
+// 8. CRITICAL REGRESSION TEST: Ensure old domain NEVER appears in generated files
+const generatedFilesToCheck = [
+    'public/robots.txt',
+    'public/sitemap.xml',
+    'public/sitemap-main.xml',
+    'public/sitemap-tools.xml',
+    'public/sitemap-categories.xml',
+    'public/sitemap-blog.xml',
+    'public/sitemap-legal.xml'
+];
+
+for (const relPath of generatedFilesToCheck) {
+    const fullPath = path.resolve(process.cwd(), relPath);
+    if (!fs.existsSync(fullPath)) {
+        throw new Error(`[SEO REGRESSION] Required generated file missing: ${relPath}`);
+    }
+    const content = fs.readFileSync(fullPath, 'utf8');
+    if (content.includes('student-utility-hub-2ss3.vercel.app')) {
+        throw new Error(`[SEO REGRESSION] CRITICAL FAILURE: Old Vercel hostname "student-utility-hub-2ss3.vercel.app" found in generated ${relPath}!`);
+    }
+    if (content.includes('.vercel.app')) {
+        throw new Error(`[SEO REGRESSION] CRITICAL FAILURE: Vercel hostname found in generated ${relPath}!`);
+    }
+}
+console.log('✅ Passed regression check: Zero old Vercel domain references in all sitemaps and robots.txt\n');
+

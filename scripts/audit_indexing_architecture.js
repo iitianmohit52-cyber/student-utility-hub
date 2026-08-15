@@ -165,12 +165,28 @@ async function auditIndexingArchitecture() {
     console.log('🔍 RUNNING INDEXING ARCHITECTURE & DISCOVERY AUDIT');
     console.log('==================================================\n');
 
+    // Check robots.txt
+    const robotsPath = path.resolve(process.cwd(), 'public/robots.txt');
+    if (!fs.existsSync(robotsPath)) {
+        throw new Error('public/robots.txt missing!');
+    }
+    const robotsTxt = fs.readFileSync(robotsPath, 'utf8');
+    if (!robotsTxt.includes(`Sitemap: ${SITE_URL}/sitemap.xml`)) {
+        throw new Error(`public/robots.txt missing correct Sitemap directive: "Sitemap: ${SITE_URL}/sitemap.xml"`);
+    }
+    if (robotsTxt.includes('student-utility-hub-2ss3.vercel.app')) {
+        throw new Error('public/robots.txt contains legacy Vercel domain!');
+    }
+
     const mainSitemapPath = path.resolve(process.cwd(), 'public/sitemap.xml');
     if (!fs.existsSync(mainSitemapPath)) {
         throw new Error('public/sitemap.xml missing!');
     }
 
     const mainContent = fs.readFileSync(mainSitemapPath, 'utf8');
+    if (mainContent.includes('student-utility-hub-2ss3.vercel.app')) {
+        throw new Error('public/sitemap.xml contains legacy Vercel domain!');
+    }
     const mainDom = new JSDOM(mainContent, { contentType: 'text/xml' });
     const subSitemapLocs = Array.from(mainDom.window.document.querySelectorAll('sitemap > loc')).map(el => el.textContent.trim());
 
@@ -188,6 +204,9 @@ async function auditIndexingArchitecture() {
             throw new Error(`Child sitemap file missing: public/${filename}`);
         }
         const subContent = fs.readFileSync(subPath, 'utf8');
+        if (subContent.includes('student-utility-hub-2ss3.vercel.app')) {
+            throw new Error(`public/${filename} contains legacy Vercel domain!`);
+        }
         const subDom = new JSDOM(subContent, { contentType: 'text/xml' });
         const locs = Array.from(subDom.window.document.querySelectorAll('url > loc')).map(el => el.textContent.trim());
         

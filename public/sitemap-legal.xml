@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/privacy-policy</loc>
+        <loc>https://studentutilityhub.in/privacy-policy</loc>
         <changefreq>monthly</changefreq>
         <priority>0.5</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/terms-of-service</loc>
+        <loc>https://studentutilityhub.in/terms-of-service</loc>
         <changefreq>monthly</changefreq>
         <priority>0.5</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/disclaimer</loc>
+        <loc>https://studentutilityhub.in/disclaimer</loc>
         <changefreq>monthly</changefreq>
         <priority>0.5</priority>
     </url>
     <url>
-        <loc>https://student-utility-hub-2ss3.vercel.app/contact</loc>
+        <loc>https://studentutilityhub.in/contact</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>

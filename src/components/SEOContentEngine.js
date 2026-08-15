@@ -11,6 +11,7 @@
  */
 
 import { categories } from '../tools/toolRegistry.js';
+import { SITE_URL } from '../config.js';
 
 export const generateSEOHTML = (tool) => {
     // 1. Pluggable AI Override Layer Check
@@ -296,7 +297,7 @@ export const generateSEOHTML = (tool) => {
 // 4. Schema Engine (Injects comprehensive structured schemas)
 export const injectJSONLDSchemas = (toolOrCategory, isCategory = false) => {
     removeJSONLDSchemas(); // Clear old schemas
-    const siteUrl = "https://student-utility-hub-2ss3.vercel.app";
+    const siteUrl = SITE_URL;
 
     const websiteSchema = {
         "@context": "https://schema.org",

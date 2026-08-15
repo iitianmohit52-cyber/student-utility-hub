@@ -4,9 +4,11 @@
  * Maintains consistency across Privacy Policy, Terms of Service, and Disclaimer.
  */
 
+import { SITE_URL } from '../config.js';
+
 export const LegalConfig = {
     siteName: 'Student Utility Hub',
-    siteUrl: 'https://student-utility-hub-2ss3.vercel.app',
+    siteUrl: SITE_URL,
     
     // Real verified details
     contactEmail: 'inventormohit004@gmail.com', 
