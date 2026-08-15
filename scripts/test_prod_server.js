@@ -50,6 +50,16 @@ for (const file of seoFiles) {
         throw new Error(`[PRODUCTION REGRESSION] Production domain "studentutilityhub.in" missing from dist/${file}!`);
     }
 }
+
+// Check dist/index.html contains exact AdSense meta tag and script
+const distHtml = fs.readFileSync(path.join(DIST_DIR, 'index.html'), 'utf8');
+if (!distHtml.includes('<meta name="google-adsense-account" content="ca-pub-709465335735977">')) {
+    throw new Error('[PRODUCTION REGRESSION] Missing <meta name="google-adsense-account" content="ca-pub-709465335735977"> in dist/index.html!');
+}
+if (!distHtml.includes('ca-pub-709465335735977')) {
+    throw new Error('[PRODUCTION REGRESSION] Missing ca-pub-709465335735977 in dist/index.html!');
+}
+
 console.log('✅ Passed SEO verification: All public/ and dist/ SEO files strictly use studentutilityhub.in with ZERO legacy references.\n');
 
 function startServer() {

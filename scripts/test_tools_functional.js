@@ -350,6 +350,10 @@ runTest('index.html contains exact AdSense Publisher ID: pub-709465335735977', (
     assert.ok(indexHtmlContent.includes('ca-pub-709465335735977'), 'Missing ca-pub-709465335735977 in index.html');
 });
 
+runTest('index.html contains exact AdSense verification meta tag', () => {
+    assert.ok(indexHtmlContent.includes('<meta name="google-adsense-account" content="ca-pub-709465335735977">'), 'Missing <meta name="google-adsense-account" content="ca-pub-709465335735977"> in index.html');
+});
+
 runTest('index.html has ZERO mock ad placeholders ("Between Sections Ad", "Before FAQ Ad", "Top Banner Ad")', () => {
     assert.ok(!indexHtmlContent.includes('Between Sections Ad'), 'Found leftover mock text "Between Sections Ad"');
     assert.ok(!indexHtmlContent.includes('Before FAQ Ad'), 'Found leftover mock text "Before FAQ Ad"');
