@@ -1,5 +1,6 @@
 import { createTool } from '../core/ToolFactory.js';
 import { createInput, createButton, createToolLayout, createResultBox } from '../../components/ui/index.js';
+import { escapeHTML, sanitizeURL } from '../../utils/sanitize.js';
 
 const loadJsQR = async () => {
     if (window.jsQR) return window.jsQR;
@@ -164,22 +165,32 @@ export default createTool('qrCodeScanner', ({ container, showAlert, hideAlert })
     };
 
     const showResult = (data) => {
+        const safeData = String(data || '');
+        const escapedData = escapeHTML(safeData);
+        const validHttpUrl = sanitizeURL(safeData);
+        const isHttp = validHttpUrl && (validHttpUrl.startsWith('http://') || validHttpUrl.startsWith('https://'));
+
         resultBox.update(`
             <div style="text-align: center;">
                 <p style="color:var(--success-color); font-weight:600; margin-bottom:1rem;">✅ QR Code Decoded!</p>
-                <textarea id="qrDataOutput" readonly style="width:100%; height:80px; padding:0.75rem; border:1px solid var(--tool-card-border); border-radius:var(--radius-md); background:var(--surface-color); color:var(--text-primary); font-family:monospace; margin-bottom:1rem;">${data}</textarea>
+                <textarea id="qrDataOutput" readonly style="width:100%; height:80px; padding:0.75rem; border:1px solid var(--tool-card-border); border-radius:var(--radius-md); background:var(--surface-color); color:var(--text-primary); font-family:monospace; margin-bottom:1rem;"></textarea>
                 <div style="display:flex; gap:1rem; justify-content:center;">
                     <button type="button" class="primary-button" id="copyResultBtn">📋 Copy Data</button>
-                    ${data.startsWith('http') ? `<a href="${data}" target="_blank" rel="noopener" class="secondary-button" style="text-decoration:none;">🌐 Open URL</a>` : ''}
+                    ${isHttp ? `<a href="${escapeHTML(validHttpUrl)}" target="_blank" rel="noopener noreferrer" class="secondary-button" style="text-decoration:none;">🌐 Open URL</a>` : ''}
                 </div>
             </div>
         `);
 
+        const out = resultBox.querySelector('#qrDataOutput');
+        if (out) out.value = safeData;
+
         resultBox.querySelector('#copyResultBtn').onclick = () => {
-            const out = resultBox.querySelector('#qrDataOutput');
-            out.select();
-            document.execCommand('copy');
-            showAlert('QR data copied to clipboard!', 'success');
+            if (out) {
+                out.select();
+                navigator.clipboard.writeText(safeData)
+                    .then(() => showAlert('QR data copied to clipboard!', 'success'))
+                    .catch(() => showAlert('Failed to copy data.', 'error'));
+            }
         };
     };
 

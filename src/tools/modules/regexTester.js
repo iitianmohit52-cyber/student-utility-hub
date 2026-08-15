@@ -55,8 +55,18 @@ export default (container) => {
                 });
                 html += '</ul>';
 
-                // Highlighted text
-                const highlighted = text.replace(regex, match => `<mark style="background:var(--accent-glow); color:var(--accent-color); font-weight:bold; padding:2px 4px; border-radius:4px;">${escapeHtml(match)}</mark>`);
+                // Safely build highlighted text with 100% HTML escaping
+                let lastIndex = 0;
+                let highlighted = '';
+                for (const match of matches) {
+                    const matchStart = match.index;
+                    const matchEnd = match.index + match[0].length;
+                    highlighted += escapeHtml(text.substring(lastIndex, matchStart));
+                    highlighted += `<mark style="background:var(--accent-glow); color:var(--accent-color); font-weight:bold; padding:2px 4px; border-radius:4px;">${escapeHtml(match[0])}</mark>`;
+                    lastIndex = matchEnd;
+                }
+                highlighted += escapeHtml(text.substring(lastIndex));
+
                 html += `<div style="background:var(--surface-color); padding:1rem; border-radius:8px; border:1px solid var(--tool-card-border); white-space:pre-wrap;">${highlighted}</div>`;
             } else {
                 html += '<p style="color:var(--text-secondary);">No matches found for the given pattern in this text.</p>';

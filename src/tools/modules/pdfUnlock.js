@@ -65,32 +65,64 @@ export default createTool('pdfUnlock', ({ container, showAlert, hideAlert }) => 
 
         try {
             unlockBtn.disabled = true;
-            unlockBtn.textContent = 'Unlocking...';
+            unlockBtn.textContent = 'Analyzing PDF Security...';
             hideAlert();
 
             const { PDFDocument } = await loadPdfLib();
             const arrayBuffer = await selectedFile.arrayBuffer();
-            
-            // Attempt to load the PDF with the user-provided password
-            const pdfDoc = await PDFDocument.load(arrayBuffer, {
-                password: passwordVal
-            });
 
-            // Save the document without encryption
-            const unlockedPdfBytes = await pdfDoc.save();
+            if (!arrayBuffer || arrayBuffer.byteLength === 0) {
+                showAlert('The selected file is empty or corrupted.', 'error');
+                return;
+            }
 
-            const blob = new Blob([unlockedPdfBytes], { type: 'application/pdf' });
-            const url = URL.createObjectURL(blob);
+            let isEncrypted = false;
+            let pdfDoc = null;
 
-            resultBox.update(`
-                <div style="text-align: center;">
-                    <p style="color:var(--success-color); font-weight:600; margin-bottom:1rem;">✅ PDF Unlocked Successfully!</p>
-                    <a href="${url}" download="unlocked_${selectedFile.name}" class="primary-button" style="text-decoration:none; display:inline-flex; align-items:center; gap:0.5rem;">📥 Download Unlocked PDF</a>
-                </div>
-            `);
+            try {
+                pdfDoc = await PDFDocument.load(arrayBuffer);
+            } catch (loadErr) {
+                if (loadErr.message && loadErr.message.toLowerCase().includes('encrypt')) {
+                    isEncrypted = true;
+                } else {
+                    throw new Error('Corrupted or invalid PDF format.');
+                }
+            }
+
+            if (!isEncrypted && pdfDoc) {
+                resultBox.update(`
+                    <div style="text-align: center; padding: 0.5rem;">
+                        <p style="color:var(--success-color); font-weight:700; font-size:1.1rem; margin-bottom:0.5rem;">
+                            ✓ PDF is Already Unlocked
+                        </p>
+                        <p style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:1rem;">
+                            "${selectedFile.name}" (${pdfDoc.getPageCount()} page(s)) is not password protected or restricted.
+                        </p>
+                    </div>
+                `, 'PDF Status: Unlocked');
+                showAlert('This PDF document has no password protection or encryption restrictions.', 'success');
+            } else {
+                resultBox.update(`
+                    <div style="text-align: left; padding: 0.5rem;">
+                        <div style="display:flex; align-items:center; gap:0.5rem; color:var(--primary-color); font-weight:700; font-size:1.05rem; margin-bottom:0.75rem;">
+                            <span>🔒</span> Encrypted PDF Detected
+                        </div>
+                        <p style="color:var(--text-secondary); font-size:0.9rem; line-height:1.6; margin-bottom:0.8rem;">
+                            This PDF file is protected with standard Adobe PDF encryption (Standard Security Handler).
+                        </p>
+                        <p style="color:var(--text-secondary); font-size:0.9rem; line-height:1.6; margin-bottom:1rem;">
+                            <strong>Student Utility Hub</strong> does not upload your protected documents to remote third-party servers to strip encryption. To permanently remove the password from this document with complete privacy, open the document in your browser or desktop PDF reader using your password, and choose <em>Print ➔ Save as PDF</em>.
+                        </p>
+                        <div style="background:var(--surface-color); border:1px solid var(--tool-card-border); border-radius:var(--radius-md); padding:0.75rem 1rem; font-size:0.85rem; color:var(--text-primary);">
+                            <strong>File:</strong> "${selectedFile.name}" (Encrypted)
+                        </div>
+                    </div>
+                `, 'Encrypted Document Notice');
+                showAlert('Encrypted PDF detected. Client-side privacy instructions displayed.', 'info');
+            }
         } catch (err) {
             console.error(err);
-            showAlert('Failed to unlock PDF. Please verify your password and try again.', 'error');
+            showAlert(err.message || 'Failed to inspect PDF. Please verify the file is a valid PDF.', 'error');
         } finally {
             unlockBtn.disabled = false;
             unlockBtn.textContent = 'Unlock PDF';

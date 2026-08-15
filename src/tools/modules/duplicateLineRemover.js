@@ -82,7 +82,7 @@ export default createTool('duplicateLineRemover', ({ container, showAlert, hideA
         const cleanedResult = outputLines.join('\n');
         
         resultBox.update(`
-            <textarea id="cleanedOutput" readonly style="width:100%; height:200px; padding:0.75rem; border:1px solid var(--tool-card-border); border-radius:var(--radius-md); background:var(--surface-color); color:var(--text-primary); font-family:monospace; font-size:0.95rem; resize:vertical; margin-bottom:1rem;">${cleanedResult}</textarea>
+            <textarea id="cleanedOutput" readonly style="width:100%; height:200px; padding:0.75rem; border:1px solid var(--tool-card-border); border-radius:var(--radius-md); background:var(--surface-color); color:var(--text-primary); font-family:monospace; font-size:0.95rem; resize:vertical; margin-bottom:1rem;"></textarea>
             <div style="display:flex; gap:1rem;">
                 <button type="button" class="primary-button" id="copyResultBtn">📋 Copy Cleaned Text</button>
                 <button type="button" class="secondary-button" id="clearBtn">✕ Reset</button>
@@ -91,6 +91,7 @@ export default createTool('duplicateLineRemover', ({ container, showAlert, hideA
 
         // Event listener binding
         const cleanedOutput = resultBox.querySelector('#cleanedOutput');
+        if (cleanedOutput) cleanedOutput.value = cleanedResult;
         
         resultBox.querySelector('#copyResultBtn').onclick = () => {
             cleanedOutput.select();

@@ -54,7 +54,7 @@ export default (container) => {
             return;
         }
         const targetFormat = formatSelect.value;
-        const targetExtension = targetFormat.split('/')[1];
+        const targetExtension = targetFormat === 'image/jpeg' ? 'jpg' : (targetFormat.split('/')[1] || 'png');
 
         showAlert('Processing...', 'info');
 
@@ -63,9 +63,18 @@ export default (container) => {
             const img = new Image();
             img.onload = () => {
                 const canvas = document.createElement('canvas');
-                canvas.width = img.width;
-                canvas.height = img.height;
+                canvas.width = img.naturalWidth || img.width;
+                canvas.height = img.naturalHeight || img.height;
                 const ctx = canvas.getContext('2d');
+                
+                // If converting to JPEG, fill with white background first to prevent black transparency
+                if (targetFormat === 'image/jpeg') {
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                } else {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
+
                 ctx.drawImage(img, 0, 0);
                 
                 canvas.toBlob((blob) => {
@@ -82,7 +91,7 @@ export default (container) => {
                     } else {
                         showAlert(`Error converting to ${targetFormat}. This format might not be supported for export by your browser.`, 'error');
                     }
-                }, targetFormat, 0.9);
+                }, targetFormat, 0.92);
             };
             img.onerror = () => showAlert('Could not load image. Ensure it is a valid JPG, PNG, or WEBP.', 'error');
             img.src = event.target.result;

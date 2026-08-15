@@ -96,7 +96,7 @@ export default createTool('xmlFormatter', ({ container, showAlert, hideAlert }) 
             const formatted = prettyPrintXml(xmlInputVal);
 
             resultBox.update(`
-                <textarea id="formattedXmlOutput" readonly style="width:100%; height:200px; padding:0.75rem; border:1px solid var(--tool-card-border); border-radius:var(--radius-md); background:var(--surface-color); color:var(--text-primary); font-family:monospace; font-size:0.95rem; resize:vertical; margin-bottom:1rem;">${formatted}</textarea>
+                <textarea id="formattedXmlOutput" readonly style="width:100%; height:200px; padding:0.75rem; border:1px solid var(--tool-card-border); border-radius:var(--radius-md); background:var(--surface-color); color:var(--text-primary); font-family:monospace; font-size:0.95rem; resize:vertical; margin-bottom:1rem;"></textarea>
                 <div style="display:flex; gap:1rem;">
                     <button type="button" class="primary-button" id="copyResultBtn">📋 Copy Output</button>
                     <button type="button" class="secondary-button" id="clearBtn">✕ Reset</button>
@@ -104,6 +104,7 @@ export default createTool('xmlFormatter', ({ container, showAlert, hideAlert }) 
             `);
 
             const output = resultBox.querySelector('#formattedXmlOutput');
+            if (output) output.value = formatted;
             
             resultBox.querySelector('#copyResultBtn').onclick = () => {
                 output.select();

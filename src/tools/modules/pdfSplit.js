@@ -53,29 +53,68 @@ export default (container) => {
             const srcPdf = await PDFDocument.load(arrayBuffer);
             const totalPages = srcPdf.getPageCount();
 
-            // Parse ranges
-            const pageIndices = [];
-            const parts = rangeStr.split(',');
-            for (const part of parts) {
-                if (part.includes('-')) {
-                    const [start, end] = part.split('-').map(n => parseInt(n.trim(), 10));
-                    if (!isNaN(start) && !isNaN(end)) {
+            // Parse ranges with deduplication and validation
+            const parsePageRanges = (str, maxPages) => {
+                const parts = str.split(',').map(s => s.trim()).filter(Boolean);
+                if (parts.length === 0) {
+                    throw new Error('Please specify a valid page range.');
+                }
+
+                const selectedPages = new Set();
+                const orderedIndices = [];
+
+                for (const part of parts) {
+                    if (part.includes('-')) {
+                        const rangeTokens = part.split('-');
+                        if (rangeTokens.length !== 2) {
+                            throw new Error(`Invalid range format: "${part}"`);
+                        }
+                        let start = parseInt(rangeTokens[0].trim(), 10);
+                        let end = parseInt(rangeTokens[1].trim(), 10);
+
+                        if (isNaN(start) || isNaN(end)) {
+                            throw new Error(`Invalid numbers in range: "${part}"`);
+                        }
+
+                        // Normalize reversed ranges (e.g. 5-3 -> 3-5)
+                        if (start > end) {
+                            const tmp = start;
+                            start = end;
+                            end = tmp;
+                        }
+
+                        if (start < 1 || end > maxPages) {
+                            throw new Error(`Range "${part}" is out of bounds. The document has ${maxPages} page(s).`);
+                        }
+
                         for (let i = start; i <= end; i++) {
-                            if (i >= 1 && i <= totalPages) pageIndices.push(i - 1);
+                            if (!selectedPages.has(i)) {
+                                selectedPages.add(i);
+                                orderedIndices.push(i - 1);
+                            }
+                        }
+                    } else {
+                        const pageNum = parseInt(part, 10);
+                        if (isNaN(pageNum)) {
+                            throw new Error(`Invalid page number: "${part}"`);
+                        }
+                        if (pageNum < 1 || pageNum > maxPages) {
+                            throw new Error(`Page ${pageNum} is out of bounds. The document has ${maxPages} page(s).`);
+                        }
+                        if (!selectedPages.has(pageNum)) {
+                            selectedPages.add(pageNum);
+                            orderedIndices.push(pageNum - 1);
                         }
                     }
-                } else {
-                    const pageNum = parseInt(part.trim(), 10);
-                    if (!isNaN(pageNum) && pageNum >= 1 && pageNum <= totalPages) {
-                        pageIndices.push(pageNum - 1);
-                    }
                 }
-            }
 
-            if (pageIndices.length === 0) {
-                showAlert(`No valid pages found in range. The PDF has ${totalPages} pages.`, 'error');
-                return;
-            }
+                if (orderedIndices.length === 0) {
+                    throw new Error('No valid pages found in range.');
+                }
+                return orderedIndices;
+            };
+
+            const pageIndices = parsePageRanges(rangeStr, totalPages);
 
             const newPdf = await PDFDocument.create();
             const copiedPages = await newPdf.copyPages(srcPdf, pageIndices);
@@ -92,7 +131,7 @@ export default (container) => {
             resultDiv.style.display = 'block';
         } catch (err) {
             console.error(err);
-            showAlert('Error processing PDF split. Ensure the file is a valid PDF.', 'error');
+            showAlert(err.message || 'Error processing PDF split. Ensure the file is a valid PDF.', 'error');
         } finally {
             splitBtn.disabled = false;
             splitBtn.textContent = '✂️ Extract & Split PDF';

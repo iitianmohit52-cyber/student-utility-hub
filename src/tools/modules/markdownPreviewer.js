@@ -44,8 +44,15 @@ export default (container) => {
         // Inline Code & Blocks
         safe = safe.replace(/`([^`]+)`/g, '<code style="background:var(--surface-elevated); padding:2px 6px; border-radius:4px; font-family:monospace; color:var(--accent-color);">$1</code>');
 
-        // Links
-        safe = safe.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color:var(--accent-color); text-decoration:underline;">$1</a>');
+        // Links - only allow http, https, mailto, and relative anchor paths
+        safe = safe.replace(/\[([^\]]+)\]\(([^ \t\r\n]+)\)/g, (match, linkText, linkUrl) => {
+            const trimmedUrl = linkUrl.trim();
+            const isSafeScheme = /^(https?:|mailto:|\/|#)/i.test(trimmedUrl) && !/^(javascript:|data:|vbscript:)/i.test(trimmedUrl);
+            if (isSafeScheme) {
+                return `<a href="${trimmedUrl}" target="_blank" rel="noopener noreferrer" style="color:var(--accent-color); text-decoration:underline;">${linkText}</a>`;
+            }
+            return `<span>${linkText}</span>`;
+        });
 
         // Blockquotes
         safe = safe.replace(/^>\s*(.*$)/gim, '<blockquote style="border-left:3px solid var(--accent-color); margin:0.5rem 0; padding-left:0.8rem; color:var(--text-secondary);">$1</blockquote>');

@@ -1,4 +1,5 @@
 import { showAlert, hideAlert } from '../../utils/alerts.js';
+import { escapeHTML } from '../../utils/sanitize.js';
 
 export default (container) => {
     container.innerHTML = `
@@ -53,10 +54,10 @@ export default (container) => {
     const copyBtn = container.querySelector('#copyCiteBtn');
 
     genBtn.onclick = () => {
-        const author = authorInput.value.trim();
-        const year = yearInput.value.trim();
-        const title = titleInput.value.trim();
-        const pub = pubInput.value.trim();
+        const author = escapeHTML(authorInput.value.trim());
+        const year = escapeHTML(yearInput.value.trim());
+        const title = escapeHTML(titleInput.value.trim());
+        const pub = escapeHTML(pubInput.value.trim());
         const style = styleSelect.value;
 
         if (!title || !author) {

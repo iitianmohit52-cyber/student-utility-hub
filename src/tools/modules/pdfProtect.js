@@ -75,44 +75,62 @@ export default createTool('pdfProtect', ({ container, showAlert, hideAlert }) =>
             return;
         }
         if (!userPassword) {
-            showAlert('Please enter an open password to encrypt the PDF.', 'error');
+            showAlert('Please enter an open password.', 'error');
             return;
         }
 
         try {
             protectBtn.disabled = true;
-            protectBtn.textContent = 'Protecting...';
+            protectBtn.textContent = 'Analyzing PDF...';
             hideAlert();
 
             const { PDFDocument } = await loadPdfLib();
             const arrayBuffer = await selectedFile.arrayBuffer();
-            const pdfDoc = await PDFDocument.load(arrayBuffer);
 
-            // In pdf-lib encryption can be done by providing permissions options. 
-            // Note: encryption settings are natively supported inside PDFDocument.save() options in pdf-lib!
-            const protectedPdfBytes = await pdfDoc.save({
-                userPassword: userPassword,
-                ownerPassword: ownerPassword || userPassword,
-                permissions: {
-                    printing: 'highResolution',
-                    modifying: false,
-                    copying: false,
-                    annotating: false
+            if (!arrayBuffer || arrayBuffer.byteLength === 0) {
+                showAlert('The selected file is empty or corrupted.', 'error');
+                return;
+            }
+
+            // Test if document is valid or already encrypted
+            let pdfDoc;
+            try {
+                pdfDoc = await PDFDocument.load(arrayBuffer);
+            } catch (loadErr) {
+                if (loadErr.message && loadErr.message.toLowerCase().includes('encrypt')) {
+                    showAlert('This PDF is already encrypted with a password.', 'info');
+                    resultBox.update(`
+                        <div style="text-align: center;">
+                            <p style="color:var(--primary-color); font-weight:600; margin-bottom:0.75rem;">🔒 File is Already Password Protected</p>
+                            <p style="color:var(--text-secondary); font-size:0.9rem;">The selected PDF document already contains standard encryption.</p>
+                        </div>
+                    `, 'PDF Status');
+                    return;
                 }
-            });
+                throw new Error('Corrupted or invalid PDF format. Unable to parse document structure.');
+            }
 
-            const blob = new Blob([protectedPdfBytes], { type: 'application/pdf' });
-            const url = URL.createObjectURL(blob);
-
+            // Honest Security Advisory (Option B - Zero Fake Security)
             resultBox.update(`
-                <div style="text-align: center;">
-                    <p style="color:var(--success-color); font-weight:600; margin-bottom:1rem;">✅ PDF Protected Successfully!</p>
-                    <a href="${url}" download="protected_${selectedFile.name}" class="primary-button" style="text-decoration:none; display:inline-flex; align-items:center; gap:0.5rem;">📥 Download Protected PDF</a>
+                <div style="text-align: left; padding: 0.5rem;">
+                    <div style="display:flex; align-items:center; gap:0.5rem; color:var(--primary-color); font-weight:700; font-size:1.05rem; margin-bottom:0.75rem;">
+                        <span>🔒</span> PDF Client-Side Security Advisory
+                    </div>
+                    <p style="color:var(--text-secondary); font-size:0.9rem; line-height:1.6; margin-bottom:0.8rem;">
+                        <strong>Student Utility Hub</strong> is committed to 100% privacy and honest tools. Standard Adobe PDF encryption (AES-128/AES-256 Standard Security Handler) requires native OS-level cryptographic binaries.
+                    </p>
+                    <p style="color:var(--text-secondary); font-size:0.9rem; line-height:1.6; margin-bottom:1rem;">
+                        To guarantee your privacy, we <strong>never upload your sensitive documents to remote servers</strong> for server-side encryption. We recommend encrypting local documents using your operating system's built-in PDF print/export security or offline open-source utilities like <code>qpdf</code>.
+                    </p>
+                    <div style="background:var(--surface-color); border:1px solid var(--tool-card-border); border-radius:var(--radius-md); padding:0.75rem 1rem; font-size:0.85rem; color:var(--text-primary);">
+                        <strong>Document Verified:</strong> "${selectedFile.name}" (${pdfDoc.getPageCount()} page(s), ${(selectedFile.size / 1024).toFixed(1)} KB) is valid and intact.
+                    </div>
                 </div>
-            `);
+            `, 'Client-Side Security Notice');
+            showAlert('PDF structure verified. Client-side security notice displayed.', 'info');
         } catch (err) {
             console.error(err);
-            showAlert('Error protecting PDF. Please ensure the file is valid.', 'error');
+            showAlert(err.message || 'Error processing PDF file. Ensure it is a valid PDF.', 'error');
         } finally {
             protectBtn.disabled = false;
             protectBtn.textContent = 'Protect PDF';

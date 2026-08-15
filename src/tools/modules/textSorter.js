@@ -88,7 +88,7 @@ export default createTool('textSorter', ({ container, showAlert, hideAlert }) =>
         const sortedResult = lines.join('\n');
 
         resultBox.update(`
-            <textarea id="sortedOutput" readonly style="width:100%; height:200px; padding:0.75rem; border:1px solid var(--tool-card-border); border-radius:var(--radius-md); background:var(--surface-color); color:var(--text-primary); font-family:monospace; font-size:0.95rem; resize:vertical; margin-bottom:1rem;">${sortedResult}</textarea>
+            <textarea id="sortedOutput" readonly style="width:100%; height:200px; padding:0.75rem; border:1px solid var(--tool-card-border); border-radius:var(--radius-md); background:var(--surface-color); color:var(--text-primary); font-family:monospace; font-size:0.95rem; resize:vertical; margin-bottom:1rem;"></textarea>
             <div style="display:flex; gap:1rem;">
                 <button type="button" class="primary-button" id="copyResultBtn">📋 Copy Sorted Text</button>
                 <button type="button" class="secondary-button" id="clearBtn">✕ Reset</button>
@@ -96,6 +96,7 @@ export default createTool('textSorter', ({ container, showAlert, hideAlert }) =>
         `);
 
         const sortedOutput = resultBox.querySelector('#sortedOutput');
+        if (sortedOutput) sortedOutput.value = sortedResult;
         
         resultBox.querySelector('#copyResultBtn').onclick = () => {
             sortedOutput.select();

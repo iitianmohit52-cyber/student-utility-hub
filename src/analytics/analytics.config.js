@@ -11,7 +11,7 @@ export const AnalyticsConfig = {
     // The providers to push data to. 
     providers: {
         console: true, // Always log to console in debug mode
-        googleAnalytics: false, // Set to true when GA is configured
+        googleAnalytics: true, // Pushes page_view & events to GTM dataLayer
         clarity: false,
         plausible: false
     },

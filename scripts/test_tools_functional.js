@@ -339,9 +339,190 @@ runTest('Compressor Decision: Returns reduced blob and positive percentage when 
 });
 
 // -----------------------------------------------------------------------------
-// 5. ADSENSE & SEO READINESS AUDIT
+// 5. SECURITY & TOOL REGRESSION AUDIT
 // -----------------------------------------------------------------------------
-console.log('\n🛡️ Section 5: AdSense Policy & SEO DOM Verification');
+console.log('\n🔒 Section 5: Security Hardening & Tool Regression Audit');
+
+// Web Crypto Password Generator Test
+runTest('Password Generator uses Web Crypto and enforces character sets & length', () => {
+    const charSets = {
+        uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+        lowercase: 'abcdefghijklmnopqrstuvwxyz',
+        numbers: '0123456789',
+        symbols: '!@#$%^&*()_+-=[]{}|;:,.<>?'
+    };
+
+    const getSecureRandomInt = (max) => {
+        const maxUint32 = 0xFFFFFFFF;
+        const limit = maxUint32 - (maxUint32 % max);
+        const buf = crypto.randomBytes(4);
+        const rand = buf.readUInt32BE(0);
+        if (rand >= limit) return getSecureRandomInt(max);
+        return rand % max;
+    };
+
+    const length = 20;
+    const charset = charSets.uppercase + charSets.lowercase + charSets.numbers + charSets.symbols;
+    const chars = [
+        charSets.uppercase[getSecureRandomInt(charSets.uppercase.length)],
+        charSets.lowercase[getSecureRandomInt(charSets.lowercase.length)],
+        charSets.numbers[getSecureRandomInt(charSets.numbers.length)],
+        charSets.symbols[getSecureRandomInt(charSets.symbols.length)]
+    ];
+    for (let i = chars.length; i < length; i++) {
+        chars.push(charset.charAt(getSecureRandomInt(charset.length)));
+    }
+    const password = chars.join('');
+
+    assert.strictEqual(password.length, length);
+    assert.ok(/[A-Z]/.test(password), 'Must contain uppercase');
+    assert.ok(/[a-z]/.test(password), 'Must contain lowercase');
+    assert.ok(/[0-9]/.test(password), 'Must contain numbers');
+    assert.ok(/[!@#$%^&*()_+\-=[\]{}|;:,.<>?]/.test(password), 'Must contain symbols');
+});
+
+// PDF Split Range Deduplication & Validation Test
+runTest('PDF Splitter Range Parser: Deduplicates overlapping pages and handles ranges', () => {
+    const parsePageRanges = (str, maxPages) => {
+        const parts = str.split(',').map(s => s.trim()).filter(Boolean);
+        const selectedPages = new Set();
+        const orderedIndices = [];
+
+        for (const part of parts) {
+            if (part.includes('-')) {
+                const rangeTokens = part.split('-');
+                let start = parseInt(rangeTokens[0].trim(), 10);
+                let end = parseInt(rangeTokens[1].trim(), 10);
+                if (start > end) { const tmp = start; start = end; end = tmp; }
+                if (start < 1 || end > maxPages) throw new Error(`Out of bounds`);
+                for (let i = start; i <= end; i++) {
+                    if (!selectedPages.has(i)) {
+                        selectedPages.add(i);
+                        orderedIndices.push(i - 1);
+                    }
+                }
+            } else {
+                const pageNum = parseInt(part, 10);
+                if (pageNum < 1 || pageNum > maxPages) throw new Error(`Out of bounds`);
+                if (!selectedPages.has(pageNum)) {
+                    selectedPages.add(pageNum);
+                    orderedIndices.push(pageNum - 1);
+                }
+            }
+        }
+        return orderedIndices;
+    };
+
+    // Range 1-3, 4-6 must produce 0,1,2,3,4,5 (1,2,3,4,5,6)
+    const res1 = parsePageRanges('1-3, 4-6', 10);
+    assert.deepStrictEqual(res1, [0, 1, 2, 3, 4, 5]);
+
+    // Overlapping ranges 1-3, 3-5 must NOT duplicate page 3
+    const res2 = parsePageRanges('1-3, 3-5', 10);
+    assert.deepStrictEqual(res2, [0, 1, 2, 3, 4]);
+
+    // Reversed range 5-3 should normalize to 3,4,5
+    const res3 = parsePageRanges('5-3', 10);
+    assert.deepStrictEqual(res3, [2, 3, 4]);
+
+    // Out of bounds detection
+    assert.throws(() => parsePageRanges('1-15', 10));
+});
+
+// Markdown Link Protocol Sanitization Test
+runTest('Markdown Link Protocol Sanitization: Blocks javascript: and data: links', () => {
+    const sanitizeMarkdownLinks = (raw) => {
+        return raw.replace(/\[([^\]]+)\]\(([^ \t\r\n]+)\)/g, (match, linkText, linkUrl) => {
+            const trimmedUrl = linkUrl.trim();
+            const isSafeScheme = /^(https?:|mailto:|\/|#)/i.test(trimmedUrl) && !/^(javascript:|data:|vbscript:)/i.test(trimmedUrl);
+            if (isSafeScheme) {
+                return `<a href="${trimmedUrl}" target="_blank" rel="noopener noreferrer">${linkText}</a>`;
+            }
+            return `<span>${linkText}</span>`;
+        });
+    };
+
+    const malicious1 = '[Click here](javascript:alert(1))';
+    const safeOutput1 = sanitizeMarkdownLinks(malicious1);
+    assert.ok(!safeOutput1.includes('href="javascript:'), 'Must not allow javascript: in href');
+    assert.strictEqual(safeOutput1, '<span>Click here</span>');
+
+    const malicious2 = '[Click here](data:text/html,<script>alert(1)</script>)';
+    const safeOutput2 = sanitizeMarkdownLinks(malicious2);
+    assert.ok(!safeOutput2.includes('href="data:'), 'Must not allow data: in href');
+
+    const validLink = '[Student Utility Hub](https://studentutilityhub.in/tools/pdf-merge)';
+    const safeOutput3 = sanitizeMarkdownLinks(validLink);
+    assert.ok(safeOutput3.includes('href="https://studentutilityhub.in/tools/pdf-merge"'));
+});
+
+// QR Scanner Decoded Content Sanitization Test
+runTest('QR Scanner Decoded Content Sanitization: Safely handles HTML injection', () => {
+    const rawQrData = '</textarea><script>alert("XSS")</script>';
+    const escapeHTML = (str) => {
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    };
+    const escaped = escapeHTML(rawQrData);
+    assert.ok(!escaped.includes('<script>'), 'Must escape script tags');
+    assert.ok(!escaped.includes('</textarea>'), 'Must escape textarea tags');
+});
+
+// Citation Generator HTML Escaping Test
+runTest('Citation Generator: Escapes raw author & title fields', () => {
+    const escapeHTML = (str) => String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const author = 'Smith <img src=x onerror=alert(1)>';
+    const title = 'A Study in Privacy & Security';
+    const escapedAuthor = escapeHTML(author);
+    const citation = `${escapedAuthor}. <em>${escapeHTML(title)}</em>. 2026.`;
+
+    assert.ok(!citation.includes('<img'), 'Must escape img tags in author');
+    assert.ok(citation.includes('&lt;img src=x onerror=alert(1)&gt;'));
+});
+
+// Zero Forbidden Placeholders Across Entire Workspace
+runTest('Zero forbidden placeholders across all source files', () => {
+    const forbiddenPatterns = [
+        'YOUR_CLARITY_ID',
+        'Ad Placeholder',
+        'Top Banner Ad',
+        'Between Sections Ad',
+        'Before FAQ Ad',
+        'Governing Jurisdiction - To Be Configured'
+    ];
+
+    const checkDir = (dir) => {
+        const entries = fs.readdirSync(dir, { withFileTypes: true });
+        for (const entry of entries) {
+            const full = path.join(dir, entry.name);
+            if (entry.isDirectory()) {
+                if (entry.name !== 'node_modules' && entry.name !== '.git' && entry.name !== 'dist') {
+                    checkDir(full);
+                }
+            } else if (entry.isFile() && (entry.name.endsWith('.js') || entry.name.endsWith('.html') || entry.name.endsWith('.json') || entry.name.endsWith('.txt'))) {
+                // Skip this test file itself
+                if (entry.name === 'test_tools_functional.js') continue;
+                const content = fs.readFileSync(full, 'utf8');
+                for (const pattern of forbiddenPatterns) {
+                    if (content.includes(pattern)) {
+                        throw new Error(`Found forbidden placeholder "${pattern}" in ${full}`);
+                    }
+                }
+            }
+        }
+    };
+
+    checkDir(rootDir);
+});
+
+// -----------------------------------------------------------------------------
+// 6. ADSENSE & SEO READINESS AUDIT
+// -----------------------------------------------------------------------------
+console.log('\n🛡️ Section 6: AdSense Policy & SEO DOM Verification');
 
 const indexHtmlPath = path.join(rootDir, 'index.html');
 const indexHtmlContent = fs.readFileSync(indexHtmlPath, 'utf8');

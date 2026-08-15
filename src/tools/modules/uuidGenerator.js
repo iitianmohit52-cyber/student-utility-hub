@@ -35,9 +35,16 @@ export default createTool('uuidGenerator', ({ container, showAlert, hideAlert })
     container.appendChild(layout);
 
     const generateUUIDv4 = () => {
-        // Fallback for older browsers without crypto.randomUUID
         if (typeof crypto !== 'undefined' && crypto.randomUUID) {
             return crypto.randomUUID();
+        }
+        if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+            const buf = new Uint8Array(16);
+            crypto.getRandomValues(buf);
+            buf[6] = (buf[6] & 0x0f) | 0x40; // Version 4
+            buf[8] = (buf[8] & 0x3f) | 0x80; // Variant 10xx
+            const hex = Array.from(buf, b => b.toString(16).padStart(2, '0')).join('');
+            return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20, 32)}`;
         }
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
             const r = Math.random() * 16 | 0;
@@ -57,7 +64,7 @@ export default createTool('uuidGenerator', ({ container, showAlert, hideAlert })
         const outputStr = list.join('\n');
 
         resultBox.update(`
-            <textarea id="uuidOutput" readonly style="width:100%; height:180px; padding:0.75rem; border:1px solid var(--tool-card-border); border-radius:var(--radius-md); background:var(--surface-color); color:var(--text-primary); font-family:monospace; font-size:0.95rem; resize:vertical; margin-bottom:1rem;">${outputStr}</textarea>
+            <textarea id="uuidOutput" readonly style="width:100%; height:180px; padding:0.75rem; border:1px solid var(--tool-card-border); border-radius:var(--radius-md); background:var(--surface-color); color:var(--text-primary); font-family:monospace; font-size:0.95rem; resize:vertical; margin-bottom:1rem;"></textarea>
             <div style="display:flex; gap:1rem;">
                 <button type="button" class="primary-button" id="copyResultBtn">📋 Copy UUIDs</button>
                 <button type="button" class="secondary-button" id="clearBtn">✕ Reset</button>
@@ -65,6 +72,7 @@ export default createTool('uuidGenerator', ({ container, showAlert, hideAlert })
         `);
 
         const uuidOutput = resultBox.querySelector('#uuidOutput');
+        if (uuidOutput) uuidOutput.value = outputStr;
         
         resultBox.querySelector('#copyResultBtn').onclick = () => {
             uuidOutput.select();

@@ -5,6 +5,17 @@
       "has": [
         {
           "type": "host",
+          "value": "www.studentutilityhub.in"
+        }
+      ],
+      "destination": "https://studentutilityhub.in/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
           "value": "student-utility-hub-2ss3.vercel.app"
         }
       ],
