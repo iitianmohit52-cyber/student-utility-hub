@@ -79,6 +79,9 @@ export default (container) => {
                 
                 canvas.toBlob((blob) => {
                     if (blob) {
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
                         const safeBaseName = originalFileName.replace(/[^a-zA-Z0-9._-]/g, '_');
                         a.download = `${safeBaseName}_converted.${targetExtension}`;
                         document.body.appendChild(a);

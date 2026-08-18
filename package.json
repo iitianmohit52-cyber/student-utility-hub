@@ -13,7 +13,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "node scripts/test_tools_real_functionality.js && node scripts/test_tools_functional.js && node scripts/generate_seo.js && node scripts/test_seo_dom.js && node scripts/audit_indexing_architecture.js",
+    "prebuild": "node scripts/audit_tool_integrity.js && node scripts/test_tools_real_functionality.js && node scripts/test_tools_functional.js && node scripts/generate_seo.js && node scripts/audit_domain_migration.js && node scripts/audit_seo.js && node scripts/test_seo_dom.js && node scripts/audit_indexing_architecture.js",
     "build": "vite build && node scripts/test_prod_server.js",
     "preview": "vite preview",
     "update-seo": "node scripts/generate_seo.js",

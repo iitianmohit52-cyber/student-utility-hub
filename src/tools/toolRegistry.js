@@ -91,6 +91,331 @@ const rawTools = [
     { id: 'audioTrimmer', name: 'Audio Trimmer & Cutter', category: 'media', icon: '✂️', description: 'Trim and extract audio clips effortlessly.', keywords: ['audio', 'trimmer', 'cutter', 'clip', 'media', 'music'] }
 ];
 
+// Search-Intent SEO Metadata Matrix for all 77 Active Tools
+const toolIntentMetadata = {
+    // --- PDF TOOLS ---
+    pdfMerge: {
+        seoTitle: 'Merge PDF Online Free – Combine Multiple PDF Files | Student Utility Hub',
+        seoDescription: 'Combine multiple PDF documents into a single PDF file securely. Fast, free client-side PDF merger with custom page ordering and zero server uploads.'
+    },
+    pdfSplit: {
+        seoTitle: 'Split PDF Online Free – Extract & Separate PDF Pages | Student Utility Hub',
+        seoDescription: 'Extract specific pages or split PDF documents into separate files online. 100% private, instant browser-native PDF page splitter.'
+    },
+    pdfToImage: {
+        seoTitle: 'PDF to Image Converter – Convert PDF Pages to JPG & PNG | Student Utility Hub',
+        seoDescription: 'Convert PDF pages into high-resolution JPG or PNG images directly in your browser. Fast, free, and completely secure client-side extraction.'
+    },
+    imageToPdf: {
+        seoTitle: 'Image to PDF Converter – Convert JPG & PNG to PDF | Student Utility Hub',
+        seoDescription: 'Convert JPG, PNG, and WebP images into a compiled PDF document. Adjust margins, page orientation, and download your unified PDF instantly.'
+    },
+    pdfWatermark: {
+        seoTitle: 'Add Watermark to PDF Online – Custom Text Stamp | Student Utility Hub',
+        seoDescription: 'Add custom text watermarks to your PDF pages easily. Protect confidential documents with adjustable opacity, size, and rotation locally.'
+    },
+    pdfPageRotator: {
+        seoTitle: 'Rotate PDF Pages Online – Change PDF Orientation (90°, 180°, 270°) | Student Utility Hub',
+        seoDescription: 'Rotate individual or all PDF pages clockwise and counter-clockwise. Fix orientation and save your aligned PDF file in seconds.'
+    },
+    pdfCompress: {
+        seoTitle: 'Compress PDF Online Free – Reduce PDF Size Securely | Student Utility Hub',
+        seoDescription: 'Reduce PDF file size online while preserving document quality. Client-side PDF compressor that processes files locally with zero uploads.'
+    },
+    pdfUnlock: {
+        seoTitle: 'Unlock PDF Online – Remove Password & Security Restrictions | Student Utility Hub',
+        seoDescription: 'Remove passwords, printing restrictions, and security limits from PDF files in your browser. Safe, instant client-side PDF unlocker.'
+    },
+    pdfProtect: {
+        seoTitle: 'Protect PDF Online – Encrypt PDF with Strong Password | Student Utility Hub',
+        seoDescription: 'Encrypt and secure your PDF documents with standard password encryption. Keep sensitive academic and business records private.'
+    },
+    pdfSign: {
+        seoTitle: 'Sign PDF Online Free – Add Digital Signature to PDF | Student Utility Hub',
+        seoDescription: 'Draw, type, or upload your signature to sign PDF documents online for free. Fast, legally compliant client-side document signing.'
+    },
+    pdfRemovePages: {
+        seoTitle: 'Remove Pages from PDF – Delete Unwanted PDF Pages Online | Student Utility Hub',
+        seoDescription: 'Delete specific unwanted pages from your PDF file and save the clean document. Fast, interactive page selector with zero server uploads.'
+    },
+
+    // --- IMAGE TOOLS ---
+    imageConverter: {
+        seoTitle: 'Image Converter Online – Convert JPG, PNG, WebP Free | Student Utility Hub',
+        seoDescription: 'Convert images between JPG, PNG, and WebP formats instantly. High-speed client-side image converter preserving high fidelity.'
+    },
+    imageCompressor: {
+        seoTitle: 'Image Compressor Online – Reduce JPG, PNG & WebP Size | Student Utility Hub',
+        seoDescription: 'Reduce image file size without visual quality loss. Multi-candidate compression supporting JPG, PNG, and modern WebP formats.'
+    },
+    imageCropper: {
+        seoTitle: 'Image Cropper Online – Crop Photos with Custom Aspect Ratios | Student Utility Hub',
+        seoDescription: 'Crop pictures online with freeform or fixed aspect ratios (1:1, 16:9, 4:3). Fast browser-based photo cropping tool with instant export.'
+    },
+    imageResizer: {
+        seoTitle: 'Image Resizer Online – Resize Image Dimensions & Pixels | Student Utility Hub',
+        seoDescription: 'Resize image dimensions in pixels or percentages while locking aspect ratio. Scale down photos for web upload limits safely.'
+    },
+    imageFilter: {
+        seoTitle: 'Image Filter Effects – Apply Grayscale, Sepia, Blur & Contrast | Student Utility Hub',
+        seoDescription: 'Apply photo filter effects including grayscale, vintage sepia, blur, brightness, and contrast adjustments in real time.'
+    },
+    svgToPng: {
+        seoTitle: 'SVG to PNG Converter – Convert Vector SVG to High-Res PNG | Student Utility Hub',
+        seoDescription: 'Convert vector SVG files into raster PNG or JPG images with custom resolution scaling. High-quality vector rendering in your browser.'
+    },
+    imageColorExtractor: {
+        seoTitle: 'Image Color Palette Extractor – Get Dominant HEX & RGB Codes | Student Utility Hub',
+        seoDescription: 'Extract dominant color palettes and HEX/RGB codes from any photo. Perfect for UI/UX designers and artists creating harmonious themes.'
+    },
+    faviconGenerator: {
+        seoTitle: 'Favicon Generator Online – Generate 16x16, 32x32 & Apple Icons | Student Utility Hub',
+        seoDescription: 'Generate multi-size website favicons (16x16, 32x32, 48x48, 180x180) from an image. Download standardized favicon assets in one click.'
+    },
+    imageBackgroundRemover: {
+        seoTitle: 'Background Remover Online – Make Images Transparent Free | Student Utility Hub',
+        seoDescription: 'Remove solid backgrounds from photos and create transparent PNG images client-side. Fast, free cutout tool with zero server latency.'
+    },
+    imageWatermark: {
+        seoTitle: 'Watermark Images Online – Add Custom Logo & Text Stamp | Student Utility Hub',
+        seoDescription: 'Add customizable text or logo watermarks to your photographs. Protect your portfolio and images from unauthorized distribution.'
+    },
+    imageMetadata: {
+        seoTitle: 'Image EXIF Metadata Viewer – Inspect Camera & GPS Data | Student Utility Hub',
+        seoDescription: 'Inspect hidden EXIF metadata from photographs including camera model, exposure settings, ISO, date, and geolocation coordinates.'
+    },
+    imageRotateFlip: {
+        seoTitle: 'Rotate & Flip Image Online – Mirror Photos Horizontally/Vertically | Student Utility Hub',
+        seoDescription: 'Rotate images by 90/180/270 degrees and flip photos horizontally or vertically. Fast client-side photo orientation editor.'
+    },
+    screenshotToPdf: {
+        seoTitle: 'Screenshot to PDF Converter – Paste & Convert Images to PDF | Student Utility Hub',
+        seoDescription: 'Convert clipboard screenshots or image files directly into a compiled PDF document. Ideal for compiling bug reports and study notes.'
+    },
+
+    // --- TEXT & CONTENT ---
+    qrCodeGenerator: {
+        seoTitle: 'QR Code Generator Online – Create Custom QR Codes for Free | Student Utility Hub',
+        seoDescription: 'Generate scannable QR codes for URLs, text, Wi-Fi networks, and contact cards. Download high-resolution PNG QR images instantly.'
+    },
+    passwordGenerator: {
+        seoTitle: 'Strong Password Generator – Create Secure Random Passwords | Student Utility Hub',
+        seoDescription: 'Generate strong, uncrackable passwords using the Web Crypto API. Customize length, uppercase, lowercase, numbers, and special symbols.'
+    },
+    wordCounter: {
+        seoTitle: 'Word Counter Online – Character Count, Words & Reading Time | Student Utility Hub',
+        seoDescription: 'Count words, characters with/without spaces, sentences, paragraphs, and reading time in real time. Accurate Unicode text analyzer.'
+    },
+    base64: {
+        seoTitle: 'Base64 Encoder & Decoder – UTF-8 Safe Text Conversion | Student Utility Hub',
+        seoDescription: 'Encode text strings to Base64 format and decode Base64 back to plain text. Full UTF-8, emoji, and special character support.'
+    },
+    jsonFormatter: {
+        seoTitle: 'JSON Formatter & Validator – Beautify, Minify & Inspect JSON | Student Utility Hub',
+        seoDescription: 'Format, beautify, validate, and minify JSON data online. Features 2-space indentation, syntax highlighting, and instant error detection.'
+    },
+    caseConverter: {
+        seoTitle: 'Case Converter Online – UPPERCASE, lowercase, Title Case, camelCase | Student Utility Hub',
+        seoDescription: 'Convert text case between UPPERCASE, lowercase, Title Case, sentence case, camelCase, snake_case, and kebab-case in one click.'
+    },
+    diffChecker: {
+        seoTitle: 'Text Diff Checker Online – Compare Text & Find Differences | Student Utility Hub',
+        seoDescription: 'Compare two text blocks side-by-side or line-by-line to spot differences, additions, and deletions. Fast diff inspection tool.'
+    },
+    markdownPreviewer: {
+        seoTitle: 'Markdown Live Previewer – Real-Time Markdown to HTML Editor | Student Utility Hub',
+        seoDescription: 'Write GitHub-flavored Markdown with real-time rendered HTML preview. Includes copy HTML output and formatted text view.'
+    },
+    loremIpsum: {
+        seoTitle: 'Lorem Ipsum Generator – Placeholder Dummy Text by Paragraphs | Student Utility Hub',
+        seoDescription: 'Generate custom Lorem Ipsum placeholder text by paragraphs, sentences, or words for web design mockups and copy layout.'
+    },
+    slugGenerator: {
+        seoTitle: 'URL Slug Generator – Create SEO-Friendly Clean URL Slugs | Student Utility Hub',
+        seoDescription: 'Convert article titles and strings into clean, lowercase, hyphenated URL slugs optimized for SEO and readability.'
+    },
+    textCleaner: {
+        seoTitle: 'Text Cleaner & HTML Stripper – Remove Tags & Extra Spaces | Student Utility Hub',
+        seoDescription: 'Strip HTML tags, unwanted line breaks, and duplicate spaces from dirty copy. Clean formatted text for web publishing.'
+    },
+    textToSpeech: {
+        seoTitle: 'Text to Speech Online – Natural Voice Audio Reader | Student Utility Hub',
+        seoDescription: 'Convert written text into natural spoken speech using your browser native Web Speech API. Adjust voice, pitch, and speed.'
+    },
+    speechToText: {
+        seoTitle: 'Speech to Text Online – Voice Dictation & Audio Transcription | Student Utility Hub',
+        seoDescription: 'Transcribe spoken voice into formatted text in real-time. Fast browser-based voice dictation with zero audio recordings uploaded.'
+    },
+    duplicateLineRemover: {
+        seoTitle: 'Duplicate Line Remover – Clean & Deduplicate Text Lists | Student Utility Hub',
+        seoDescription: 'Find and remove duplicate lines from lists and data sets instantly. Features case-sensitivity controls and empty line removal.'
+    },
+    textSorter: {
+        seoTitle: 'Text Sorter Online – Alphabetical, Numerical & Length Sorting | Student Utility Hub',
+        seoDescription: 'Sort text lines alphabetically (A-Z, Z-A), numerically, by character length, or in reverse order. Clean list organizer.'
+    },
+    reverseText: {
+        seoTitle: 'Reverse Text Generator – Invert Words, Letters & Backwards Text | Student Utility Hub',
+        seoDescription: 'Reverse text backwards, invert letter order, flip entire sentences, or mirror paragraphs. Surrogate-pair and emoji safe.'
+    },
+    randomTextGenerator: {
+        seoTitle: 'Random Text & Word Generator – Creative Writing & Mockup Copy | Student Utility Hub',
+        seoDescription: 'Generate random words, sentences, and paragraphs for placeholder copy, typing practice, and creative brainstorms.'
+    },
+    htmlEncoderDecoder: {
+        seoTitle: 'HTML Entity Encoder & Decoder – Escape Special Characters | Student Utility Hub',
+        seoDescription: 'Convert special characters into HTML entities (e.g. &amp;, &lt;, &gt;) and decode entities back to plain text for safe web embedding.'
+    },
+
+    // --- DEVELOPER TOOLS ---
+    htmlFormatter: {
+        seoTitle: 'HTML Formatter & Minifier – Beautify HTML Code Online | Student Utility Hub',
+        seoDescription: 'Beautify nested HTML code markup with custom indentation or minify HTML to reduce payload size and optimize page speed.'
+    },
+    cssMinifier: {
+        seoTitle: 'CSS Minifier & Formatter – Compress Stylesheet Code | Student Utility Hub',
+        seoDescription: 'Minify CSS stylesheet code to reduce file size and improve Core Web Vitals. Removes whitespace, comments, and redundant rules.'
+    },
+    jsFormatter: {
+        seoTitle: 'JavaScript Formatter & Minifier – Beautify JS Code Online | Student Utility Hub',
+        seoDescription: 'Format, beautify, and minify JavaScript snippets. Clean up obfuscated script code with structured indentation.'
+    },
+    jwtDecoder: {
+        seoTitle: 'JWT Token Decoder – Inspect JSON Web Token Header & Claims | Student Utility Hub',
+        seoDescription: 'Decode and inspect JSON Web Tokens (JWT) client-side. View decoded header algorithms, payload claims, and expiration timestamps securely.'
+    },
+    hashGenerator: {
+        seoTitle: 'Hash Generator – MD5, SHA-1, SHA-256 & SHA-512 Hashes | Student Utility Hub',
+        seoDescription: 'Generate cryptographic hash strings including MD5, SHA-1, SHA-256, and SHA-512. Fast client-side checksum generator.'
+    },
+    urlEncoder: {
+        seoTitle: 'URL Encoder & Decoder – Percent-Encoding for Query Parameters | Student Utility Hub',
+        seoDescription: 'Encode special characters for URL query strings (percent-encoding) and decode encoded URLs back to human-readable strings.'
+    },
+    regexTester: {
+        seoTitle: 'Regex Tester & Debugger – Real-Time Regular Expression Evaluator | Student Utility Hub',
+        seoDescription: 'Test regular expressions against sample text with real-time match highlighting, capture groups breakdown, and flag controls.'
+    },
+    colorPicker: {
+        seoTitle: 'Color Picker & Hex Converter – HEX, RGB, HSL & CMYK Codes | Student Utility Hub',
+        seoDescription: 'Pick colors visually and convert between HEX, RGB, and HSL values. Copy web-ready CSS color strings in one click.'
+    },
+    uuidGenerator: {
+        seoTitle: 'UUID Generator (v4) – Bulk Random GUID & UUID Strings | Student Utility Hub',
+        seoDescription: 'Generate RFC 4122 compliant version 4 UUIDs (GUIDs) individually or in bulk. Cryptographically random and unique keys.'
+    },
+    timestampConverter: {
+        seoTitle: 'Unix Timestamp Converter – Epoch Seconds to Date & Time | Student Utility Hub',
+        seoDescription: 'Convert Unix epoch timestamps (seconds and milliseconds) to human-readable UTC/Local dates and convert dates to timestamps.'
+    },
+    sqlFormatter: {
+        seoTitle: 'SQL Formatter Online – Beautify & Align SQL Queries | Student Utility Hub',
+        seoDescription: 'Format and beautify complex SQL queries. Standardizes keyword capitalization (SELECT, FROM, WHERE) and aligns clauses.'
+    },
+    xmlFormatter: {
+        seoTitle: 'XML Formatter & Beautifier – Pretty-Print XML Documents | Student Utility Hub',
+        seoDescription: 'Pretty-print and indent XML documents with tree formatting. Validates XML tags and makes nested schemas human-readable.'
+    },
+    qrCodeScanner: {
+        seoTitle: 'QR Code Scanner Online – Scan QR Codes with Camera or Image | Student Utility Hub',
+        seoDescription: 'Scan QR codes using your device camera webcam or upload an image file. Decodes URLs and text data locally without cloud uploads.'
+    },
+
+    // --- CALCULATORS ---
+    ageCalculator: {
+        seoTitle: 'Age Calculator – Exact Age in Years, Months, Days & Hours | Student Utility Hub',
+        seoDescription: 'Calculate exact age from date of birth in years, months, days, minutes, and hours. Accurate birthday and leap-year age calculation.'
+    },
+    emiCalculator: {
+        seoTitle: 'EMI Loan Calculator – Monthly Loan Repayment & Interest Breakdown | Student Utility Hub',
+        seoDescription: 'Calculate monthly EMI repayments, total interest payable, and amortization schedules for home, car, and personal loans with interactive charts.'
+    },
+    sipCalculator: {
+        seoTitle: 'SIP Investment Calculator – Estimate Mutual Fund Returns & Wealth | Student Utility Hub',
+        seoDescription: 'Estimate future returns and wealth growth from monthly Systematic Investment Plans (SIP). Calculate compounding mutual fund investment values.'
+    },
+    bmiCalculator: {
+        seoTitle: 'BMI Calculator – Body Mass Index & WHO Health Classification | Student Utility Hub',
+        seoDescription: 'Calculate Body Mass Index (BMI) using metric (kg/cm) or imperial (lbs/inches) units. Includes WHO weight category classifications.'
+    },
+    percentageCalculator: {
+        seoTitle: 'Percentage Calculator – Calculate Percentages & Percent Change | Student Utility Hub',
+        seoDescription: 'Calculate percentages of numbers, percentage increases/decreases, and proportions. Accurate multi-formula percentage tool.'
+    },
+    cgpaCalculator: {
+        seoTitle: 'CGPA to Percentage Calculator – Convert CGPA to Percentage (9.5x) | Student Utility Hub',
+        seoDescription: 'Convert university CGPA to percentage using standard formula (CGPA x 9.5). Find corresponding academic grades and divisions.'
+    },
+    discountCalculator: {
+        seoTitle: 'Discount Calculator – Calculate Sale Prices & Total Savings | Student Utility Hub',
+        seoDescription: 'Calculate final sale prices, discount percentages, and total money saved during shopping and promotions.'
+    },
+    compoundInterest: {
+        seoTitle: 'Compound Interest Calculator – Future Value with Compounding | Student Utility Hub',
+        seoDescription: 'Calculate compound interest and total investment growth with annual, semi-annual, quarterly, or monthly compounding frequencies.'
+    },
+    gpaCalculator: {
+        seoTitle: 'Semester GPA Calculator – Weighted Course Grade Point Average | Student Utility Hub',
+        seoDescription: 'Calculate semester GPA based on course credit hours and letter grades. Fast weighted average grade point calculation for students.'
+    },
+    unitConverter: {
+        seoTitle: 'Unit Converter – Length, Weight, Temperature & Area Conversions | Student Utility Hub',
+        seoDescription: 'Convert between metric and imperial units for length (meters/feet), weight (kg/lbs), temperature (C/F/K), area, and volume.'
+    },
+    gstCalculator: {
+        seoTitle: 'GST Calculator India – Calculate GST Inclusive & Exclusive Amount | Student Utility Hub',
+        seoDescription: 'Calculate Goods and Services Tax (GST) online for Indian tax slabs (5%, 12%, 18%, 28%). Accurate GST inclusive and exclusive price breakdown.'
+    },
+    fuelCostCalculator: {
+        seoTitle: 'Fuel Cost Calculator – Trip Mileage & Gasoline Cost Estimation | Student Utility Hub',
+        seoDescription: 'Calculate total trip fuel expense and liters/gallons required based on distance, vehicle mileage (km/l or mpg), and fuel price.'
+    },
+    salaryCalculator: {
+        seoTitle: 'Salary Calculator – Convert Hourly Wage to Annual & Monthly Pay | Student Utility Hub',
+        seoDescription: 'Convert hourly wages to weekly, monthly, and annual salaries. Calculate equivalent full-time and part-time income figures.'
+    },
+    timeDurationCalculator: {
+        seoTitle: 'Time Duration Calculator – Calculate Hours & Minutes Between Times | Student Utility Hub',
+        seoDescription: 'Calculate the exact elapsed time (hours, minutes, days) between two timestamps, clock times, or calendar dates.'
+    },
+    scientificCalculator: {
+        seoTitle: 'Scientific Calculator Online – Trigonometry, Logarithms & Math Functions | Student Utility Hub',
+        seoDescription: 'Advanced scientific calculator with trigonometric (sin, cos, tan), logarithmic (log, ln), roots (sqrt), powers, and memory operations.'
+    },
+
+    // --- STUDENT UTILITIES ---
+    pomodoroTimer: {
+        seoTitle: 'Pomodoro Study Timer – 25/5 Productivity Clock & Focus Intervals | Student Utility Hub',
+        seoDescription: 'Boost student focus and study productivity using the Pomodoro technique. Features customizable work/break intervals and notification chimes.'
+    },
+    citationGenerator: {
+        seoTitle: 'Citation Generator – APA, MLA & Chicago Style Bibliographies | Student Utility Hub',
+        seoDescription: 'Generate standardized academic citations in APA 7th, MLA 9th, and Chicago formats for books, websites, and journal articles.'
+    },
+    gpaScaleConverter: {
+        seoTitle: 'GPA Scale Converter – Convert Between 4.0, 5.0 & 10.0 Scales | Student Utility Hub',
+        seoDescription: 'Convert academic grade point averages between 4.0 US scale, 5.0 scale, and 10.0 Indian/European grading systems accurately.'
+    },
+    timer: {
+        seoTitle: 'Online Timer & Stopwatch – Precise Countdown & Lap Counter | Student Utility Hub',
+        seoDescription: 'Dual-purpose full-screen countdown timer and millisecond-accurate stopwatch with lap tracking for study sessions and workouts.'
+    },
+
+    // --- AUDIO & VIDEO ---
+    videoConverter: {
+        seoTitle: 'Video Format Converter – Convert MP4, WebM & Video In Browser | Student Utility Hub',
+        seoDescription: 'Convert video files right inside your browser. Fast, free client-side video conversion with zero cloud uploads or size tracking.'
+    },
+    audioConverter: {
+        seoTitle: 'Audio Converter Online – Convert Tracks to Uncompressed WAV | Student Utility Hub',
+        seoDescription: 'Convert audio files to uncompressed high-fidelity WAV format natively in your browser using the Web Audio API.'
+    },
+    audioTrimmer: {
+        seoTitle: 'Audio Trimmer & Cutter – Cut MP3 & Audio Slices Online | Student Utility Hub',
+        seoDescription: 'Trim audio tracks, cut audio clips, and export selected segments as uncompressed audio slices. Fast waveform timeline trimming.'
+    }
+};
+
 export const toKebabCase = (str) => {
     if (!str) return '';
     return str
@@ -103,8 +428,12 @@ export const tools = rawTools.map((tool, index, arr) => {
     const slug = toKebabCase(tool.id);
     const title = tool.name;
     const categoryName = tool.category === 'developer' ? 'Developer' : (tool.category === 'student' ? 'Student' : tool.category.toUpperCase());
-    const seoTitle = `${tool.name} – Free Online ${categoryName} Tool | Student Utility Hub`;
-    const seoDescription = `Use our free online ${tool.name} to ${tool.description.toLowerCase().replace(/\.$/, '')} safely. Runs 100% client-side in your browser for absolute privacy.`;
+    
+    // Custom search-intent metadata if available, otherwise intent-driven fallback
+    const intent = toolIntentMetadata[tool.id];
+    const seoTitle = intent?.seoTitle || `${tool.name} Online – Free ${categoryName} Tool | Student Utility Hub`;
+    const seoDescription = intent?.seoDescription || `Use our free online ${tool.name} to ${tool.description.toLowerCase().replace(/\.$/, '')} safely. Runs 100% client-side in your browser for absolute privacy.`;
+    
     const searchTags = tool.keywords || [];
     const popularity = index % 3 === 0 ? 'high' : 'medium';
     const version = '1.0.0';
@@ -132,11 +461,11 @@ export const tools = rawTools.map((tool, index, arr) => {
 
 export const categories = [
     { id: 'all', name: 'All Tools', icon: '✨', description: 'Browse all available utilities.' },
-    { id: 'pdf', name: 'PDF Tools', icon: '📄', description: 'Manage, merge, and convert PDF documents.' },
-    { id: 'image', name: 'Image Tools', icon: '🖼️', description: 'Edit, compress, and convert images.' },
-    { id: 'text', name: 'Text & Content', icon: '📝', description: 'Format, analyze, and generate text.' },
-    { id: 'developer', name: 'Developer Tools', icon: '💻', description: 'Utilities for coding and web development.' },
-    { id: 'calculator', name: 'Calculators', icon: '🧮', description: 'Financial, health, and math calculators.' },
-    { id: 'student', name: 'Student Utilities', icon: '🎓', description: 'Tools for studying and academic success.' },
-    { id: 'media', name: 'Audio & Video', icon: '🎵', description: 'Convert and edit media files.' }
+    { id: 'pdf', name: 'PDF Tools', icon: '📄', description: 'Manage, merge, compress, and convert PDF documents.' },
+    { id: 'image', name: 'Image Tools', icon: '🖼️', description: 'Edit, compress, convert, and crop images.' },
+    { id: 'text', name: 'Text & Content', icon: '📝', description: 'Format, analyze, clean, and generate text.' },
+    { id: 'developer', name: 'Developer Tools', icon: '💻', description: 'Utilities for coding, token decoding, and web development.' },
+    { id: 'calculator', name: 'Calculators', icon: '🧮', description: 'Financial, tax, health, and mathematical calculators.' },
+    { id: 'student', name: 'Student Utilities', icon: '🎓', description: 'Tools for studying, Pomodoro timing, and academic success.' },
+    { id: 'media', name: 'Audio & Video', icon: '🎵', description: 'Convert and trim media files locally.' }
 ];

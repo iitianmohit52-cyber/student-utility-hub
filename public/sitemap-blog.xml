@@ -25,4 +25,24 @@
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
     </url>
+    <url>
+        <loc>https://studentutilityhub.in/guides/how-to-compress-pdf-guide</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://studentutilityhub.in/guides/how-to-split-pdf-pages-guide</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://studentutilityhub.in/guides/how-to-format-validate-json-guide</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://studentutilityhub.in/guides/how-to-calculate-sip-returns-guide</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
 </urlset>
