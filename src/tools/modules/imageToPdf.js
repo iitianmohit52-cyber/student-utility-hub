@@ -62,7 +62,12 @@ export default (container) => {
                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
                 const jpegDataUrl = canvas.toDataURL('image/jpeg', 0.92);
-                const jpegBytes = await fetch(jpegDataUrl).then(res => res.arrayBuffer());
+                const base64Data = jpegDataUrl.split(',')[1];
+                const binaryString = atob(base64Data);
+                const jpegBytes = new Uint8Array(binaryString.length);
+                for (let i = 0; i < binaryString.length; i++) {
+                    jpegBytes[i] = binaryString.charCodeAt(i);
+                }
 
                 const imageEmbed = await pdfDoc.embedJpg(jpegBytes);
                 const page = pdfDoc.addPage([imageEmbed.width, imageEmbed.height]);

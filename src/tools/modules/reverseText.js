@@ -21,10 +21,11 @@ export default createTool('reverseText', ({ container, showAlert, hideAlert }) =
         id: 'reverseMode',
         label: 'Reverse Mode:',
         options: [
-            { value: 'entire', label: 'Reverse Entire Text' },
-            { value: 'words', label: 'Reverse Words only' },
+            { value: 'entire', label: 'Reverse Entire Text (Character-by-Character)' },
+            { value: 'each-word', label: 'Reverse Letters in Each Word' },
+            { value: 'words', label: 'Reverse Word Order' },
             { value: 'lines', label: 'Reverse Line-by-Line' },
-            { value: 'words-in-lines', label: 'Reverse Word Order in Lines' }
+            { value: 'words-in-lines', label: 'Reverse Word Order in Each Line' }
         ],
         onChange: (val) => reverseMode = val
     });
@@ -59,14 +60,28 @@ export default createTool('reverseText', ({ container, showAlert, hideAlert }) =
         let output = '';
 
         if (reverseMode === 'entire') {
-            output = rawText.split('').reverse().join('');
+            // Unicode-safe reverse using Array.from to prevent broken surrogate pairs
+            output = Array.from(rawText).reverse().join('');
+        } else if (reverseMode === 'each-word') {
+            output = rawText.replace(/\S+/g, (word) => Array.from(word).reverse().join(''));
         } else if (reverseMode === 'words') {
-            output = rawText.split(/\s+/).reverse().join(' ');
+            const tokens = rawText.split(/(\s+)/);
+            const words = tokens.filter((_, idx) => idx % 2 === 0);
+            const spaces = tokens.filter((_, idx) => idx % 2 !== 0);
+            words.reverse();
+            output = '';
+            for (let i = 0; i < words.length; i++) {
+                output += words[i];
+                if (i < spaces.length) output += spaces[i];
+            }
         } else if (reverseMode === 'lines') {
             output = rawText.split(/\r?\n/).reverse().join('\n');
         } else if (reverseMode === 'words-in-lines') {
             const lines = rawText.split(/\r?\n/);
-            const processed = lines.map(line => line.split(/\s+/).reverse().join(' '));
+            const processed = lines.map(line => {
+                const parts = line.trim().split(/\s+/).filter(Boolean);
+                return parts.reverse().join(' ');
+            });
             output = processed.join('\n');
         }
 

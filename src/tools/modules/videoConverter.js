@@ -101,9 +101,9 @@ export default (container) => {
             }
             const blob = new Blob(recordedChunks, { type: targetMimeType.split(';')[0] }); 
             const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `${escapeHTML(originalFileName)}_converted.${targetMimeType.split('/')[1].split(';')[0]}`;
+            const safeBaseName = originalFileName.replace(/[^a-zA-Z0-9._-]/g, '_');
+            const fileExt = targetMimeType.includes('mp4') ? 'mp4' : 'webm';
+            a.download = `${safeBaseName}_converted.${fileExt}`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);

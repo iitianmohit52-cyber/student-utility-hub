@@ -55,11 +55,18 @@ export default (container) => {
             const arrayBuffer = await file.arrayBuffer();
             const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
             
-            resultDiv.innerHTML = `<p style="font-weight:600; margin-bottom:1rem; color:var(--accent-color);">Generated Page Images (${pdf.numPages} Page(s)):</p><div id="pageImagesGrid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:1rem;"></div>`;
+            const totalPages = pdf.numPages;
+            resultDiv.innerHTML = `
+                <p style="font-weight:600; margin-bottom:1rem; color:var(--accent-color);">
+                    Generated Page Images (${totalPages} Page${totalPages > 1 ? 's' : ''}):
+                </p>
+                <div id="pageImagesGrid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:1rem;"></div>
+            `;
             const grid = resultDiv.querySelector('#pageImagesGrid');
             resultDiv.style.display = 'block';
 
-            for (let pageNum = 1; pageNum <= Math.min(pdf.numPages, 10); pageNum++) {
+            for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
+                convertBtn.textContent = `Rendering Page ${pageNum} of ${totalPages}...`;
                 const page = await pdf.getPage(pageNum);
                 const viewport = page.getViewport({ scale: 1.5 });
                 const canvas = document.createElement('canvas');
@@ -78,6 +85,7 @@ export default (container) => {
                 `;
                 grid.appendChild(wrapper);
             }
+            showAlert(`Rendered all ${totalPages} page(s) successfully!`, 'success');
         } catch (err) {
             console.error(err);
             showAlert('Error rendering PDF to images.', 'error');

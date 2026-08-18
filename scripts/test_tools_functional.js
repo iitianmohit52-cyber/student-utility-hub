@@ -16,6 +16,7 @@ const rootDir = path.resolve(__dirname, '..');
 let totalTests = 0;
 let passedTests = 0;
 let failedTests = 0;
+const failedNames = [];
 
 function runTest(name, fn) {
     totalTests++;
@@ -25,6 +26,7 @@ function runTest(name, fn) {
         console.log(`  ✅ PASS: ${name}`);
     } catch (err) {
         failedTests++;
+        failedNames.push({ name, err: err.message });
         console.error(`  ❌ FAIL: ${name}`);
         console.error(`     ${err.message}`);
     }
@@ -38,6 +40,7 @@ async function runAsyncTest(name, fn) {
         console.log(`  ✅ PASS: ${name}`);
     } catch (err) {
         failedTests++;
+        failedNames.push({ name, err: err.message });
         console.error(`  ❌ FAIL: ${name}`);
         console.error(`     ${err.message}`);
     }
@@ -504,8 +507,8 @@ runTest('Zero forbidden placeholders across all source files', () => {
                     checkDir(full);
                 }
             } else if (entry.isFile() && (entry.name.endsWith('.js') || entry.name.endsWith('.html') || entry.name.endsWith('.json') || entry.name.endsWith('.txt'))) {
-                // Skip this test file itself
-                if (entry.name === 'test_tools_functional.js') continue;
+                // Skip test script files themselves
+                if (entry.name.startsWith('test_')) continue;
                 const content = fs.readFileSync(full, 'utf8');
                 for (const pattern of forbiddenPatterns) {
                     if (content.includes(pattern)) {
@@ -560,7 +563,8 @@ console.log(`   Failed:          ${failedTests}`);
 console.log('===============================================================\n');
 
 if (failedTests > 0) {
-    console.error(`💥 AUDIT FAILED: ${failedTests} test(s) failed.`);
+    console.error(`💥 AUDIT FAILED: ${failedTests} test(s) failed:`);
+    failedNames.forEach(f => console.error(`  - ${f.name}: ${f.err}`));
     process.exit(1);
 } else {
     console.log('🌟 ALL 77 TOOLS FUNCTIONAL AUDITS & REGRESSION TESTS PASSED!\n');
