@@ -1,15 +1,11 @@
 import { LegalConfig } from '../../config/legalConfig.js';
-import { Analytics, AnalyticsEvents } from '../../analytics/analytics.js';
 
 /**
  * Reusable Legal Page Layout Component
  * Standardizes the design for Privacy, Terms, Disclaimer, and Contact pages.
  */
 export const LegalPageLayout = ({ title, seoTitle, seoDescription, slug, content }) => {
-    // 1. Fire Analytics
-    Analytics.event(AnalyticsEvents.PAGE_VIEW, { page_path: `/${slug}` });
-
-    // 2. Set SEO Metadata
+    // 1. Set SEO Metadata
     document.title = seoTitle || `${title} - ${LegalConfig.siteName}`;
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {

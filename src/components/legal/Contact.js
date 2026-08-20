@@ -1,11 +1,7 @@
 import { LegalConfig } from '../../config/legalConfig.js';
-import { Analytics, AnalyticsEvents } from '../../analytics/analytics.js';
 
 export const renderContact = (container) => {
-    // 1. Fire Analytics
-    Analytics.event(AnalyticsEvents.PAGE_VIEW, { page_path: '/contact' });
-
-    // 2. Set SEO Metadata
+    // 1. Set SEO Metadata
     document.title = 'Contact Us - Student Utility Hub';
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {

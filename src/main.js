@@ -35,7 +35,6 @@ initErrorHandling();
 
 // Initialize Analytics
 Analytics.init();
-Analytics.pageView();
 
 // PWA Service Worker Registration
 let newWorker;
