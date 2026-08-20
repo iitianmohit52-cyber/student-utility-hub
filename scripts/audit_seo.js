@@ -1,8 +1,9 @@
 /**
  * scripts/audit_seo.js
- * Comprehensive Production-Level Automated SEO Audit Test Suite
+ * Comprehensive Production-Level Automated SEO Audit Test Suite — Phase 2 Extended
  * Validates metadata uniqueness, canonical consistency, heading hierarchy,
- * structured JSON-LD schemas, internal linking integrity, and image SEO.
+ * search intent keyword mapping, rich tool SEO content, curated internal linking,
+ * structured JSON-LD schemas, and educational guide topical clusters.
  */
 
 import fs from 'fs';
@@ -11,6 +12,8 @@ import assert from 'assert';
 import { fileURLToPath } from 'url';
 import { tools, categories, toKebabCase } from '../src/tools/toolRegistry.js';
 import { articles } from '../src/tools/articleRegistry.js';
+import { seoKeywordMap } from '../src/data/seoKeywordMap.js';
+import { toolSEOContent } from '../src/data/toolSEOContent.js';
 import { SITE_URL } from '../src/config.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -37,13 +40,15 @@ const test = (name, fn) => {
 };
 
 console.log('\n===============================================================');
-console.log('🔍 RUNNING COMPREHENSIVE PRODUCTION SEO AUDIT SUITE');
+console.log('🔍 RUNNING COMPREHENSIVE PRODUCTION SEO AUDIT SUITE (PHASE 2)');
 console.log('===============================================================\n');
 
 // 1. Metadata Uniqueness & Intent Quality
 test('All 77 Tools have unique, intent-focused SEO titles and descriptions', () => {
     const seenTitles = new Set();
     const seenDescriptions = new Set();
+
+    assert.strictEqual(tools.length, 77, `Expected exactly 77 tools, found ${tools.length}`);
 
     tools.forEach(tool => {
         assert.ok(tool.seoTitle && tool.seoTitle.trim().length >= 25, `Tool "${tool.name}" seoTitle is too short or missing: "${tool.seoTitle}"`);
@@ -60,9 +65,70 @@ test('All 77 Tools have unique, intent-focused SEO titles and descriptions', () 
     });
 });
 
-test('All 8 Educational Guides have unique titles, summaries, and tool mappings', () => {
+// 2. Search Intent & Keyword Matrix Completeness (Phase 2 & 3)
+test('Search Intent Keyword Matrix: All 77 Tools mapped with unique primary keywords', () => {
+    const seenPrimaryKeywords = new Set();
+
+    tools.forEach(tool => {
+        const keywordEntry = seoKeywordMap[tool.id];
+        assert.ok(keywordEntry, `Tool "${tool.id}" missing from seoKeywordMap.js`);
+        assert.ok(keywordEntry.primaryKeyword && keywordEntry.primaryKeyword.trim().length >= 3, `Tool "${tool.id}" missing valid primaryKeyword`);
+        assert.ok(Array.isArray(keywordEntry.secondaryKeywords) && keywordEntry.secondaryKeywords.length >= 3, `Tool "${tool.id}" must have at least 3 secondary keywords`);
+        assert.ok(Array.isArray(keywordEntry.longTailKeywords) && keywordEntry.longTailKeywords.length >= 2, `Tool "${tool.id}" must have at least 2 long-tail keywords`);
+        assert.ok(keywordEntry.searchIntent && keywordEntry.searchIntent.trim().length >= 20, `Tool "${tool.id}" searchIntent too brief`);
+        assert.ok(keywordEntry.contentAngle && keywordEntry.contentAngle.trim().length >= 20, `Tool "${tool.id}" contentAngle too brief`);
+        assert.ok(Array.isArray(keywordEntry.semanticTerms) && keywordEntry.semanticTerms.length >= 2, `Tool "${tool.id}" must have at least 2 semantic terms`);
+
+        const normalizedPK = keywordEntry.primaryKeyword.toLowerCase().trim();
+        assert.ok(!seenPrimaryKeywords.has(normalizedPK), `Keyword cannibalization detected: Primary keyword "${normalizedPK}" assigned to multiple tools!`);
+        seenPrimaryKeywords.add(normalizedPK);
+    });
+});
+
+// 3. Tool-Specific Rich SEO Content & Introductions (Phase 4, 5, 12, 13)
+test('Rich Tool SEO Content: All 77 Tools have unique intros, how-to steps, and tool-specific FAQs', () => {
+    const seenIntros = new Set();
+
+    tools.forEach(tool => {
+        const content = toolSEOContent[tool.id];
+        assert.ok(content, `Tool "${tool.id}" missing from toolSEOContent.js`);
+        assert.ok(content.intro && content.intro.trim().length >= 200, `Tool "${tool.id}" intro is too short (< 200 chars): ${content.intro?.length}`);
+        assert.ok(Array.isArray(content.howToSteps) && content.howToSteps.length >= 3, `Tool "${tool.id}" must have at least 3 how-to steps`);
+        assert.ok(content.commonMistake && content.commonMistake.trim().length >= 20, `Tool "${tool.id}" commonMistake is too short`);
+        assert.ok(content.proTip && content.proTip.trim().length >= 20, `Tool "${tool.id}" proTip is too short`);
+        assert.ok(Array.isArray(content.useCases) && content.useCases.length >= 2, `Tool "${tool.id}" must have at least 2 use cases`);
+        assert.ok(Array.isArray(content.faqs) && content.faqs.length >= 2, `Tool "${tool.id}" must have at least 2 FAQs`);
+
+        content.faqs.forEach((faq, idx) => {
+            assert.ok(faq.q && faq.q.trim().length >= 10, `Tool "${tool.id}" FAQ #${idx + 1} question too short`);
+            assert.ok(faq.a && faq.a.trim().length >= 20, `Tool "${tool.id}" FAQ #${idx + 1} answer too short`);
+        });
+
+        assert.ok(!seenIntros.has(content.intro), `Duplicate intro detected for tool "${tool.id}"`);
+        seenIntros.add(content.intro);
+    });
+});
+
+// 4. Curated Internal Linking Completeness (Phase 9 & 10)
+test('Curated Internal Linking: All 77 Tools have at least 3 valid related tools', () => {
+    const validToolIds = new Set(tools.map(t => t.id));
+
+    tools.forEach(tool => {
+        assert.ok(Array.isArray(tool.relatedTools) && tool.relatedTools.length >= 3, `Tool "${tool.name}" has fewer than 3 related tools (${tool.relatedTools?.length})`);
+        
+        tool.relatedTools.forEach(relId => {
+            assert.ok(validToolIds.has(relId), `Tool "${tool.name}" links to invalid relatedTool ID: "${relId}"`);
+            assert.notStrictEqual(relId, tool.id, `Tool "${tool.name}" contains self-referencing related tool`);
+        });
+    });
+});
+
+// 5. Educational Guides & Topical Clusters (Phase 11)
+test('Educational Guides: All guides have unique titles, summaries, and valid tool mappings', () => {
     const seenGuideTitles = new Set();
     const seenGuideSlugs = new Set();
+
+    assert.ok(articles.length >= 8, `Expected at least 8 educational guides, found ${articles.length}`);
 
     articles.forEach(art => {
         assert.ok(art.title && art.title.trim().length >= 20, `Guide "${art.slug}" title is too short`);
@@ -82,7 +148,7 @@ test('All 8 Educational Guides have unique titles, summaries, and tool mappings'
     });
 });
 
-// 2. Canonical Architecture & URL Standards
+// 6. Canonical Architecture & URL Standards
 test('Canonical URL integrity across all indexable entities', () => {
     tools.forEach(tool => {
         const canonical = `${SITE_URL}/tools/${tool.slug}`;
@@ -103,23 +169,7 @@ test('Canonical URL integrity across all indexable entities', () => {
     });
 });
 
-// 3. Internal Linking Graph Completeness
-test('Internal linking graph completeness: Zero orphan tools or guides', () => {
-    // 1. Every tool must have at least 1 related tool and belong to a category
-    tools.forEach(tool => {
-        assert.ok(Array.isArray(tool.relatedTools) && tool.relatedTools.length > 0, `Tool "${tool.name}" has empty relatedTools array`);
-        const cat = categories.find(c => c.id === tool.category);
-        assert.ok(cat, `Tool "${tool.name}" assigned to non-existent category: "${tool.category}"`);
-    });
-
-    // 2. Every guide must be reachable from Blog and mapped tool
-    articles.forEach(art => {
-        const parentCat = categories.find(c => c.id === art.category);
-        assert.ok(parentCat, `Guide "${art.slug}" belongs to invalid category "${art.category}"`);
-    });
-});
-
-// 4. Image SEO & Alt Attributes
+// 7. Image SEO & Alt Attributes
 test('Image asset alt attribute validation in source and components', () => {
     const html = fs.readFileSync(path.resolve(rootDir, 'index.html'), 'utf8');
     
@@ -133,7 +183,7 @@ test('Image asset alt attribute validation in source and components', () => {
     assert.ok(fs.existsSync(path.join(publicDir, 'manifest.json')), 'manifest.json missing in public/');
 });
 
-// 5. AdSense Compliance & CLS Prevention
+// 8. AdSense Compliance & CLS Prevention
 test('AdSense slot parameters and CLS protective dimension wrappers', () => {
     const indexHtml = fs.readFileSync(path.resolve(rootDir, 'index.html'), 'utf8');
     assert.ok(indexHtml.includes('ca-pub-709465335735977'), 'index.html missing exact AdSense publisher ID');

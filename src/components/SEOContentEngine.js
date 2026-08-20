@@ -1,171 +1,100 @@
 /**
- * SEOContentEngine.js
+ * src/components/SEOContentEngine.js
  * Programmatic SEO Engine providing:
- * - EEAT Authority Metadata Badges
- * - Trust Indicator Grid (privacy, zero uploads, local execution)
- * - Category-specific Warning (Common Mistakes) and Info (Pro Tips) callout boxes
- * - Dynamic Category-specific mathematical and workflow use-case examples
- * - 12 domain-specific FAQs
- * - Complete JSON-LD Structured Data Schema injections
- * - Pluggable AI content override layer
+ * - EEAT Authority Metadata Badges & Verification Indicators
+ * - Trust Indicator Grid (100% local processing, zero cloud uploads)
+ * - Unique Tool-Specific Introductions (~120-250 words) from toolSEOContent.js
+ * - Tool-Specific Step-by-Step Instructions & Practical Use Cases
+ * - Warning (Common Mistakes) and Info (Pro Tips) callout boxes
+ * - Tool-Specific FAQs with dynamic accordion UI
+ * - Synchronized JSON-LD Structured Data Schema injections (WebPage, SoftwareApplication, FAQPage, HowTo, BreadcrumbList)
  */
 
 import { categories } from '../tools/toolRegistry.js';
 import { SITE_URL } from '../config.js';
+import { getToolSEOContent } from '../data/toolSEOContent.js';
+import { getToolKeywordData } from '../data/seoKeywordMap.js';
 
 export const generateSEOHTML = (tool) => {
-    // 1. Pluggable AI Override Layer Check
+    // 1. Pluggable custom override check
     if (window.customSEOContent && window.customSEOContent[tool.id]) {
         return window.customSEOContent[tool.id];
     }
 
     const name = tool.name;
     const catName = tool.category.charAt(0).toUpperCase() + tool.category.slice(1);
-    const keywordsStr = tool.keywords ? tool.keywords.join(', ') : '';
-    const mainKeyword = tool.keywords?.[0] || name.toLowerCase();
+    const specificContent = getToolSEOContent(tool.id);
+    const keywordData = getToolKeywordData(tool.id);
 
-    // 2. Category-specific Content Definitions for warning, tips, and examples
-    let commonMistake = '';
-    let proTip = '';
-    let categoryExamples = '';
+    // 2. Determine Introduction Content
+    const introParagraph = specificContent?.intro ? `
+        <p style="line-height: 1.75; color: var(--text-secondary); margin-bottom: 1.25rem; font-size: 1.05rem;">
+            ${specificContent.intro}
+        </p>
+    ` : `
+        <p style="line-height: 1.75; color: var(--text-secondary); margin-bottom: 1.25rem; font-size: 1.05rem;">
+            The <strong>${name}</strong> is a high-performance browser-native utility engineered to simplify your ${catName.toLowerCase()} workflows. 
+            Unlike traditional web tools that transfer files to a cloud database, our programmatic engine runs 100% client-side. 
+            This ensures that whether you are handling sensitive academic reports, private credentials, or code strings, your information remains fully protected.
+        </p>
+        <p style="line-height: 1.75; color: var(--text-secondary); font-size: 1.05rem;">
+            Designed for students, developers, and digital professionals, the <strong>${name}</strong> handles operations with zero latency. 
+            By utilizing modern browser APIs, all operations execute locally on your device without transmitting data over the network.
+        </p>
+    `;
 
-    if (tool.category === 'pdf') {
-        commonMistake = 'Uploading password-protected or corrupted PDF documents without unlocking them first. The local file reader will fail to parse secured files unless decrypted beforehand.';
-        proTip = 'When merging or splitting files, verify the page index order prior to processing to avoid repeating the operation. You can compile multiple actions consecutively.';
-        categoryExamples = `
-            <div style="background: var(--surface-elevated); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 0.75rem;">
-                <strong>Example 1: Document Merging</strong> - Combining multiple lecture notes PDFs and a syllabus PDF into a single, unified study guide before exams.
+    // 3. Determine Warnings and Tips
+    const commonMistake = specificContent?.commonMistake || 'Inputting unsupported parameters or values outside normal bounds. Ensure your inputs follow the instructions above.';
+    const proTip = specificContent?.proTip || 'Bookmark this page for quick offline access during exams, study sessions, or development sprints.';
+
+    // 4. Determine Use Cases
+    let useCasesHTML = '';
+    if (specificContent?.useCases && specificContent.useCases.length > 0) {
+        useCasesHTML = specificContent.useCases.map(uc => `
+            <div style="background: var(--surface-elevated); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--tool-card-border);">
+                <strong style="color: var(--text-primary); display: block; margin-bottom: 0.35rem; font-size: 1.05rem;">${uc.title}</strong>
+                <p style="margin: 0; color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">${uc.description}</p>
             </div>
-            <div style="background: var(--surface-elevated); padding: 1rem; border-radius: var(--radius-md);">
-                <strong>Example 2: Size Compression</strong> - Compressing a scanned project report from 15MB down to under 2MB to meet university online submission file limits.
-            </div>
-        `;
-    } else if (tool.category === 'image') {
-        commonMistake = 'Expecting high image quality outputs when setting compression levels extremely high. Extreme compression naturally degrades visual fidelity.';
-        proTip = 'Use the PNG format when transparent pixels are required (such as logos) and WEBP or JPG for standard photos to maximize size savings.';
-        categoryExamples = `
-            <div style="background: var(--surface-elevated); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 0.75rem;">
-                <strong>Example 1: Asset Converter</strong> - Converting massive camera raw photos (.png) to web-optimized WEBP formats for faster portfolio loads.
-            </div>
-            <div style="background: var(--surface-elevated); padding: 1rem; border-radius: var(--radius-md);">
-                <strong>Example 2: Background Removal</strong> - Making background pixels of a portrait photograph transparent to overlay the subject onto a custom flyer.
-            </div>
-        `;
-    } else if (tool.category === 'developer') {
-        commonMistake = 'Inputting syntax-corrupted payloads (such as unescaped quotes in JSON or missing semicolons in SQL queries). The format tokenizers require valid code structures to align elements.';
-        proTip = 'Use the integrated clipboard copy button to format your files instantly and paste them directly into your IDE or terminal without losing indentation spacing.';
-        categoryExamples = `
-            <div style="background: var(--surface-elevated); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 0.75rem;">
-                <strong>Example 1: API Debugging</strong> - Transforming minified API response JSON strings into clean, readable hierarchies to identify bug variables.
-            </div>
-            <div style="background: var(--surface-elevated); padding: 1rem; border-radius: var(--radius-md);">
-                <strong>Example 2: Hash Creation</strong> - Generating secure cryptographic MD5 or SHA-256 hashes of text strings to verify checksum database records.
-            </div>
-        `;
-    } else if (tool.category === 'calculator') {
-        commonMistake = 'Entering incorrect values (like yearly interest rates in monthly calculations, or inclusive figures in exclusive tax formulas). Double-check input labels before calculating.';
-        proTip = 'Utilize sliders and numbers inputs concurrently. Live preview calculations update instantly, allowing you to run comparative estimations (like compound interest variations) in seconds.';
-        
-        // Specific calculators formulas
-        if (tool.id === 'gstCalculator') {
-            categoryExamples = `
-                <div style="background: var(--surface-elevated); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 0.75rem;">
-                    <strong>GST Exclusive Example</strong> - A ₹1,000 product with 18% GST adds ₹180 tax, resulting in a ₹1,180 final price.
-                </div>
-                <div style="background: var(--surface-elevated); padding: 1rem; border-radius: var(--radius-md);">
-                    <strong>GST Inclusive Example</strong> - Extracting 18% GST from a ₹1,180 invoice reveals a ₹1,000 base price and ₹180 GST component.
-                </div>
-            `;
-        } else if (tool.id === 'emiCalculator') {
-            categoryExamples = `
-                <div style="background: var(--surface-elevated); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 0.75rem;">
-                    <strong>Home Loan Example</strong> - Estimating repayments for a ₹50,00,000 loan at 8.5% interest rate over 20 years to view monthly EMI.
-                </div>
-                <div style="background: var(--surface-elevated); padding: 1rem; border-radius: var(--radius-md);">
-                    <strong>Car Loan Example</strong> - Calculating a ₹10,00,000 loan at 10.5% interest over 5 years to verify total interest payable.
-                </div>
-            `;
-        } else if (tool.id === 'percentageCalculator') {
-            categoryExamples = `
-                <div style="background: var(--surface-elevated); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 0.75rem;">
-                    <strong>Discount Example</strong> - Finding a 20% discount on a ₹1,500 college textbook, resulting in ₹300 saved and a ₹1,200 final cost.
-                </div>
-                <div style="background: var(--surface-elevated); padding: 1rem; border-radius: var(--radius-md);">
-                    <strong>Marks Percentage Example</strong> - Calculating exam performance if a student scores 450 marks out of a total 600 maximum (75%).
-                </div>
-            `;
-        } else {
-            categoryExamples = `
-                <div style="background: var(--surface-elevated); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 0.75rem;">
-                    <strong>Example 1: Financial Computations</strong> - Compiling complex rate figures to evaluate monthly repayments, tax margins, or compounding periods.
-                </div>
-                <div style="background: var(--surface-elevated); padding: 1rem; border-radius: var(--radius-md);">
-                    <strong>Example 2: Unit Scales</strong> - Converting metric weights and distances to imperial configurations for homework assignments.
-                </div>
-            `;
-        }
+        `).join('');
     } else {
-        commonMistake = 'Inputting unsupported parameters or values outside the normal bounds. Ensure your values fit the instructions in the fields.';
-        proTip = 'Bookmark this page (Ctrl + D) for quick offline access during exams, study sessions, or project developer sprints.';
-        categoryExamples = `
-            <div style="background: var(--surface-elevated); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 0.75rem;">
-                <strong>Example 1: Study Management</strong> - Creating interval timers (such as Pomodoro countdowns) to structure student revision schedules.
+        useCasesHTML = `
+            <div style="background: var(--surface-elevated); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--tool-card-border);">
+                <strong style="color: var(--text-primary); display: block; margin-bottom: 0.35rem;">Academic & Study Productivity</strong>
+                <p style="margin: 0; color: var(--text-secondary); font-size: 0.95rem;">Preparing homework, formatting files, and organizing notes for classroom submissions.</p>
             </div>
-            <div style="background: var(--surface-elevated); padding: 1rem; border-radius: var(--radius-md);">
-                <strong>Example 2: Citation Compiling</strong> - Generating APA or MLA bibliographic listings from source details for a research paper.
+            <div style="background: var(--surface-elevated); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--tool-card-border);">
+                <strong style="color: var(--text-primary); display: block; margin-bottom: 0.35rem;">Professional Workflow Optimization</strong>
+                <p style="margin: 0; color: var(--text-secondary); font-size: 0.95rem;">Converting assets and computing metrics with client-side speed and complete data privacy.</p>
             </div>
         `;
     }
 
-    // 3. Domain FAQs (12 Questions)
-    const faqsList = [
+    // 5. Determine How-To Steps
+    let howToStepsHTML = '';
+    if (specificContent?.howToSteps && specificContent.howToSteps.length > 0) {
+        howToStepsHTML = specificContent.howToSteps.map(step => `<li>${step}</li>`).join('');
+    } else {
+        howToStepsHTML = `
+            <li>Select or input your source data in the workspace inputs above.</li>
+            <li>Configure any specific operational variables (such as formatting styles, passwords, or ranges).</li>
+            <li>Click the primary action button to execute the client-side conversion or calculation.</li>
+            <li>Review the rendered output and use 'Copy' or 'Download' to save your results.</li>
+        `;
+    }
+
+    // 6. Determine FAQs
+    const faqsList = specificContent?.faqs && specificContent.faqs.length > 0 ? specificContent.faqs : [
         {
-            q: `Is the Student Utility Hub ${name} safe and secure?`,
-            a: `Yes, 100%. Our ${name} processes all inputs entirely inside your browser's local sandbox memory. No files, texts, or parameters are sent to external servers or stored database logs, guaranteeing complete user privacy.`
+            q: `Is the Student Utility Hub ${name} safe and private?`,
+            a: `Yes, 100%. Our ${name} runs entirely inside your browser's local sandbox memory. Zero files, texts, or parameters are sent to external servers or database logs.`
         },
         {
-            q: `Are there any limits on using the ${name}?`,
-            a: `Absolutely not. Student Utility Hub is designed as a free evergreen utility platform. You can compile, calculate, or format files using the ${name} as many times as you need without encountering paywalls.`
+            q: `Are there any limits or costs to using the ${name}?`,
+            a: `No. Student Utility Hub is 100% free with no subscriptions, usage caps, or hidden paywalls.`
         },
         {
-            q: `Does this ${name} work on smartphones and tablets?`,
-            a: `Yes, it does. Our frontend is fully responsive and optimized for screen viewports across iOS, Android, and desktop configurations. Touch targets are large and keyboard navigation is fully supported.`
-        },
-        {
-            q: `Can I access the ${name} offline?`,
-            a: `Yes. Since Student Utility Hub is built as a Progressive Web App (PWA), once you visit the site, key resources are cached locally. You can open and use the ${name} even without an active internet connection.`
-        },
-        {
-            q: `What is the main purpose of the ${name}?`,
-            a: `The ${name} is designed to streamline ${catName.toLowerCase()} tasks. It provides instant evaluations, formatting, and file processing tools directly inside your web client.`
-        },
-        {
-            q: `Do I need to install any Chrome extension or software?`,
-            a: `No software or plugins are required. Everything runs natively via web standard APIs (HTML5 Canvas, File Readers, Web Crypto API) inside your active tab.`
-        },
-        {
-            q: `How does the ${name} handle large files?`,
-            a: `Because the tool runs client-side, the file processing speed depends on your local device's hardware capacity (CPU/RAM). Larger files may take slightly longer, but are completely processed locally.`
-        },
-        {
-            q: `How can I copy or export the outputs from the ${name}?`,
-            a: `The interface contains standardized "Copy" and "Download" buttons. Clicking copy grabs the output to your clipboard, and download saves the result file directly into your local download directory.`
-        },
-        {
-            q: `Why should I choose this browser-native tool over server alternatives?`,
-            a: `Most online services upload your data to remote clouds. Our browser-native ${name} guarantees your data never leaves your computer, while matching or exceeding the speeds of server equivalents.`
-        },
-        {
-            q: `What categories of tools does Student Utility Hub support?`,
-            a: `We support several productivity categories: PDF management, Image editing, Text utilities, Developer formatters, Calculators, and Student study aids.`
-        },
-        {
-            q: `Is there any API endpoint access for the ${name}?`,
-            a: `No, because all code is designed to run statically in the user's browser client. If you require automation, you can run the page locally or check the open-source logic.`
-        },
-        {
-            q: `Who built the Student Utility Hub ${name}?`,
-            a: `The platform is engineered by a dedicated community of frontend architects, prioritizing speed, accessibility (WCAG compliance), and privacy for students and developers worldwide.`
+            q: `Can I use the ${name} offline?`,
+            a: `Yes. Student Utility Hub is built as a Progressive Web App (PWA). Once loaded, the ${name} can be used without an active internet connection.`
         }
     ];
 
@@ -195,7 +124,7 @@ export const generateSEOHTML = (tool) => {
                 </div>
                 <div>
                     <span style="color: var(--text-secondary); display: block; margin-bottom: 0.25rem;">Version</span>
-                    <strong style="color: var(--text-primary);">1.1.0 (Production)</strong>
+                    <strong style="color: var(--text-primary);">1.2.0 (Production)</strong>
                 </div>
             </div>
 
@@ -225,16 +154,8 @@ export const generateSEOHTML = (tool) => {
 
             <!-- Detailed Guide Introduction -->
             <section style="margin-bottom: 2.5rem;">
-                <h2 style="font-size: 1.6rem; color: var(--primary-color); margin-bottom: 1.2rem; font-weight: 700;">Detailed Guide & Verification for ${name}</h2>
-                <p style="line-height: 1.7; color: var(--text-secondary); margin-bottom: 1.2rem;">
-                    The <strong>${name}</strong> is a high-performance browser-native utility engineered to simplify your ${catName.toLowerCase()} workflows. 
-                    Unlike traditional web tools that transfer files to a cloud database, our programmatic engine runs 100% client-side. 
-                    This ensures that whether you are handling sensitive academic reports, private credentials, or code strings, your information remains fully protected.
-                </p>
-                <p style="line-height: 1.7; color: var(--text-secondary);">
-                    Designed for students, developers, and digital professionals, the <strong>${name}</strong> handles ${catName.toLowerCase()} operations with zero latency. 
-                    By utilizing modern browser APIs, all operations run locally on your device without transmitting data over the network.
-                </p>
+                <h2 style="font-size: 1.6rem; color: var(--primary-color); margin-bottom: 1.2rem; font-weight: 700;">Overview & Guide: ${name}</h2>
+                ${introParagraph}
             </section>
 
             <!-- Warning Box (Common Mistakes) -->
@@ -242,7 +163,7 @@ export const generateSEOHTML = (tool) => {
                 <h4 style="margin: 0 0 0.5rem 0; color: var(--text-primary); font-size: 1rem; display: flex; align-items: center; gap: 0.5rem; font-weight: 700;">
                     <span>⚠️</span> Common Mistakes to Avoid
                 </h4>
-                <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5;">
+                <p style="margin: 0; font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6;">
                     ${commonMistake}
                 </p>
             </div>
@@ -252,28 +173,24 @@ export const generateSEOHTML = (tool) => {
                 <h4 style="margin: 0 0 0.5rem 0; color: var(--text-primary); font-size: 1rem; display: flex; align-items: center; gap: 0.5rem; font-weight: 700;">
                     <span>💡</span> Pro Tips & Best Practices
                 </h4>
-                <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5;">
+                <p style="margin: 0; font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6;">
                     ${proTip}
                 </p>
             </div>
 
             <!-- Practical Examples -->
             <section style="margin-bottom: 2.5rem;">
-                <h3 style="font-size: 1.35rem; margin-bottom: 1.2rem; color: var(--text-primary); font-weight: 700;">Real-Life Applications & Examples</h3>
+                <h3 style="font-size: 1.35rem; margin-bottom: 1.2rem; color: var(--text-primary); font-weight: 700;">Real-World Use Cases & Applications</h3>
                 <div style="display: grid; gap: 1rem;">
-                    ${categoryExamples}
+                    ${useCasesHTML}
                 </div>
             </section>
 
             <!-- Detailed Step-by-Step Instructions -->
             <section style="margin-bottom: 2.5rem;">
-                <h3 style="font-size: 1.35rem; margin-bottom: 1.2rem; color: var(--text-primary); font-weight: 700;">How to Use</h3>
-                <ol style="line-height: 1.8; color: var(--text-secondary); padding-left: 1.5rem;">
-                    <li>Select or input the source data (such as files, strings, dates, or values) in the workspace inputs above.</li>
-                    <li>Configure the operational variables (such as formatting specifications, passwords, or ranges).</li>
-                    <li>Execute the conversion or calculation by clicking the primary action button.</li>
-                    <li>Review the results rendered in the dedicated result area.</li>
-                    <li>Export the output safely using the "Copy Output" or "Download File" buttons.</li>
+                <h3 style="font-size: 1.35rem; margin-bottom: 1.2rem; color: var(--text-primary); font-weight: 700;">Step-by-Step Instructions</h3>
+                <ol style="line-height: 1.8; color: var(--text-secondary); padding-left: 1.5rem; font-size: 1rem;">
+                    ${howToStepsHTML}
                 </ol>
             </section>
 
@@ -285,16 +202,16 @@ export const generateSEOHTML = (tool) => {
 
             <!-- Browser Compatibility -->
             <section style="margin-bottom: 2.5rem; background: var(--surface-elevated); padding: 1.5rem; border-radius: var(--radius-lg); border: 1px solid var(--tool-card-border);">
-                <h4 style="margin: 0 0 1rem 0; color: var(--text-primary); font-size: 1.1rem; font-weight: 700;">Browser & Device Support</h4>
-                <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6;">
-                    This tool is fully WCAG AA accessible and compatible with Apple Safari, Google Chrome, Mozilla Firefox, Microsoft Edge, and Opera. It is tested on iOS, Android, macOS, Linux, and Windows platforms.
+                <h4 style="margin: 0 0 1rem 0; color: var(--text-primary); font-size: 1.1rem; font-weight: 700;">Browser & Device Compatibility</h4>
+                <p style="margin: 0; font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6;">
+                    This tool complies with WCAG AA accessibility standards and is tested across Google Chrome, Apple Safari, Mozilla Firefox, Microsoft Edge, and Opera on Windows, macOS, Linux, iOS, and Android platforms.
                 </p>
             </section>
         </div>
     `;
 };
 
-// 4. Schema Engine (Injects comprehensive structured schemas)
+// JSON-LD Schema Engine (Injects WebPage, SoftwareApplication, FAQPage, HowTo, BreadcrumbList)
 export const injectJSONLDSchemas = (toolOrCategory, isCategory = false) => {
     removeJSONLDSchemas(); // Clear old schemas
     const siteUrl = SITE_URL;
@@ -304,7 +221,7 @@ export const injectJSONLDSchemas = (toolOrCategory, isCategory = false) => {
         "@type": "WebSite",
         "url": siteUrl,
         "name": "Student Utility Hub",
-        "description": "75+ Free Online Client-Side Tools and Calculators"
+        "description": "77+ Free Online Client-Side Tools and Calculators"
     };
 
     const orgSchema = {
@@ -343,6 +260,7 @@ export const injectJSONLDSchemas = (toolOrCategory, isCategory = false) => {
         const toolUrl = `${siteUrl}/tools/${toolOrCategory.slug}`;
         const catName = toolOrCategory.category.charAt(0).toUpperCase() + toolOrCategory.category.slice(1);
         const catUrl = toolOrCategory.category === 'calculator' ? `${siteUrl}/calculators` : `${siteUrl}/${toolOrCategory.category}-tools`;
+        const specificContent = getToolSEOContent(toolOrCategory.id);
 
         const webpageSchema = {
             "@context": "https://schema.org",
@@ -365,38 +283,48 @@ export const injectJSONLDSchemas = (toolOrCategory, isCategory = false) => {
             }
         };
 
+        // Populate FAQs directly from specific tool content
+        const faqsSource = specificContent?.faqs && specificContent.faqs.length > 0 ? specificContent.faqs : [
+            {
+                q: `Is the Student Utility Hub ${toolOrCategory.name} safe?`,
+                a: `Yes. The ${toolOrCategory.name} runs entirely in your local browser sandbox.`
+            },
+            {
+                q: `Can I access the ${toolOrCategory.name} offline?`,
+                a: `Yes, once cached, the PWA framework allows offline usage.`
+            }
+        ];
+
         const faqSchema = {
             "@context": "https://schema.org",
             "@type": "FAQPage",
-            "mainEntity": [
-                {
-                    "@type": "Question",
-                    "name": `Is the Student Utility Hub ${toolOrCategory.name} safe?`,
-                    "acceptedAnswer": {
-                        "@type": "Answer",
-                        "text": `Yes. The ${toolOrCategory.name} runs entirely in your local browser sandbox.`
-                    }
-                },
-                {
-                    "@type": "Question",
-                    "name": `Can I access the ${toolOrCategory.name} offline?`,
-                    "acceptedAnswer": {
-                        "@type": "Answer",
-                        "text": `Yes, once cached, the PWA framework allows offline usage.`
-                    }
+            "mainEntity": faqsSource.map(f => ({
+                "@type": "Question",
+                "name": f.q,
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": f.a
                 }
-            ]
+            }))
         };
+
+        // Populate HowTo steps directly from specific tool content
+        const stepsSource = specificContent?.howToSteps && specificContent.howToSteps.length > 0 ? specificContent.howToSteps : [
+            "Select or input your source data in the workspace inputs.",
+            "Configure settings or variables according to your needs.",
+            "Execute the operation and copy or download the results."
+        ];
 
         const howToSchema = {
             "@context": "https://schema.org",
             "@type": "HowTo",
             "name": `How to use the ${toolOrCategory.name}`,
-            "step": [
-                { "@type": "HowToStep", "name": "Input data", "text": "Select your file or type text into the workspace inputs." },
-                { "@type": "HowToStep", "name": "Configure settings", "text": "Set parameters like tolerance thresholds or sorting orders." },
-                { "@type": "HowToStep", "name": "Get results", "text": "Click the action button to process and copy your results." }
-            ]
+            "step": stepsSource.map((stepText, idx) => ({
+                "@type": "HowToStep",
+                "position": idx + 1,
+                "name": `Step ${idx + 1}`,
+                "text": stepText
+            }))
         };
 
         const breadcrumbSchema = {

@@ -416,6 +416,93 @@ const toolIntentMetadata = {
     }
 };
 
+// Curated high-intent related tools mapping for all 77 active tools
+const curatedRelatedToolsMap = {
+    pdfMerge: ['pdfSplit', 'pdfCompress', 'pdfToImage', 'imageToPdf', 'pdfPageRotator', 'pdfRemovePages'],
+    pdfSplit: ['pdfMerge', 'pdfRemovePages', 'pdfCompress', 'pdfPageRotator', 'pdfToImage', 'pdfUnlock'],
+    pdfToImage: ['imageToPdf', 'imageConverter', 'imageCompressor', 'pdfSplit', 'screenshotToPdf', 'pdfCompress'],
+    imageToPdf: ['screenshotToPdf', 'pdfMerge', 'pdfCompress', 'imageConverter', 'imageResizer', 'pdfToImage'],
+    pdfWatermark: ['imageWatermark', 'pdfProtect', 'pdfSign', 'pdfMerge', 'pdfPageRotator', 'pdfCompress'],
+    pdfPageRotator: ['pdfSplit', 'pdfRemovePages', 'pdfMerge', 'imageRotateFlip', 'pdfCompress', 'pdfWatermark'],
+    pdfCompress: ['pdfMerge', 'pdfSplit', 'imageCompressor', 'pdfUnlock', 'imageToPdf', 'pdfProtect'],
+    pdfUnlock: ['pdfProtect', 'pdfCompress', 'pdfMerge', 'pdfSign', 'pdfSplit', 'passwordGenerator'],
+    pdfProtect: ['pdfUnlock', 'passwordGenerator', 'pdfWatermark', 'pdfSign', 'pdfCompress', 'pdfMerge'],
+    pdfSign: ['pdfWatermark', 'pdfProtect', 'pdfMerge', 'imageToPdf', 'pdfSplit', 'pdfUnlock'],
+    pdfRemovePages: ['pdfSplit', 'pdfPageRotator', 'pdfMerge', 'pdfCompress', 'imageToPdf', 'pdfWatermark'],
+
+    imageConverter: ['imageCompressor', 'imageResizer', 'svgToPng', 'faviconGenerator', 'imageCropper', 'imageFilter'],
+    imageCompressor: ['imageConverter', 'imageResizer', 'pdfCompress', 'imageCropper', 'imageFilter', 'svgToPng'],
+    imageCropper: ['imageResizer', 'imageRotateFlip', 'imageCompressor', 'imageBackgroundRemover', 'faviconGenerator', 'imageConverter'],
+    imageResizer: ['imageCropper', 'imageCompressor', 'imageConverter', 'faviconGenerator', 'imageRotateFlip', 'imageFilter'],
+    imageFilter: ['imageCropper', 'imageResizer', 'imageColorExtractor', 'imageCompressor', 'imageRotateFlip', 'imageWatermark'],
+    svgToPng: ['imageConverter', 'imageResizer', 'faviconGenerator', 'imageColorExtractor', 'colorPicker', 'imageBackgroundRemover'],
+    imageColorExtractor: ['colorPicker', 'imageFilter', 'svgToPng', 'cssMinifier', 'faviconGenerator', 'imageMetadata'],
+    faviconGenerator: ['imageResizer', 'imageCropper', 'svgToPng', 'imageConverter', 'qrCodeGenerator', 'colorPicker'],
+    imageBackgroundRemover: ['imageCropper', 'imageConverter', 'imageCompressor', 'imageFilter', 'imageWatermark', 'svgToPng'],
+    imageWatermark: ['pdfWatermark', 'imageCropper', 'imageResizer', 'imageFilter', 'imageRotateFlip', 'imageBackgroundRemover'],
+    imageMetadata: ['imageCompressor', 'imageConverter', 'imageRotateFlip', 'timestampConverter', 'imageColorExtractor', 'qrCodeScanner'],
+    imageRotateFlip: ['imageCropper', 'imageResizer', 'pdfPageRotator', 'imageFilter', 'imageCompressor', 'imageWatermark'],
+    screenshotToPdf: ['imageToPdf', 'pdfMerge', 'pdfCompress', 'imageCropper', 'qrCodeScanner', 'imageConverter'],
+
+    qrCodeGenerator: ['qrCodeScanner', 'urlEncoder', 'slugGenerator', 'passwordGenerator', 'base64', 'uuidGenerator'],
+    passwordGenerator: ['hashGenerator', 'pdfProtect', 'base64', 'uuidGenerator', 'qrCodeGenerator', 'randomTextGenerator'],
+    wordCounter: ['caseConverter', 'textCleaner', 'duplicateLineRemover', 'textSorter', 'diffChecker', 'markdownPreviewer'],
+    base64: ['jwtDecoder', 'urlEncoder', 'hashGenerator', 'htmlEncoderDecoder', 'jsonFormatter', 'passwordGenerator'],
+    jsonFormatter: ['jwtDecoder', 'xmlFormatter', 'sqlFormatter', 'jsFormatter', 'htmlFormatter', 'diffChecker'],
+    caseConverter: ['slugGenerator', 'wordCounter', 'textCleaner', 'reverseText', 'textSorter', 'loremIpsum'],
+    diffChecker: ['wordCounter', 'textCleaner', 'markdownPreviewer', 'jsonFormatter', 'caseConverter', 'duplicateLineRemover'],
+    markdownPreviewer: ['htmlFormatter', 'diffChecker', 'wordCounter', 'loremIpsum', 'textCleaner', 'citationGenerator'],
+    loremIpsum: ['randomTextGenerator', 'wordCounter', 'markdownPreviewer', 'slugGenerator', 'caseConverter', 'textCleaner'],
+    slugGenerator: ['caseConverter', 'urlEncoder', 'textCleaner', 'wordCounter', 'loremIpsum', 'qrCodeGenerator'],
+    textCleaner: ['wordCounter', 'duplicateLineRemover', 'textSorter', 'htmlEncoderDecoder', 'caseConverter', 'diffChecker'],
+    textToSpeech: ['speechToText', 'wordCounter', 'audioConverter', 'audioTrimmer', 'timer', 'pomodoroTimer'],
+    speechToText: ['textToSpeech', 'wordCounter', 'textCleaner', 'audioConverter', 'audioTrimmer', 'timer'],
+    duplicateLineRemover: ['textSorter', 'textCleaner', 'wordCounter', 'diffChecker', 'reverseText', 'caseConverter'],
+    textSorter: ['duplicateLineRemover', 'textCleaner', 'reverseText', 'wordCounter', 'caseConverter', 'slugGenerator'],
+    reverseText: ['textSorter', 'caseConverter', 'wordCounter', 'textCleaner', 'duplicateLineRemover', 'randomTextGenerator'],
+    randomTextGenerator: ['loremIpsum', 'passwordGenerator', 'uuidGenerator', 'wordCounter', 'slugGenerator', 'reverseText'],
+    htmlEncoderDecoder: ['textCleaner', 'base64', 'urlEncoder', 'htmlFormatter', 'markdownPreviewer', 'xmlFormatter'],
+
+    htmlFormatter: ['cssMinifier', 'jsFormatter', 'xmlFormatter', 'jsonFormatter', 'markdownPreviewer', 'htmlEncoderDecoder'],
+    cssMinifier: ['htmlFormatter', 'jsFormatter', 'colorPicker', 'imageColorExtractor', 'jsonFormatter', 'svgToPng'],
+    jsFormatter: ['htmlFormatter', 'cssMinifier', 'jsonFormatter', 'jwtDecoder', 'regexTester', 'sqlFormatter'],
+    jwtDecoder: ['base64', 'jsonFormatter', 'hashGenerator', 'timestampConverter', 'uuidGenerator', 'urlEncoder'],
+    hashGenerator: ['passwordGenerator', 'jwtDecoder', 'base64', 'uuidGenerator', 'urlEncoder', 'pdfProtect'],
+    urlEncoder: ['base64', 'slugGenerator', 'qrCodeGenerator', 'htmlEncoderDecoder', 'jwtDecoder', 'hashGenerator'],
+    regexTester: ['jsonFormatter', 'jsFormatter', 'textCleaner', 'diffChecker', 'wordCounter', 'xmlFormatter'],
+    colorPicker: ['imageColorExtractor', 'cssMinifier', 'svgToPng', 'faviconGenerator', 'imageFilter', 'htmlFormatter'],
+    uuidGenerator: ['passwordGenerator', 'hashGenerator', 'timestampConverter', 'jwtDecoder', 'randomTextGenerator', 'qrCodeGenerator'],
+    timestampConverter: ['timeDurationCalculator', 'ageCalculator', 'jwtDecoder', 'timer', 'uuidGenerator', 'salaryCalculator'],
+    sqlFormatter: ['jsonFormatter', 'xmlFormatter', 'jsFormatter', 'htmlFormatter', 'diffChecker', 'regexTester'],
+    xmlFormatter: ['htmlFormatter', 'jsonFormatter', 'sqlFormatter', 'jsFormatter', 'diffChecker', 'htmlEncoderDecoder'],
+    qrCodeScanner: ['qrCodeGenerator', 'screenshotToPdf', 'urlEncoder', 'imageMetadata', 'base64', 'imageColorExtractor'],
+
+    ageCalculator: ['timeDurationCalculator', 'bmiCalculator', 'percentageCalculator', 'salaryCalculator', 'timer', 'gpaCalculator'],
+    emiCalculator: ['sipCalculator', 'compoundInterest', 'salaryCalculator', 'gstCalculator', 'discountCalculator', 'percentageCalculator'],
+    sipCalculator: ['compoundInterest', 'emiCalculator', 'salaryCalculator', 'percentageCalculator', 'discountCalculator', 'gstCalculator'],
+    bmiCalculator: ['ageCalculator', 'unitConverter', 'percentageCalculator', 'pomodoroTimer', 'timer', 'fuelCostCalculator'],
+    percentageCalculator: ['cgpaCalculator', 'discountCalculator', 'gstCalculator', 'sipCalculator', 'gpaCalculator', 'compoundInterest'],
+    cgpaCalculator: ['gpaCalculator', 'gpaScaleConverter', 'percentageCalculator', 'pomodoroTimer', 'citationGenerator', 'wordCounter'],
+    discountCalculator: ['gstCalculator', 'percentageCalculator', 'salaryCalculator', 'emiCalculator', 'compoundInterest', 'sipCalculator'],
+    compoundInterest: ['sipCalculator', 'emiCalculator', 'salaryCalculator', 'percentageCalculator', 'discountCalculator', 'gstCalculator'],
+    gpaCalculator: ['cgpaCalculator', 'gpaScaleConverter', 'percentageCalculator', 'pomodoroTimer', 'citationGenerator', 'wordCounter'],
+    unitConverter: ['fuelCostCalculator', 'bmiCalculator', 'timeDurationCalculator', 'percentageCalculator', 'scientificCalculator', 'ageCalculator'],
+    gstCalculator: ['discountCalculator', 'salaryCalculator', 'percentageCalculator', 'emiCalculator', 'compoundInterest', 'sipCalculator'],
+    fuelCostCalculator: ['unitConverter', 'timeDurationCalculator', 'salaryCalculator', 'percentageCalculator', 'discountCalculator', 'emiCalculator'],
+    salaryCalculator: ['timeDurationCalculator', 'gstCalculator', 'emiCalculator', 'sipCalculator', 'discountCalculator', 'percentageCalculator'],
+    timeDurationCalculator: ['timestampConverter', 'ageCalculator', 'timer', 'fuelCostCalculator', 'pomodoroTimer', 'salaryCalculator'],
+    scientificCalculator: ['percentageCalculator', 'unitConverter', 'compoundInterest', 'gpaCalculator', 'emiCalculator', 'sipCalculator'],
+
+    pomodoroTimer: ['timer', 'citationGenerator', 'gpaCalculator', 'cgpaCalculator', 'wordCounter', 'timeDurationCalculator'],
+    citationGenerator: ['wordCounter', 'markdownPreviewer', 'pomodoroTimer', 'gpaCalculator', 'cgpaCalculator', 'gpaScaleConverter'],
+    gpaScaleConverter: ['cgpaCalculator', 'gpaCalculator', 'percentageCalculator', 'pomodoroTimer', 'citationGenerator', 'wordCounter'],
+    timer: ['pomodoroTimer', 'timeDurationCalculator', 'ageCalculator', 'textToSpeech', 'audioTrimmer', 'speechToText'],
+
+    videoConverter: ['audioConverter', 'audioTrimmer', 'screenshotToPdf', 'imageConverter', 'imageCompressor', 'imageResizer'],
+    audioConverter: ['audioTrimmer', 'videoConverter', 'textToSpeech', 'speechToText', 'timer', 'imageMetadata'],
+    audioTrimmer: ['audioConverter', 'videoConverter', 'textToSpeech', 'speechToText', 'timer', 'audioConverter']
+};
+
 export const toKebabCase = (str) => {
     if (!str) return '';
     return str
@@ -439,11 +526,11 @@ export const tools = rawTools.map((tool, index, arr) => {
     const version = '1.0.0';
     const status = 'active';
     
-    // Automatically find related tools of the same category if none are explicitly declared
-    let relatedTools = arr
+    // Use curated related tools if defined, otherwise fall back to category items
+    let relatedTools = curatedRelatedToolsMap[tool.id] || arr
         .filter(t => t.category === tool.category && t.id !== tool.id)
         .map(t => t.id)
-        .slice(0, 6); // Grab up to 6 tools of the same category
+        .slice(0, 6);
 
     return {
         ...tool,

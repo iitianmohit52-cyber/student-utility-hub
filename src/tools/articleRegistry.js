@@ -333,6 +333,170 @@ export const articles = [
                 { q: 'Can students start an SIP with small amounts?', a: 'Yes, most index funds allow starting SIP investments with as little as ₹500 per month.' }
             ]
         }
+    },
+    {
+        id: 'how-to-convert-images-to-pdf-guide',
+        slug: 'how-to-convert-images-to-pdf-guide',
+        title: 'How to Convert Images (JPG, PNG) into a PDF Document Online',
+        summary: 'Compile multiple photos, scanned notes, and assignment pages into a single organized PDF file securely inside your browser.',
+        category: 'pdf',
+        toolId: 'imageToPdf',
+        type: 'guide',
+        keywords: ['image to pdf', 'jpg to pdf', 'convert photo to pdf', 'combine images pdf'],
+        reviewedBy: 'SUH Document Engineering Panel',
+        lastUpdated: 'August 2026',
+        version: '1.0.0',
+        readTime: '4 min read',
+        references: ['https://www.iso.org/standard/75839.html (PDF Image Integration Standards)'],
+        content: {
+            intro: 'Submitting homework assignments, receipts, or portfolios as loose image files is messy and often rejected by online submission portals. Compiling your photos into a single PDF document ensures standardized page margins, uniform presentation, and easy sharing.',
+            steps: [
+                'Launch the Image to PDF Converter on Student Utility Hub.',
+                'Select or drag-and-drop your JPG, PNG, or WEBP photos into the workspace.',
+                'Drag and arrange image thumbnails in your desired page sequence.',
+                'Set target page orientation (Portrait or Landscape) and margin preferences.',
+                'Click "Convert to PDF" and download your clean, combined document.'
+            ],
+            examples: [
+                'Combining multiple smartphone photos of handwritten math homework into a single submission PDF.',
+                'Compiling photographed travel expense receipts into a structured reimbursement report.'
+            ],
+            tips: [
+                'Compress heavy high-resolution camera photos first if you need to meet strict 2MB email or portal limits.',
+                'Use portrait orientation for standard handwritten assignments and documents.'
+            ],
+            warnings: [
+                'Check thumbnail orientation before exporting to ensure no photos are upside down.',
+                'Avoid uploading corrupt image files that could prevent canvas rendering.'
+            ],
+            faqs: [
+                { q: 'Can I combine multiple different image formats into one PDF?', a: 'Yes. You can mix JPG, PNG, and WEBP pictures into the same combined PDF document.' },
+                { q: 'Are my personal photos uploaded to a cloud server?', a: 'No. The compilation runs 100% locally in your browser memory using HTML5 Canvas.' }
+            ]
+        }
+    },
+    {
+        id: 'how-to-convert-cgpa-to-percentage-guide',
+        slug: 'how-to-convert-cgpa-to-percentage-guide',
+        title: 'How to Convert CGPA to Percentage: Formula & Conversion Rules',
+        summary: 'Master university CGPA and GPA percentage conversion formulas for CBSE, AICTE, and international academic grading systems.',
+        category: 'calculator',
+        toolId: 'cgpaCalculator',
+        type: 'tutorial',
+        keywords: ['cgpa to percentage', 'convert gpa to percentage', 'cbse cgpa formula', 'calculate percentage from cgpa'],
+        reviewedBy: 'SUH Academic Board',
+        lastUpdated: 'August 2026',
+        version: '1.0.0',
+        readTime: '5 min read',
+        references: ['https://www.cbse.gov.in/ (CBSE Grading and Conversion Guidelines)'],
+        content: {
+            intro: 'Converting Cumulative Grade Point Average (CGPA) into an equivalent percentage score is required for university entrance exams, scholarship applications, and corporate job placement forms. Understanding the standard mathematical multiplier ensures you report accurate percentages.',
+            steps: [
+                'Open the CGPA to Percentage Calculator on Student Utility Hub.',
+                'Enter your cumulative CGPA or SGPA score (e.g. 8.4).',
+                'Select your curriculum standard (CBSE/AICTE 9.5 Multiplier or standard 10x Scale).',
+                'Review your converted percentage score and degree classification honors.',
+                'Copy the percentage figure directly for your job or university application.'
+            ],
+            examples: [
+                'CBSE 10-Point Scale: A CGPA of 8.6 multiplied by 9.5 results in an official percentage of 81.7%.',
+                'Standard 10x Scale: An 8.6 CGPA on a linear scale translates to 86.0%.'
+            ],
+            tips: [
+                'Always verify whether your institution officially mandates the 9.5 multiplier or a university-specific conversion formula.',
+                'Mention both CGPA and converted percentage on your resume for maximum clarity.'
+            ],
+            warnings: [
+                'Do not assume all universities use a simple 10x multiplier; check the back of your official marksheet for the prescribed formula.',
+                'Avoid rounding percentages upwards beyond two decimal places.'
+            ],
+            faqs: [
+                { q: 'Why does CBSE use 9.5 as the conversion multiplier?', a: 'Statistical analysis of past scoring distributions showed that multiplying by 9.5 accurately maps the 10-point grade bands to historical percentage scores.' },
+                { q: 'Can I convert semester SGPA using this formula?', a: 'Yes. Semester SGPA scores follow the same proportional conversion rules as cumulative CGPA.' }
+            ]
+        }
+    },
+    {
+        id: 'how-to-use-pomodoro-technique-guide',
+        slug: 'how-to-use-pomodoro-technique-guide',
+        title: 'How to Master the Pomodoro Technique: Boost Study & Work Focus',
+        summary: 'Learn how to eliminate digital distractions and maximize study productivity using structured 25-minute focus intervals and strategic breaks.',
+        category: 'student',
+        toolId: 'pomodoroTimer',
+        type: 'guide',
+        keywords: ['pomodoro technique', 'study focus timer', 'productivity technique', '25 minute focus block'],
+        reviewedBy: 'SUH Educational Psychologist',
+        lastUpdated: 'August 2026',
+        version: '1.0.0',
+        readTime: '5 min read',
+        references: ['https://francescocirillo.com/products/the-pomodoro-technique (The Official Pomodoro Technique)'],
+        content: {
+            intro: 'The Pomodoro Technique, invented by Francesco Cirillo in the late 1980s, is one of the most effective time management frameworks for students and professionals. By breaking large study workloads into 25-minute uninterrupted intervals separated by 5-minute restorative breaks, it prevents cognitive fatigue and maintains flow state.',
+            steps: [
+                'Choose a specific study chapter, assignment, or task you want to accomplish.',
+                'Open the Pomodoro Study Timer on Student Utility Hub and click "Start Focus" (25 minutes).',
+                'Work exclusively on your task with zero phone or social media interruptions until the chime sounds.',
+                'Take a 5-minute short break: stretch, hydrate, or rest your eyes.',
+                'Repeat for 4 cycles, then reward yourself with an extended 15-to-30 minute long break.'
+            ],
+            examples: [
+                'Breaking a 3-chapter biology revision into six 25-minute focus sessions with scheduled hydration breaks.',
+                'Drafting an academic literature review across 4 focused morning Pomodoro cycles.'
+            ],
+            tips: [
+                'Keep a quick notepad nearby to jot down stray distracting thoughts without breaking your focus block.',
+                'Avoid looking at phone screens during your 5-minute break to allow true cognitive eye rest.'
+            ],
+            warnings: [
+                'Do not skip breaks even if you feel energized; scheduled recovery is critical to sustain multi-hour focus.',
+                'Avoid multitasking during focus intervals—commit to one single priority task per Pomodoro.'
+            ],
+            faqs: [
+                { q: 'What should I do if I finish a task before the 25 minutes are up?', a: 'Use the remaining minutes to review your work, practice active recall, or refine your notes.' },
+                { q: 'Can I customize the timer interval lengths?', a: 'Yes. You can adjust the timer to 50-minute study blocks and 10-minute breaks in the settings.' }
+            ]
+        }
+    },
+    {
+        id: 'understanding-cryptographic-hashes-guide',
+        slug: 'understanding-cryptographic-hashes-guide',
+        title: 'Understanding Cryptographic Hashes: MD5, SHA-256 & Data Integrity',
+        summary: 'A beginner-friendly guide to one-way cryptographic hash functions, digital signatures, checksums, and secure data verification.',
+        category: 'developer',
+        toolId: 'hashGenerator',
+        type: 'guide',
+        keywords: ['cryptographic hash', 'sha256 hash', 'md5 checksum', 'data integrity verification'],
+        reviewedBy: 'SUH Cybersecurity Panel',
+        lastUpdated: 'August 2026',
+        version: '1.0.0',
+        readTime: '6 min read',
+        references: ['https://csrc.nist.gov/publications/detail/fips/180-4/final (NIST Secure Hash Standards)'],
+        content: {
+            intro: 'Cryptographic hash functions are the mathematical backbone of modern cybersecurity, blockchain ledgers, password verification, and file integrity checking. A cryptographic hash takes an input string of any length and produces a deterministic, fixed-length hexadecimal digest that is computationally infeasible to reverse.',
+            steps: [
+                'Open the Hash Generator tool on Student Utility Hub.',
+                'Enter or paste your text string, token, or payload into the input workspace.',
+                'The browser computes MD5, SHA-1, SHA-256, and SHA-512 hashes simultaneously in real time.',
+                'Compare the calculated hexadecimal hash against your reference checksum.',
+                'Copy the required hash digest with 1 click.'
+            ],
+            examples: [
+                'Verifying downloaded operating system ISO file integrity by comparing its SHA-256 checksum against official vendor hashes.',
+                'Generating deterministic unique string identifiers for database indexing without storing sensitive plaintext.'
+            ],
+            tips: [
+                'Always use SHA-256 or SHA-512 for security-sensitive applications; avoid MD5 and SHA-1 for new cryptographic designs.',
+                'Even changing a single letter or punctuation mark in your input completely scrambles the output hash (the Avalanche Effect).'
+            ],
+            warnings: [
+                'Never use standard cryptographic hashes alone for password storage without salting and key stretching (like bcrypt/Argon2).',
+                'Remember that hashes are one-way functions and cannot be decrypted back into plain text.'
+            ],
+            faqs: [
+                { q: 'What is the Avalanche Effect in hashing?', a: 'A cryptographic property where a minor 1-bit change in input drastically and unpredictably changes approximately 50% of the output bits.' },
+                { q: 'Can two different inputs produce the exact same hash?', a: 'Theoretically yes (called a collision), but with SHA-256, the mathematical odds are 1 in 2^256, making accidental collisions virtually impossible.' }
+            ]
+        }
     }
 ];
 

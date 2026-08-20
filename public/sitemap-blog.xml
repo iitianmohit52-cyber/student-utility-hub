@@ -45,4 +45,24 @@
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
     </url>
+    <url>
+        <loc>https://studentutilityhub.in/guides/how-to-convert-images-to-pdf-guide</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://studentutilityhub.in/guides/how-to-convert-cgpa-to-percentage-guide</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://studentutilityhub.in/guides/how-to-use-pomodoro-technique-guide</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://studentutilityhub.in/guides/understanding-cryptographic-hashes-guide</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
 </urlset>
